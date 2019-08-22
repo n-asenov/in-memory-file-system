@@ -42,13 +42,14 @@ public class Directory {
 		return files;
 	}
 
-	public void addFile(String name) {
-		if (files.get(name) == null) {
+	public String addFile(String name) {
+		if (files.get(name) == null && subDirectories.get(name) == null) {
 			File file = new File(name);
 			files.put(name, file);
-		} else {
-			System.out.println("There is already file with such name!");
+			return null;
 		}
+		
+		return "There is already file or directory with such name!" + System.lineSeparator();
 	}
 
 	public void addSubDirectory(String name) {

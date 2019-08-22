@@ -13,10 +13,12 @@ public class DirectoryTest {
 		Directory directory = new Directory("test", null);
 		String fileName = "f1";
 
-		directory.addFile(fileName);
+		String error = directory.addFile(fileName);
 
+		String expectedError = null;
 		int expectedFilesSize = 1;
 
+		assertEquals(expectedError, error);
 		assertEquals(fileName, directory.getFiles().get(fileName).getName());
 		assertEquals(expectedFilesSize, directory.getFiles().size());
 	}
@@ -29,11 +31,18 @@ public class DirectoryTest {
 		String fileName2 = "f2";
 		String fileName3 = "f3";
 
-		directory.addFile(fileName1);
-		directory.addFile(fileName2);
-		directory.addFile(fileName3);
-
-		int expectedFilesSize = 3;
+		String error;
+		String expectedError = null;
+		int expectedFilesSize = 3;	
+		
+		error = directory.addFile(fileName1);
+		assertEquals(expectedError, error);
+		
+		error = directory.addFile(fileName2);
+		assertEquals(expectedError, error);
+		
+		error = directory.addFile(fileName3);
+		assertEquals(expectedError, error);
 
 		assertEquals(fileName1, directory.getFiles().get(fileName1).getName());
 		assertEquals(fileName2, directory.getFiles().get(fileName2).getName());
@@ -42,24 +51,24 @@ public class DirectoryTest {
 	}
 
 	@Test
-	public void addFile_AddExistingFile_PrintMessageOnConsole() {
+	public void addFile_AddExistingFile_ReturnErrorMessage() {
 		Directory directory = new Directory("test");
+		
 		String fileName = "f1";
-		String expectedResult = "There is already file with such name!\n";
+		
+		String error;
+		String expectedError = null;
+		
+		error = directory.addFile(fileName);
+		assertEquals(expectedError, error);
+		
+		error = directory.addFile(fileName);
+		expectedError = "There is already file or directory with such name!" + System.lineSeparator();
+		
 		int expectedSize = 1;
-
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
-
-		System.setOut(new PrintStream(outContent));
-
-		directory.addFile(fileName);
-		directory.addFile(fileName);
-
-		assertEquals(expectedResult, outContent.toString());
+		
+		assertEquals(expectedError, error);
 		assertEquals(expectedSize, directory.getFiles().size());
-
-		System.setOut(originalOut);
 	}
 
 	@Test
