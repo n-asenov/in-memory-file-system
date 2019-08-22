@@ -1,4 +1,4 @@
-package fileSystem;
+package fileSystem.fs;
 
 public class FileSystem {
 	private Directory root;

@@ -1,4 +1,4 @@
-package fileSystem;
+package fileSystem.fs;
 
 import static org.junit.Assert.*;
 

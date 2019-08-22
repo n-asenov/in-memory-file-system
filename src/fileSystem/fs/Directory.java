@@ -1,4 +1,4 @@
-package fileSystem;
+package fileSystem.fs;
 
 import java.util.ArrayList;
 import java.util.Collections;
