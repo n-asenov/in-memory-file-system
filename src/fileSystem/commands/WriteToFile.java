@@ -13,14 +13,8 @@ public class WriteToFile implements Command {
 
 	@Override
 	public void execute(List<String> options, List<String> arguments) {
-		if (options == null && arguments.size() == 3) {
-			String file = arguments.get(0);
-			int lineNumber = Integer.parseInt(arguments.get(1));
-			String lineContent = arguments.get(2);
-
-			fs.writeToFile(file, lineNumber, lineContent, false);
-		}
-
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -2,13 +2,7 @@ package fileSystem;
 
 import java.util.HashMap;
 
-import fileSystem.commands.ChangeDirectory;
 import fileSystem.commands.Command;
-import fileSystem.commands.CreateFile;
-import fileSystem.commands.ListDirectoryContent;
-import fileSystem.commands.MakeDirectory;
-import fileSystem.commands.PrintFileContent;
-import fileSystem.commands.WriteToFile;
 import fileSystem.fs.FileSystem;
 
 public class Terminal {

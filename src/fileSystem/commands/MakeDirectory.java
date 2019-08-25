@@ -13,12 +13,7 @@ public class MakeDirectory implements Command {
 
 	@Override
 	public void execute(List<String> options, List<String> arguments) {
-		if (options == null && arguments.size() == 1) {
-			fs.makeDirectory(arguments.get(0));
-		} else if (options != null) {
-			System.out.println("Invalid options!");
-		} else {
-			System.out.println("Invalid arguments!");
-		}
+		// TODO Auto-generated method stub
+		
 	}
 }
