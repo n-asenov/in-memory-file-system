@@ -2,166 +2,146 @@ package fileSystem.fs;
 
 import static org.junit.Assert.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 
 public class DirectoryTest {
 	@Test
-	public void addFile_AddNewFileInDirectory_FileAddedInDirectory() {
-		Directory directory = new Directory("test", null);
-		String fileName = "f1";
+	public void addFile_AddNewTextFileInDirectory_TextFileAddedInDirectory() {
+		Directory directory = new Directory("test");
+		File file = new TextFile("f1");
 
-		String error = directory.addFile(fileName);
+		String error = directory.addFile(file);
 
 		String expectedError = null;
 		int expectedFilesSize = 1;
+		int expectedDirectorySize = 0;
+
+		List<String> list = directory.getContent(FilterBy.DEFAULT);
 
 		assertEquals(expectedError, error);
-		assertEquals(fileName, directory.getFiles().get(fileName).getName());
-		assertEquals(expectedFilesSize, directory.getFiles().size());
+		assertEquals(expectedFilesSize, list.size());
+		assertEquals(file.getName(), list.get(0));
+		assertEquals(expectedDirectorySize, directory.getSize());
 	}
 
 	@Test
-	public void addFile_AddSeveralNewFilesInDirectory_FilesAddedInDirectory() {
-		Directory directory = new Directory("test", null);
+	public void addFile_AddSeveralNewTextFilesInDirectory_TextFilesAddedInDirectory() {
+		Directory directory = new Directory("test");
 
-		String fileName1 = "f1";
-		String fileName2 = "f2";
-		String fileName3 = "f3";
+		int numberOfFiles = 10;
+
+		int expectedDirectorySize = 0;
+		int expectedFilesSize = 0;
+		String expectedError = null;
+
+		for (int i = 0; i < numberOfFiles; i++) {
+			File file = new TextFile("f" + i);
+			String error = directory.addFile(file);
+			assertEquals(expectedError, error);
+			expectedFilesSize++;
+		}
+
+		List<String> list = directory.getContent(FilterBy.DEFAULT);
+
+		assertEquals(expectedDirectorySize, directory.getSize());
+		assertEquals(expectedFilesSize, list.size());
+
+		for (int i = 0; i < numberOfFiles; i++) {
+			String expectedResult = "f" + i;
+			assertEquals(expectedResult, list.get(i));
+		}
+	}
+
+	@Test
+	public void addFile_AddExistingTextFile_ReturnErrorMessage() {
+		Directory directory = new Directory("test");
+
+		File file = new TextFile("f1");
 
 		String error;
 		String expectedError = null;
-		int expectedFilesSize = 3;	
-		
-		error = directory.addFile(fileName1);
-		assertEquals(expectedError, error);
-		
-		error = directory.addFile(fileName2);
-		assertEquals(expectedError, error);
-		
-		error = directory.addFile(fileName3);
+
+		error = directory.addFile(file);
 		assertEquals(expectedError, error);
 
-		assertEquals(fileName1, directory.getFiles().get(fileName1).getName());
-		assertEquals(fileName2, directory.getFiles().get(fileName2).getName());
-		assertEquals(fileName3, directory.getFiles().get(fileName3).getName());
-		assertEquals(expectedFilesSize, directory.getFiles().size());
+		error = directory.addFile(file);
+		expectedError = "File already exists!";
+
+		assertEquals(expectedError, error);
 	}
 
 	@Test
-	public void addFile_AddExistingFile_ReturnErrorMessage() {
-		Directory directory = new Directory("test");
-		
-		String fileName = "f1";
-		
-		String error;
-		String expectedError = null;
-		
-		error = directory.addFile(fileName);
-		assertEquals(expectedError, error);
-		
-		error = directory.addFile(fileName);
-		expectedError = "There is already file or directory with such name!" + System.lineSeparator();
-		
-		int expectedSize = 1;
-		
-		assertEquals(expectedError, error);
-		assertEquals(expectedSize, directory.getFiles().size());
-	}
-
-	@Test
-	public void addSubDirectory_addNewDirectory_DirectoryAddedToSubDirectories() {
+	public void addFile_addNewDirectory_DirectoryAddedToContent() {
 		Directory directory = new Directory("test");
 
-		String newSubDirectory = "subDir1";
+		Directory newSubDirectory = new Directory("dir1");
 
-		directory.addSubDirectory(newSubDirectory);
+		String result;
+		String expectedResult = null;
 
-		Directory addedDirectory = directory.getSubDirectories().get(newSubDirectory);
+		result = directory.addFile(newSubDirectory);
 
-		assertEquals(newSubDirectory, addedDirectory.getName());
-		assertSame(directory, addedDirectory.getParent());
-		assertEquals(0, addedDirectory.getFiles().size());
-		assertEquals(0, addedDirectory.getSubDirectories().size());
+		assertEquals(expectedResult, result);
 	}
 
 	@Test
-	public void addSubDirectory_addExistingDirectory_PrintMessageOnConsole() {
+	public void addFile_addExistingDirectory_ReturnErrorMessage() {
 		Directory directory = new Directory("Test");
 
-		String subDirectoryName = "dir1";
+		Directory subDirectoryName = new Directory("dir1");
 
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
+		String expectedResult = "File already exists!";
 
-		System.setOut(new PrintStream(outContent));
+		directory.addFile(subDirectoryName);
+		String result = directory.addFile(subDirectoryName);
 
-		String expectedResult = "There is already directory with such name!\n";
-		int expectedSizeOfSubDirectories = 1;
-
-		directory.addSubDirectory(subDirectoryName);
-		directory.addSubDirectory(subDirectoryName);
-
-		assertEquals(expectedResult, outContent.toString());
-		assertEquals(expectedSizeOfSubDirectories, directory.getSubDirectories().size());
-
-		System.setOut(originalOut);
+		assertEquals(expectedResult, result);
 	}
 
 	@Test
-	public void listContent_listContentByDefaultOption_ContentOfDirectoryPrintedOnConsole() {
+	public void getContent_getContentByDefaultOption_ContentSortedByName() {
 		Directory directory = new Directory("Test");
 
-		directory.addSubDirectory("dir1");
-		directory.addSubDirectory("dir2");
-		directory.addSubDirectory("dir3");
+		int size = 5;
 
-		directory.addFile("f1");
-		directory.addFile("f2");
-		directory.addFile("f3");
+		List<String> expectedResult = new ArrayList<String>();
 
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
+		for (int i = 0; i < size; i++) {
+			Directory dir = new Directory("dir" + i);
+			expectedResult.add(dir.getName());
+			directory.addFile(dir);
+		}
+		List<String> result = directory.getContent(FilterBy.DEFAULT);
 
-		System.setOut(new PrintStream(outContent));
-
-		directory.listContent(FilterBy.DEFAULT);
-
-		String expectedResult = "Directories:\ndir1 dir2 dir3 \nFiles:\nf1 f2 f3 \n";
-
-		assertEquals(expectedResult, outContent.toString());
-
-		System.setOut(originalOut);
+		assertArrayEquals(expectedResult.toArray(), result.toArray());
 	}
 
 	@Test
-	public void listContent_listContentBySizeDescending_ContentPrintOnConsoleBySizeDescending() {
+	public void getContent_getContentBySizeDescending_ReturnContentSortedBySizeDescending() {
 		Directory directory = new Directory("Test");
 
-		directory.addSubDirectory("dir1");
-		directory.addSubDirectory("dir2");
+		TextFile f1 = new TextFile("f1");
+		f1.write(1, "hello", false);
+		TextFile f2 = new TextFile("f2");
+		f2.write(2, "Hello, World!", false);
+		Directory dir = new Directory("dir1");
 
-		directory.addFile("f1");
-		directory.addFile("f2");
-		directory.addFile("f3");
+		directory.addFile(f1);
+		directory.addFile(f2);
+		directory.addFile(dir);
 
-		directory.getFiles().get("f2").write(1, "Hello, World!", false);
-		directory.getFiles().get("f3").write(2, "Hello", false);
+		List<String> result = directory.getContent(FilterBy.SIZE_DESCENDING);
 
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
+		List<String> expectedResult = new ArrayList<String>();
 
-		System.setOut(new PrintStream(outContent));
+		expectedResult.add(f2.getName());
+		expectedResult.add(f1.getName());
+		expectedResult.add(dir.getName());
 		
-		directory.listContent(FilterBy.SIZE_DESCENDING);
-		
-		String expectedResult = "Files:\nf2 f3 f1 \nDirectories:\ndir1 dir2 \n";
-		
-		assertEquals(expectedResult, outContent.toString());
-
-		System.setOut(originalOut);
+		assertArrayEquals(expectedResult.toArray(), result.toArray());
 	}
 
 }

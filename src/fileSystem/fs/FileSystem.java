@@ -1,93 +1,122 @@
 package fileSystem.fs;
 
-public class FileSystem {
+import java.util.List;
+
+public class FileSystem implements AbstractFileSystem {
 	private Directory root;
 
 	public FileSystem() {
 		root = new Directory("/");
-		root.addSubDirectory("home");
+		root.addFile(new Directory("home", root));
 	}
 
-	public void makeDirectory(String absolutePath) {
-		StringBuilder newDirectoryName = new StringBuilder();
+	@Override
+	public String makeDirectory(String absolutePath) {
+		Directory workDirectory = goToWorkDirectory(absolutePath);
 
-		Directory workDirectory = goToWorkDirectory(absolutePath, newDirectoryName);
-
-		if (workDirectory != null) {
-			workDirectory.addSubDirectory(newDirectoryName.toString());
+		if (workDirectory == null) {
+			return "Path doesn't exists!";
 		}
+
+		return workDirectory.addFile(new Directory(getCurrentFile(absolutePath), workDirectory));
 	}
 
-	public void createFile(String absolutePath) {
-		StringBuilder newFileName = new StringBuilder();
+	@Override
+	public String createTextFile(String absolutePath) {
+		Directory workDirectory = goToWorkDirectory(absolutePath);
 
-		Directory workDirectory = goToWorkDirectory(absolutePath, newFileName);
-
-		if (workDirectory != null) {
-			workDirectory.addFile(newFileName.toString());
+		if (workDirectory == null) {
+			return "Path doesn't exists!";
 		}
+
+		return workDirectory.addFile(new TextFile(getCurrentFile(absolutePath)));
 	}
 
-	public void printFileContent(String absolutePath) {
-		StringBuilder file = new StringBuilder();
+	@Override
+	public String getTextFileContent(String absolutePath) {
+		Directory workDirectory = goToWorkDirectory(absolutePath);
 
-		Directory workDirectory = goToWorkDirectory(absolutePath, file);
-
-		if (workDirectory != null) {
-			if (workDirectory.getFiles().get(file.toString()) == null) {
-				System.out.println("File doesn't exists!");
-				return;
-			}
-
-			workDirectory.getFiles().get(file.toString()).printContent();
+		if (workDirectory == null) {
+			return "Path doesn't exists!";
 		}
-	}
 
-	public void writeToFile(String absolutePath, int lineNumber, String newContent, boolean overwrite) {
-		StringBuilder file = new StringBuilder();
+		File file = workDirectory.getFile(getCurrentFile(absolutePath));
 
-		Directory workDirectory = goToWorkDirectory(absolutePath, file);
-
-		if (workDirectory != null) {
-			if (workDirectory.getFiles().get(file.toString()) == null) {
-				System.out.println("File doesn't exists!");
-				return;
-			}
-
-			workDirectory.getFiles().get(file.toString()).write(lineNumber, newContent, overwrite);
+		if (file == null) {
+			return "File doesn't exists!";
 		}
-	}
 
-	public void listDirectoryContent(String absolutePath, FilterBy option) {
-		StringBuilder directoryToList = new StringBuilder();
-
-		Directory workDirectory = goToWorkDirectory(absolutePath, directoryToList);
-
-		if (workDirectory != null) {
-			if (workDirectory.getSubDirectories().get(directoryToList.toString()) == null) {
-				System.out.println("Directory doesn't exists!");
-				return;
-			}
-
-			workDirectory.getSubDirectories().get(directoryToList.toString()).listContent(option);
+		if (file.isDirectory()) {
+			return "File is directory!";
 		}
+
+		TextFile textFile = (TextFile) file;
+
+		return textFile.getContent();
 	}
 
-	private Directory goToWorkDirectory(String absolutePath, StringBuilder current) {
-		String[] pathSplittedByDirectories = absolutePath.split("/");
+	@Override
+	public String writeToTextFile(String absolutePath, int line, String content, boolean overwrite) {
+		Directory workDirectory = goToWorkDirectory(absolutePath);
 
+		if (workDirectory == null) {
+			return "Path doesn't exists!";
+		}
+
+		File file = workDirectory.getFile(getCurrentFile(absolutePath));
+
+		if (file == null) {
+			return "File doesn't exists!";
+		}
+
+		if (file.isDirectory()) {
+			return "File is directory!";
+		}
+
+		TextFile textFile = (TextFile) file;
+		textFile.write(line, content, overwrite);
+
+		return null;
+	}
+
+	@Override
+	public List<String> getDirectoryContent(String absolutePath, FilterBy option) {
+		Directory workDirectory = goToWorkDirectory(absolutePath);
+
+		if (workDirectory == null) {
+			return null;
+		}
+
+		File file = workDirectory.getFile(getCurrentFile(absolutePath));
+
+		if (file == null || file.isTextFile()) {
+			return null;
+		}
+		
+		Directory directory = (Directory) file;
+		
+		return directory.getContent(option);
+	}
+
+	private Directory goToWorkDirectory(String absolutePath) {
 		Directory workDirectory = root;
 
-		for (int i = 1; i < pathSplittedByDirectories.length - 1; i++) {
-			workDirectory = workDirectory.getSubDirectories().get(pathSplittedByDirectories[i]);
-			if (workDirectory == null) {
-				System.out.println("Path doesn't exists!");
+		String[] pathSpliteedByDirectories = absolutePath.split("/");
+
+		for (int i = 1; i < pathSpliteedByDirectories.length - 1; i++) {
+			File next = workDirectory.getFile(pathSpliteedByDirectories[i]);
+
+			if (next == null || !next.isDirectory()) {
 				return null;
 			}
+
+			workDirectory = (Directory) next;
 		}
 
-		current.replace(0, current.length(), pathSplittedByDirectories[pathSplittedByDirectories.length - 1]);
-
 		return workDirectory;
+	}
+
+	private String getCurrentFile(String absolutePath) {
+		return absolutePath.substring(absolutePath.lastIndexOf('/') + 1);
 	}
 }

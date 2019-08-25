@@ -2,8 +2,7 @@ package fileSystem.fs;
 
 import static org.junit.Assert.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -15,321 +14,207 @@ public class FileSystemTest {
 
 		String absolutePathToNewDirectory = "/home/newDir";
 
-		fs.makeDirectory(absolutePathToNewDirectory);
+		String result = fs.makeDirectory(absolutePathToNewDirectory);
+		String expectedResult = null;
 
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
-
-		System.setOut(new PrintStream(outContent));
-
-		fs.makeDirectory(absolutePathToNewDirectory);
-
-		String expectedOutput = "There is already directory with such name!\n";
-		assertEquals(expectedOutput, outContent.toString());
-
-		System.setOut(originalOut);
+		assertEquals(expectedResult, result);
 	}
 
 	@Test
-	public void makeDirectory_PathDoesNotExists_MessagePrintedOnConsole() {
+	public void makeDirectory_PathDoesNotExists_ReturnErrorMessage() {
 		FileSystem fs = new FileSystem();
 
 		String absolutePath = "/wrongPath/dir1";
 
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
+		String result = fs.makeDirectory(absolutePath);
+		String expectedResult = "Path doesn't exists!";
 
-		System.setOut(new PrintStream(outContent));
-
-		fs.makeDirectory(absolutePath);
-
-		String expectedOutput = "Path doesn't exists!\n";
-		assertEquals(expectedOutput, outContent.toString());
-
-		System.setOut(originalOut);
+		assertEquals(expectedResult, result);
 	}
 
 	@Test
-	public void createFile_newFile_FileAddedInDirectory() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePathToNewFile = "/home/f1";
-
-		fs.createFile(absolutePathToNewFile);
-
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
-
-		System.setOut(new PrintStream(outContent));
-
-		fs.createFile(absolutePathToNewFile);
-
-		String expectedOutput = "There is already file with such name!\n";
-		assertEquals(expectedOutput, outContent.toString());
-
-		System.setOut(originalOut);
-	}
-
-	@Test
-	public void createFile_PathDoesNotExists_PrintMessageOnConsole() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/wrongPath/f1";
-
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
-
-		System.setOut(new PrintStream(outContent));
-
-		fs.createFile(absolutePath);
-
-		String expectedOutput = "Path doesn't exists!\n";
-		assertEquals(expectedOutput, outContent.toString());
-
-		System.setOut(originalOut);
-	}
-
-	@Test
-	public void printFileContent_ExistingEmptyFile_PrintNothingOnConsole() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/home/f1";
-
-		fs.createFile(absolutePath);
-
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
-
-		System.setOut(new PrintStream(outContent));
-
-		fs.printFileContent(absolutePath);
-
-		String expectedOutput = "";
-		assertEquals(expectedOutput, outContent.toString());
-
-		System.setOut(originalOut);
-	}
-
-	@Test
-	public void printFileContent_PathDoesNotExists_PrintMessageOnConsole() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/home/dir1/f1";
-
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
-
-		System.setOut(new PrintStream(outContent));
-
-		fs.printFileContent(absolutePath);
-
-		String expectedOutput = "Path doesn't exists!\n";
-		assertEquals(expectedOutput, outContent.toString());
-
-		System.setOut(originalOut);
-	}
-
-	@Test
-	public void printFileContent_FileDoesNotExists_PrintMessageOnConsole() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/home/f1";
-
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
-
-		System.setOut(new PrintStream(outContent));
-
-		fs.printFileContent(absolutePath);
-
-		String expectedOutput = "File doesn't exists!\n";
-		assertEquals(expectedOutput, outContent.toString());
-
-		System.setOut(originalOut);
-	}
-
-	@Test
-	public void writeToFile_WriteToNonExistingFile_PrintMessegeOnConsole() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/home/f1";
-
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
-
-		System.setOut(new PrintStream(outContent));
-
-		fs.writeToFile(absolutePath, 1, "Test", false);
-
-		String expectedOutput = "File doesn't exists!\n";
-		assertEquals(expectedOutput, outContent.toString());
-
-		System.setOut(originalOut);
-	}
-
-	@Test
-	public void writeToFile_PathToFileDoesNotExists_PrintMessageOnConsole() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/home/dir1/f1";
-
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
-
-		System.setOut(new PrintStream(outContent));
-
-		fs.writeToFile(absolutePath, 1, "Test", false);
-
-		String expectedOutput = "Path doesn't exists!\n";
-		assertEquals(expectedOutput, outContent.toString());
-
-		System.setOut(originalOut);
-	}
-
-	@Test
-	public void writeToFile_WriteToEmptyFile_ContentWrittenToFile() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/home/f1";
-
-		fs.createFile(absolutePath);
-
-		fs.writeToFile(absolutePath, 1, "Test", false);
-
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
-
-		System.setOut(new PrintStream(outContent));
-
-		fs.printFileContent(absolutePath);
-
-		String expectedOutput = "Test\n";
-		assertEquals(expectedOutput, outContent.toString());
-
-		System.setOut(originalOut);
-	}
-
-	@Test
-	public void writeToFile_WriteContentOnNonEmptyLine_ContentAppendedToLine() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/home/f1";
-
-		fs.createFile(absolutePath);
-
-		fs.writeToFile(absolutePath, 1, "old", false);
-		fs.writeToFile(absolutePath, 1, "new", false);
-
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
-
-		System.setOut(new PrintStream(outContent));
-
-		fs.printFileContent(absolutePath);
-
-		String expectedOutput = "oldnew\n";
-		assertEquals(expectedOutput, outContent.toString());
-
-		System.setOut(originalOut);
-	}
-
-	@Test
-	public void writeToFile_WriteContentOnNonEmptyLine_OverwriteContent() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/home/f1";
-
-		fs.createFile(absolutePath);
-
-		fs.writeToFile(absolutePath, 1, "old", false);
-		fs.writeToFile(absolutePath, 1, "new", true);
-
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
-
-		System.setOut(new PrintStream(outContent));
-
-		fs.printFileContent(absolutePath);
-
-		String expectedOutput = "new\n";
-		assertEquals(expectedOutput, outContent.toString());
-
-		System.setOut(originalOut);
-	}
-
-	@Test
-	public void listDirectoryContent_NonExistingDirectory_PrintMessageOnConsole() {
+	public void makeDirectory_AddExistingDirectory_ReturnErrorMessage() {
 		FileSystem fs = new FileSystem();
 
 		String absolutePath = "/home/dir1";
 
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
+		fs.makeDirectory(absolutePath);
+		String result = fs.makeDirectory(absolutePath);
+		String expectedResult = "File already exists!";
 
-		System.setOut(new PrintStream(outContent));
-
-		fs.listDirectoryContent(absolutePath, FilterBy.DEFAULT);
-
-		String expectedOutput = "Directory doesn't exists!\n";
-		assertEquals(expectedOutput, outContent.toString());
-
-		System.setOut(originalOut);
+		assertEquals(expectedResult, result);
 	}
 
 	@Test
-	public void listDirectoryContent_PathDoesNotExists_PrintMessageOnConsole() {
+	public void createTextFile_NewFile_FileAddedInDirectory() {
+		FileSystem fs = new FileSystem();
+
+		String absolutePathToNewFile = "/home/f1";
+
+		String result = fs.createTextFile(absolutePathToNewFile);
+		String expectedResult = null;
+
+		assertEquals(expectedResult, result);
+	}
+
+	@Test
+	public void createTextFile_PathDoesNotExists_ReturnErrorMessage() {
+		FileSystem fs = new FileSystem();
+
+		String absolutePath = "/wrongPath/f1";
+
+		String result = fs.createTextFile(absolutePath);
+		String expectedResult = "Path doesn't exists!";
+
+		assertEquals(expectedResult, result);
+	}
+
+	@Test
+	public void createTextFile_AddExistingFile_ReturnErrorMessage() {
+		FileSystem fs = new FileSystem();
+
+		String absolutePath = "/home/f1";
+
+		fs.createTextFile(absolutePath);
+		String result = fs.createTextFile(absolutePath);
+		String expectedResult = "File already exists!";
+
+		assertEquals(expectedResult, result);
+	}
+
+	@Test
+	public void getTextFileContent_ExistingEmptyFile_ReturnEmptyString() {
+		FileSystem fs = new FileSystem();
+
+		String absolutePath = "/home/f1";
+
+		fs.createTextFile(absolutePath);
+
+		String result = fs.getTextFileContent(absolutePath);
+		String expectedResult = "";
+
+		assertEquals(expectedResult, result);
+	}
+
+	@Test
+	public void getTextFileContent_PathDoesNotExists_ReturnErrorMessage() {
+		FileSystem fs = new FileSystem();
+
+		String absolutePath = "/home/dir1/f1";
+
+		fs.createTextFile(absolutePath);
+		
+		String result = fs.getTextFileContent(absolutePath);
+		String expectedResult = "Path doesn't exists!";
+		
+		assertEquals(expectedResult, result);
+	}
+
+	@Test
+	public void getTextFileContent_FileDoesNotExists_ReturnErrorMessage() {
+		FileSystem fs = new FileSystem();
+
+		String absolutePath = "/home/f1";
+		
+		String result = fs.getTextFileContent(absolutePath);
+		String expectedResult = "File doesn't exists!";
+		
+		assertEquals(expectedResult, result);
+	}
+	
+	@Test
+	public void getTextFileContent_FileIsDirectory_ReturnErrorMessage() {
+		FileSystem fs = new FileSystem();
+		
+		String absolutePath = "/home";
+		
+		String result = fs.getTextFileContent(absolutePath);
+		String expectedResult = "File is directory!";
+		
+		assertEquals(expectedResult, result);
+	}
+	
+
+	@Test
+	public void writeToTextFile_WriteToNonExistingFile_ReturnErrorMessage() {
+		FileSystem fs = new FileSystem();
+
+		String absolutePath = "/home/f1";
+
+		String result = fs.writeToTextFile(absolutePath, 1, "Test", false);
+		String expectedResult = "File doesn't exists!";
+		
+		assertEquals(expectedResult, result);
+	}
+
+	@Test
+	public void writeToTextFile_PathToFileDoesNotExists_ReturnErrorMessage() {
+		FileSystem fs = new FileSystem();
+
+		String absolutePath = "/home/dir1/f1";
+
+		String result = fs.writeToTextFile(absolutePath, 1, "Test", false);
+		String expectedResult = "Path doesn't exists!";
+		
+		assertEquals(expectedResult, result);
+	}
+
+	@Test
+	public void writeToTextFile_WriteToEmptyFile_ContentWrittenToFile() {
+		FileSystem fs = new FileSystem();
+
+		String absolutePath = "/home/f1";
+
+		fs.createTextFile(absolutePath);
+
+		String result = fs.writeToTextFile(absolutePath, 1, "Test", false);
+		String expectedResult = null;
+		
+		assertEquals(expectedResult, result);
+	}
+
+	@Test
+	public void writeToTextFile_FileIsDirectory_ReturnErrorMessage() {
+		FileSystem fs = new FileSystem();
+		
+		String absolutePath = "/home";
+		
+		String result = fs.writeToTextFile(absolutePath, 1, "hello", false);
+		String expectedResult = "File is directory!";
+		
+		assertEquals(expectedResult, result);
+	}
+	
+	@Test
+	public void getDirectoryContent_NonExistingDirectory_ReturnNull() {
+		FileSystem fs = new FileSystem();
+
+		String absolutePath = "/home/dir1";
+
+		List<String> result = fs.getDirectoryContent(absolutePath, FilterBy.DEFAULT);
+		
+		assertEquals(null, result);
+	}
+
+	@Test
+	public void getDirectoryContent_PathDoesNotExists_ReturnNull() {
 		FileSystem fs = new FileSystem();
 
 		String absolutePath = "/home/dir1/dir2";
 
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
+		List<String> result  = fs.getDirectoryContent(absolutePath, FilterBy.DEFAULT);
 
-		System.setOut(new PrintStream(outContent));
-
-		fs.listDirectoryContent(absolutePath, FilterBy.DEFAULT);
-
-		String expectedOutput = "Path doesn't exists!\n";
-		assertEquals(expectedOutput, outContent.toString());
-
-		System.setOut(originalOut);
+		assertEquals(null, result);
 	}
 
 	@Test
-	public void listDirectoryContent_EmptyDirectory_PrintDirectoryContentByDefault() {
+	public void getDirectoryContent_EmptyDirectory_ReturnEmptyList() {
 		FileSystem fs = new FileSystem();
 
 		String absolutePath = "/home";
 
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
+		List<String> result = fs.getDirectoryContent(absolutePath, FilterBy.DEFAULT);
 
-		System.setOut(new PrintStream(outContent));
-
-		fs.listDirectoryContent(absolutePath, FilterBy.DEFAULT);
-
-		String expectedOutput = "Directories:\n\nFiles:\n\n";
-		assertEquals(expectedOutput, outContent.toString());
-
-		System.setOut(originalOut);
-	}
-
-	@Test
-	public void listDirectoryContent_EmptyDirectory_PrintDirectoryContentBySize() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/home";
-
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		PrintStream originalOut = System.out;
-
-		System.setOut(new PrintStream(outContent));
-
-		fs.listDirectoryContent(absolutePath, FilterBy.SIZE_DESCENDING);
-
-		String expectedOutput = "Files:\n\nDirectories:\n\n";
-		assertEquals(expectedOutput, outContent.toString());
-
-		System.setOut(originalOut);
+		assertEquals(0, result.size());
 	}
 }

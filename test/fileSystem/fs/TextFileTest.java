@@ -4,10 +4,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class FileTest {
+public class TextFileTest {
 	@Test
 	public void write_WriteContentOnNewLine_NewContentWrittenOnTheLine() {
-		File file = new File("test");
+		TextFile file = new TextFile("test");
 
 		int lineNumber = 1;
 		String lineContent = "New line";
@@ -15,13 +15,13 @@ public class FileTest {
 
 		file.write(lineNumber, lineContent, false);
 
-		assertEquals(lineContent, file.getContent().get(lineNumber));
+		assertEquals(lineContent + System.lineSeparator(), file.getContent());
 		assertEquals(expectedSize, file.getSize());
 	}
 
 	@Test
 	public void write_AppendContent_ContentAppendedToExistingContent() {
-		File file = new File("test");
+		TextFile file = new TextFile("test");
 
 		int lineNumber = 1;
 		String lineContent = "Existing content";
@@ -37,13 +37,13 @@ public class FileTest {
 
 		file.write(lineNumber, lineContent, false);
 
-		assertEquals(expectedContent, file.getContent().get(lineNumber));
+		assertEquals(expectedContent + System.lineSeparator(), file.getContent());
 		assertEquals(expectedSize, file.getSize());
 	}
 
 	@Test
 	public void write_OverwriteLine_OnlyTheNewContentIsInTheLine() {
-		File file = new File("test");
+		TextFile file = new TextFile("test");
 
 		int lineNumber = 1;
 		String lineContent = "Current content";
@@ -57,25 +57,39 @@ public class FileTest {
 
 		file.write(lineNumber, lineContent, true);
 
-		assertEquals(expectedContent, file.getContent().get(lineNumber));
+		assertEquals(expectedContent + System.lineSeparator(), file.getContent());
+		assertEquals(expectedSize, file.getSize());
+	}
+	
+	@Test
+	public void write_OverwriteEmptyLine_NewContentWrittenToTheLine() {
+		TextFile file = new TextFile("test");
+		
+		String newContent = "Hello world";
+		
+		file.write(1, newContent, true);
+		
+		int expectedSize = newContent.length() + 1;
+	
+		assertEquals(newContent + System.lineSeparator(), file.getContent());
 		assertEquals(expectedSize, file.getSize());
 	}
 
 	@Test
-	public void printContent_SingleLineContent_ContentReturnedAsString() {
-		File file = new File("test");
+	public void getContent_SingleLineContent_ContentReturnedAsString() {
+		TextFile file = new TextFile("test");
 
 		file.write(1, "Hello", false);
 		
-		String result = file.printContent();
+		String result = file.getContent();
 		String expectedResult = "Hello" + System.lineSeparator();
 		
 		assertEquals(expectedResult, result);
 	}
 
 	@Test
-	public void printContent_SeveralConsecutiveLines_ContentReturnedAsString() {
-		File file = new File("test");
+	public void getContent_SeveralConsecutiveLines_ContentReturnedAsString() {
+		TextFile file = new TextFile("test");
 		StringBuilder expectedResult = new StringBuilder();
 		String newLine = System.lineSeparator();
 		
@@ -86,14 +100,14 @@ public class FileTest {
 		file.write(3, "Hello Again", false);
 		expectedResult.append("Hello Again" + newLine);
 
-		String result = file.printContent();
+		String result = file.getContent();
 
 		assertEquals(expectedResult.toString(),result);
 	}
 
 	@Test
-	public void printContent_TwoContentLinesWithGapInbetween_ContentPrintedOnConsole() {
-		File file = new File("test");
+	public void getContent_TwoContentLinesWithGapInbetween_ContentReturnedAsString() {
+		TextFile file = new TextFile("test");
 		StringBuilder expectedResult = new StringBuilder();
 		String newLine = System.lineSeparator();
 		
@@ -103,14 +117,14 @@ public class FileTest {
 		file.write(3, "Again", false);
 		expectedResult.append("Again" + newLine);
 
-		String result = file.printContent();
+		String result = file.getContent();
 
 		assertEquals(expectedResult.toString(), result);
 	}
 	
 	@Test
-	public void printContent_SeveralContentLinesWithGapInbetween_ContentPrintedOnConsole() {
-		File file = new File("test");
+	public void getContent_SeveralContentLinesWithGapInbetween_ContentReturnedAsString() {
+		TextFile file = new TextFile("test");
 		StringBuilder expectedResult = new StringBuilder();
 		String newLine = System.lineSeparator();
 		
@@ -131,8 +145,19 @@ public class FileTest {
 		file.write(8, "World", false);
 		expectedResult.append("World" + newLine);
 
-		String result = file.printContent();
+		String result = file.getContent();
 
 		assertEquals(expectedResult.toString(), result);
+	}
+	
+	@Test
+	public void getContent_EmptyFile_ReturnedEmptyString() {
+		TextFile file = new TextFile("test");
+		
+		String result = file.getContent();
+		String expectedResult = "";
+		
+		assertEquals(expectedResult, result);
+		assertEquals(0, file.getSize());
 	}
 }

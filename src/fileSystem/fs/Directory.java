@@ -6,108 +6,88 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
 
-public class Directory {
-	private Directory parent;
-	private String name;
-	private TreeMap<String, Directory> subDirectories;
-	private TreeMap<String, File> files;
+public class Directory extends File {
+	private TreeMap<String, File> content;
 
 	public Directory(String name) {
-		parent = null;
-		this.name = name;
-		subDirectories = new TreeMap<String, Directory>();
-		files = new TreeMap<String, File>();
+		super(name);
+		content = new TreeMap<String, File>();
+		setUpContent(this);
 	}
 
 	public Directory(String name, Directory parent) {
-		this.parent = parent;
-		this.name = name;
-		subDirectories = new TreeMap<String, Directory>();
-		files = new TreeMap<String, File>();
+		super(name);
+		content = new TreeMap<String, File>();
+		setUpContent(parent);
 	}
 
-	public Directory getParent() {
-		return parent;
+	@Override
+	int getSize() {
+		int size = 0;
+
+		for (String name : content.keySet()) {
+			if (!name.equals(".") && !name.equals("..")) {
+				size += content.get(name).getSize();
+			}
+		}
+
+		return size;
 	}
 
-	public String getName() {
-		return name;
+	@Override
+	boolean isDirectory() {
+		return true;
 	}
 
-	public TreeMap<String, Directory> getSubDirectories() {
-		return subDirectories;
+	@Override
+	boolean isTextFile() {
+		return false;
 	}
-
-	public TreeMap<String, File> getFiles() {
-		return files;
-	}
-
-	public String addFile(String name) {
-		if (files.get(name) == null && subDirectories.get(name) == null) {
-			File file = new File(name);
-			files.put(name, file);
+	
+	public String addFile(File file) {
+		if (content.get(file.getName()) == null) {
+			content.put(file.getName(), file);
 			return null;
 		}
+
+		return "File already exists!";
+	}
 		
-		return "There is already file or directory with such name!" + System.lineSeparator();
+	public File getFile(String name) {
+		return content.get(name);
 	}
 
-	public void addSubDirectory(String name) {
-		if (subDirectories.get(name) == null) {
-			Directory newSubDirectory = new Directory(name, this);
-			subDirectories.put(name, newSubDirectory);
-		} else {
-			System.out.println("There is already directory with such name!");
-		}
-	}
-
-	public void listContent(FilterBy option) {
-		if (option == FilterBy.DEFAULT) {
-			listContent();
-		} else {
-			listContentSortedByFilter(option);
-		}
-	}
-
-	private void listContent() {
-		System.out.println("Directories:");
-		for (String name : subDirectories.keySet()) {
-			System.out.print(name + " ");
-		}
-		System.out.println();
-
-		System.out.println("Files:");
-		for (String name : files.keySet()) {
-			System.out.print(name + " ");
-		}
-		System.out.println();
-	}
-
-	private void listContentSortedByFilter(FilterBy option) {
+	public List<String> getContent(FilterBy option) {
 		List<File> list = new ArrayList<File>();
 
-		for (String name : files.keySet()) {
-			list.add(files.get(name));
+		for (String fileName : content.keySet()) {
+			if(!fileName.equals(".") && !fileName.equals("..")) {
+				list.add(content.get(fileName));
+			}
 		}
 
 		Collections.sort(list, getComparator(option));
 
-		System.out.println("Files:");
-		for (File file : list) {
-			System.out.print(file.getName() + " ");
+		List<String> result = new ArrayList<String>();
+		
+		for(int i = 0; i < list.size(); i++) {
+			result.add(list.get(i).getName());
 		}
-		System.out.println();
-
-		System.out.println("Directories:");
-		for (String name : subDirectories.keySet()) {
-			System.out.print(name + " ");
-		}
-		System.out.println();
+		
+		return result;
 	}
 
 	private Comparator<File> getComparator(FilterBy option) {
-		// if (option == FilterBy.SIZE_DESCENDING)
-		Comparator<File> compareBySize = (File f1, File f2) -> Integer.compare(f2.getSize(), f1.getSize());
-		return compareBySize;
+		if (option == FilterBy.SIZE_DESCENDING) {
+			return (f1, f2) -> Integer.compare(f2.getSize(), f1.getSize());
+		}
+
+		// Default sort
+		return (f1, f2) -> f1.getName().compareTo(f2.getName());
+	}
+
+	private void setUpContent(Directory parent) {
+		content.put(".", this);
+		content.put("..", parent);
 	}
 }
