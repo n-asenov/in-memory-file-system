@@ -27,7 +27,7 @@ public class ListDirectoryContentTest {
 	}
 
 	@Test
-	public void execute_listEmptyDirectory_ReturnEmptyArray() {
+	public void execute_listEmptyDirectory_ReturnEmptyString() {
 		ListDirectoryContent ls = new ListDirectoryContent(new FileSystem());
 
 		List<String> options = new ArrayList<String>();
