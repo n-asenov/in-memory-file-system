@@ -3,5 +3,5 @@ package fileSystem.commands;
 import java.util.List;
 
 public interface Command {
-	public void execute(List<String> options, List<String> arguments);
+	public String execute(List<String> options, List<String> arguments);
 }
