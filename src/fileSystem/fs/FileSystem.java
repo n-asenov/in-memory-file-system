@@ -80,22 +80,34 @@ public class FileSystem implements AbstractFileSystem {
 	}
 
 	@Override
-	public List<String> getDirectoryContent(String absolutePath, FilterBy option) {
+	public String getDirectoryContent(String absolutePath, FilterBy option) {
 		Directory workDirectory = goToWorkDirectory(absolutePath);
 
 		if (workDirectory == null) {
-			return null;
+			return "Path doesn't exists!";
 		}
 
 		File file = workDirectory.getFile(getCurrentFile(absolutePath));
 
-		if (file == null || file.isTextFile()) {
-			return null;
+		if (file == null) {
+			return "File doesn't exists!";
 		}
-		
+
+		if (file.isTextFile()) {
+			return "File is text file!";
+		}
+
 		Directory directory = (Directory) file;
-		
-		return directory.getContent(option);
+
+		List<String> content = directory.getContent(option);
+		StringBuilder result = new StringBuilder();
+
+		for (String fileName : content) {
+			result.append(fileName);
+			result.append(" ");
+		}
+
+		return result.toString();
 	}
 
 	private Directory goToWorkDirectory(String absolutePath) {
@@ -103,20 +115,27 @@ public class FileSystem implements AbstractFileSystem {
 
 		String[] pathSpliteedByDirectories = absolutePath.split("/");
 
-		for (int i = 1; i < pathSpliteedByDirectories.length - 1; i++) {
-			File next = workDirectory.getFile(pathSpliteedByDirectories[i]);
+		if (pathSpliteedByDirectories.length != 0) {
+			for (int i = 1; i < pathSpliteedByDirectories.length - 1; i++) {
+				File next = workDirectory.getFile(pathSpliteedByDirectories[i]);
 
-			if (next == null || !next.isDirectory()) {
-				return null;
+				if (next == null || !next.isDirectory()) {
+					return null;
+				}
+
+				workDirectory = (Directory) next;
 			}
-
-			workDirectory = (Directory) next;
 		}
 
 		return workDirectory;
 	}
 
 	private String getCurrentFile(String absolutePath) {
-		return absolutePath.substring(absolutePath.lastIndexOf('/') + 1);
+		String[] path = absolutePath.split("/");
+		if (path.length == 0) {
+			return ".";
+		}
+		
+		return path[path.length - 1];
 	}
 }

@@ -2,8 +2,6 @@ package fileSystem.fs;
 
 import static org.junit.Assert.*;
 
-import java.util.List;
-
 import org.junit.Test;
 
 public class FileSystemTest {
@@ -36,7 +34,7 @@ public class FileSystemTest {
 	public void makeDirectory_AddExistingDirectory_ReturnErrorMessage() {
 		FileSystem fs = new FileSystem();
 
-		String absolutePath = "/home/dir1";
+		String absolutePath = "/";
 
 		fs.makeDirectory(absolutePath);
 		String result = fs.makeDirectory(absolutePath);
@@ -186,35 +184,49 @@ public class FileSystemTest {
 	}
 	
 	@Test
-	public void getDirectoryContent_NonExistingDirectory_ReturnNull() {
+	public void getDirectoryContent_NonExistingDirectory_ReturnErrorMessage() {
 		FileSystem fs = new FileSystem();
 
 		String absolutePath = "/home/dir1";
 
-		List<String> result = fs.getDirectoryContent(absolutePath, FilterBy.DEFAULT);
+		String result = fs.getDirectoryContent(absolutePath, FilterBy.DEFAULT);
+		String expectedResult = "File doesn't exists!";
 		
-		assertEquals(null, result);
+		assertEquals(expectedResult, result);
 	}
 
 	@Test
-	public void getDirectoryContent_PathDoesNotExists_ReturnNull() {
+	public void getDirectoryContent_PathDoesNotExists_ReturnErrorMessage() {
 		FileSystem fs = new FileSystem();
 
-		String absolutePath = "/home/dir1/dir2";
+		String absolutePath = "/home/dir1/dir2/";
 
-		List<String> result  = fs.getDirectoryContent(absolutePath, FilterBy.DEFAULT);
-
-		assertEquals(null, result);
+		String result  = fs.getDirectoryContent(absolutePath, FilterBy.DEFAULT);
+		String expectedResult = "Path doesn't exists!";
+		
+		assertEquals(expectedResult, result);
 	}
 
 	@Test
-	public void getDirectoryContent_EmptyDirectory_ReturnEmptyList() {
+	public void getDirectoryContent_EmptyDirectory_ReturnEmptyString() {
 		FileSystem fs = new FileSystem();
 
 		String absolutePath = "/home";
 
-		List<String> result = fs.getDirectoryContent(absolutePath, FilterBy.DEFAULT);
+		String result = fs.getDirectoryContent(absolutePath, FilterBy.DEFAULT);
 
-		assertEquals(0, result.size());
+		assertEquals("", result);
+	}
+	
+	@Test
+	public void getDirectoryContent_RootDirectory_ReturnRootContent() {
+		FileSystem fs = new FileSystem();
+
+		String absolutePath = "/";
+
+		String result = fs.getDirectoryContent(absolutePath, FilterBy.DEFAULT);
+		String expectedResult = "home ";
+		
+		assertEquals(expectedResult, result);
 	}
 }
