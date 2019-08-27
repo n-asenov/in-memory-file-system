@@ -16,7 +16,7 @@ public class TextFile extends File {
 	int getSize() {
 		return size;
 	}
-	
+
 	@Override
 	boolean isDirectory() {
 		return false;
@@ -45,12 +45,18 @@ public class TextFile extends File {
 		return fileContent.toString();
 	}
 
-	public void write(int lineNumber, String lineContent, boolean overwrite) {
+	public String write(int lineNumber, String lineContent, boolean overwrite) {
+		if (lineNumber <= 0) {
+			return "Invalid line number!";
+		}
+
 		if (!overwrite) {
 			append(lineNumber, lineContent);
 		} else {
 			overwrite(lineNumber, lineContent);
 		}
+
+		return null;
 	}
 
 	private void append(int lineNumber, String lineContent) {
@@ -72,8 +78,7 @@ public class TextFile extends File {
 
 		if (currentContent != null) {
 			size -= currentContent.length();
-		}
-		else {
+		} else {
 			size++;
 		}
 
