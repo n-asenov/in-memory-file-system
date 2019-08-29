@@ -33,7 +33,7 @@ public class CreateTextFileTest {
 		arguments.add(fileName);
 		
 		String result = command.execute(options, arguments);
-		String expectedResult = "Cannot create text file: " + fileName + " : File already exists!" + System.lineSeparator();
+		String expectedResult = "Cannot create text file: " + fileName + " : File already exists!";
 		
 		assertEquals(expectedResult, result);
 	}
@@ -48,7 +48,7 @@ public class CreateTextFileTest {
 		arguments.add(file);
 		
 		String result = command.execute(options, arguments);
-		String expectedResult =  "Cannot create text file: " + file + " : Path doesn't exists!" + System.lineSeparator();
+		String expectedResult =  "Cannot create text file: " + file + " : Path doesn't exists!";
 	
 		assertEquals(expectedResult, result);
 	}

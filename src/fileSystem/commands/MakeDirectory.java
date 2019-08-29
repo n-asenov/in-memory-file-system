@@ -2,12 +2,12 @@ package fileSystem.commands;
 
 import java.util.List;
 
-import fileSystem.fs.FileSystem;
+import fileSystem.fs.AbstractFileSystem;
 
 public class MakeDirectory implements Command {
-	private FileSystem fs;
+	private AbstractFileSystem fs;
 
-	public MakeDirectory(FileSystem fs) {
+	public MakeDirectory(AbstractFileSystem fs) {
 		this.fs = fs;
 	}
 
@@ -26,7 +26,6 @@ public class MakeDirectory implements Command {
 				results.append("Cannot create directory: ");
 				results.append(argument + " : ");
 				results.append(result);
-				results.append(System.lineSeparator());
 			}
 		}
 

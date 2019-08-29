@@ -2,12 +2,12 @@ package fileSystem.commands;
 
 import java.util.List;
 
-import fileSystem.fs.FileSystem;
+import fileSystem.fs.AbstractFileSystem;
 
 public class PrintTextFileContent implements Command {
-	private FileSystem fs;
+	private AbstractFileSystem fs;
 
-	public PrintTextFileContent(FileSystem fs) {
+	public PrintTextFileContent(AbstractFileSystem fs) {
 		this.fs = fs;
 	}
 

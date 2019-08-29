@@ -46,7 +46,7 @@ public class MakeDirectoryTest {
 		arguments.add(dir);
 
 		String result = mkdir.execute(options, arguments);
-		String expectedResult = "Cannot create directory: " + dir + " : File already exists!" + System.lineSeparator();
+		String expectedResult = "Cannot create directory: " + dir + " : File already exists!";
 
 		assertEquals(expectedResult, result);
 	}
@@ -61,7 +61,7 @@ public class MakeDirectoryTest {
 		arguments.add(dir);
 		
 		String result = mkdir.execute(options, arguments);
-		String expectedResult = "Cannot create directory: " + dir + " : Path doesn't exists!" + System.lineSeparator();
+		String expectedResult = "Cannot create directory: " + dir + " : Path doesn't exists!";
 	
 		assertEquals(expectedResult, result);
 	}

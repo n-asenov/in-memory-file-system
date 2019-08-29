@@ -2,12 +2,12 @@ package fileSystem.commands;
 
 import java.util.List;
 
-import fileSystem.fs.FileSystem;;
+import fileSystem.fs.AbstractFileSystem;
 
 public class CreateTextFile implements Command {
-	private FileSystem fs;
+	private AbstractFileSystem fs;
 	
-	public CreateTextFile(FileSystem fs) {
+	public CreateTextFile(AbstractFileSystem fs) {
 		this.fs = fs;
 	}	
 	
@@ -26,7 +26,6 @@ public class CreateTextFile implements Command {
 				results.append("Cannot create text file: ");
 				results.append(argument + " : ");
 				results.append(result);
-				results.append(System.lineSeparator());
 			}
 		}
 

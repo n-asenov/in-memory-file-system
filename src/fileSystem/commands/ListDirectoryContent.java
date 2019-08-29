@@ -2,13 +2,13 @@ package fileSystem.commands;
 
 import java.util.List;
 
-import fileSystem.fs.FileSystem;
+import fileSystem.fs.AbstractFileSystem;
 import fileSystem.fs.FilterBy;
 
 public class ListDirectoryContent implements Command {
-	private FileSystem fs;
+	private AbstractFileSystem fs;
 
-	public ListDirectoryContent(FileSystem fs) {
+	public ListDirectoryContent(AbstractFileSystem fs) {
 		this.fs = fs;
 	}
 
@@ -17,18 +17,21 @@ public class ListDirectoryContent implements Command {
 		FilterBy flag = FilterBy.DEFAULT;
 
 		for (String option : options) {
-			if(!option.equals("sortedDesc")) {
+			if (!option.equals("-sortedDesc")) {
 				return "Invalid option!";
 			}
 			flag = FilterBy.SIZE_DESCENDING;
 		}
-		
-		StringBuilder result = new StringBuilder();
 
-		for (String directory : arguments) {
-			result.append(fs.getDirectoryContent(directory, flag));
+		StringBuilder result = new StringBuilder();
+		int size = arguments.size() - 1;
+		
+		for (int i = 0; i < size; i++) {
+			result.append(fs.getDirectoryContent(arguments.get(i), flag));
 			result.append(System.lineSeparator());
 		}
+
+		result.append(fs.getDirectoryContent(arguments.get(size), flag));
 
 		return result.toString();
 	}

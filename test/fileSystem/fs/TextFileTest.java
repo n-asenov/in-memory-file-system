@@ -26,7 +26,7 @@ public class TextFileTest {
 		int expectedSize = lineContent.length() + 1;
 
 		assertEquals(null, file.write(lineNumber, lineContent, false));
-		assertEquals(lineContent + System.lineSeparator(), file.getContent());
+		assertEquals(lineContent, file.getContent());
 		assertEquals(expectedSize, file.getSize());
 	}
 
@@ -47,7 +47,7 @@ public class TextFileTest {
 		expectedSize += lineContent.length();
 
 		assertEquals(null, file.write(lineNumber, lineContent, false));
-		assertEquals(expectedContent + System.lineSeparator(), file.getContent());
+		assertEquals(expectedContent, file.getContent());
 		assertEquals(expectedSize, file.getSize());
 	}
 
@@ -66,7 +66,7 @@ public class TextFileTest {
 		int expectedSize = lineContent.length() + 1;
 
 		assertEquals(null, file.write(lineNumber, lineContent, true));
-		assertEquals(expectedContent + System.lineSeparator(), file.getContent());
+		assertEquals(expectedContent, file.getContent());
 		assertEquals(expectedSize, file.getSize());
 	}
 
@@ -80,7 +80,7 @@ public class TextFileTest {
 
 		int expectedSize = newContent.length() + 1;
 
-		assertEquals(newContent + System.lineSeparator(), file.getContent());
+		assertEquals(newContent, file.getContent());
 		assertEquals(expectedSize, file.getSize());
 	}
 
@@ -91,7 +91,7 @@ public class TextFileTest {
 		file.write(1, "Hello", false);
 
 		String result = file.getContent();
-		String expectedResult = "Hello" + System.lineSeparator();
+		String expectedResult = "Hello";
 
 		assertEquals(expectedResult, result);
 	}
@@ -107,7 +107,7 @@ public class TextFileTest {
 		file.write(2, "Hello, World", false);
 		expectedResult.append("Hello, World" + newLine);
 		file.write(3, "Hello Again", false);
-		expectedResult.append("Hello Again" + newLine);
+		expectedResult.append("Hello Again");
 
 		String result = file.getContent();
 
@@ -124,7 +124,7 @@ public class TextFileTest {
 		expectedResult.append("Hello" + newLine);
 		expectedResult.append(newLine); // empty line between line 1 and 3
 		file.write(3, "Again", false);
-		expectedResult.append("Again" + newLine);
+		expectedResult.append("Again");
 
 		String result = file.getContent();
 
@@ -152,7 +152,7 @@ public class TextFileTest {
 		expectedResult.append(newLine);
 
 		file.write(8, "World", false);
-		expectedResult.append("World" + newLine);
+		expectedResult.append("World");
 
 		String result = file.getContent();
 

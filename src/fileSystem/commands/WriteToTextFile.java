@@ -2,12 +2,12 @@ package fileSystem.commands;
 
 import java.util.List;
 
-import fileSystem.fs.FileSystem;
+import fileSystem.fs.AbstractFileSystem;
 
 public class WriteToTextFile implements Command {
-	private FileSystem fs;
+	private AbstractFileSystem fs;
 
-	public WriteToTextFile(FileSystem fs) {
+	public WriteToTextFile(AbstractFileSystem fs) {
 		this.fs = fs;
 	}
 
@@ -16,7 +16,7 @@ public class WriteToTextFile implements Command {
 		boolean overwrite = false;
 
 		for (String option : options) {
-			if (!option.equals("overwrite")) {
+			if (!option.equals("-overwrite")) {
 				return "Invalid option!";
 			}
 			overwrite = true;

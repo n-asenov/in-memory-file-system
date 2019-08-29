@@ -34,7 +34,7 @@ public class ListDirectoryContentTest {
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("/home");
 		
-		assertEquals("" + System.lineSeparator(), ls.execute(options, arguments));
+		assertEquals("", ls.execute(options, arguments));
 	}
 	
 	@Test
@@ -47,7 +47,7 @@ public class ListDirectoryContentTest {
 		arguments.add("/home");
 		
 		String result = ls.execute(options, arguments);
-		String expectedResult = "home " + System.lineSeparator() + System.lineSeparator();
+		String expectedResult = "home " + System.lineSeparator();
 		
 		assertEquals(expectedResult, result);
 	}
@@ -57,12 +57,12 @@ public class ListDirectoryContentTest {
 		ListDirectoryContent ls = new ListDirectoryContent(new FileSystem());
 
 		List<String> options = new ArrayList<String>();
-		options.add("sortedDesc");
+		options.add("-sortedDesc");
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("/");
 		
 		String result = ls.execute(options, arguments);
-		String expectedResult = "home " + System.lineSeparator();
+		String expectedResult = "home ";
 		
 		assertEquals(expectedResult, result);
 	}

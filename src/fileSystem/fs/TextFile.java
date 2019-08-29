@@ -31,7 +31,7 @@ public class TextFile extends File {
 		StringBuilder fileContent = new StringBuilder();
 
 		if (content.size() != 0) {
-			for (int i = 1; i <= content.lastKey(); i++) {
+			for (int i = 1; i <= content.lastKey() - 1; i++) {
 				String lineContent = content.get(i);
 				if (lineContent == null) {
 					fileContent.append(System.lineSeparator());
@@ -40,6 +40,7 @@ public class TextFile extends File {
 					fileContent.append(System.lineSeparator());
 				}
 			}
+			fileContent.append(content.get(content.lastKey()));
 		}
 
 		return fileContent.toString();
