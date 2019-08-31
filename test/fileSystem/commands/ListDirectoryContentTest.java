@@ -7,13 +7,14 @@ import java.util.List;
 
 import org.junit.Test;
 
+import fileSystem.Path;
 import fileSystem.fs.FileSystem;
 
 public class ListDirectoryContentTest {
 
 	@Test
 	public void execute_CommandWithInvalidOptions_ReturnInvalidOptionMessage() {
-		ListDirectoryContent ls = new ListDirectoryContent(new FileSystem());
+		ListDirectoryContent ls = new ListDirectoryContent(new FileSystem(), new Path());
 
 		List<String> options = new ArrayList<String>();
 		options.add("al");
@@ -28,7 +29,7 @@ public class ListDirectoryContentTest {
 
 	@Test
 	public void execute_listEmptyDirectory_ReturnEmptyString() {
-		ListDirectoryContent ls = new ListDirectoryContent(new FileSystem());
+		ListDirectoryContent ls = new ListDirectoryContent(new FileSystem(), new Path());
 
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
@@ -39,7 +40,7 @@ public class ListDirectoryContentTest {
 	
 	@Test
 	public void execute_listTwoDirectories_ReturnContetnOfDirectories() {
-		ListDirectoryContent ls = new ListDirectoryContent(new FileSystem());
+		ListDirectoryContent ls = new ListDirectoryContent(new FileSystem(), new Path());
 
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
@@ -54,7 +55,7 @@ public class ListDirectoryContentTest {
 	
 	@Test
 	public void execute_listDirectoryWithSortedDescOption_ReturnContentSortedDesc() {
-		ListDirectoryContent ls = new ListDirectoryContent(new FileSystem());
+		ListDirectoryContent ls = new ListDirectoryContent(new FileSystem(), new Path());
 
 		List<String> options = new ArrayList<String>();
 		options.add("-sortedDesc");
@@ -65,5 +66,21 @@ public class ListDirectoryContentTest {
 		String expectedResult = "home ";
 		
 		assertEquals(expectedResult, result);
+	}
+	
+	@Test
+	public void execute_listDirectoryWithRelativePath_ReturnContentOfDirectory() {
+		FileSystem fs = new FileSystem();
+		fs.makeDirectory("/home/dir1");
+		fs.makeDirectory("/home/dir1/dir2");
+		fs.makeDirectory("/home/dir1/dir3");
+		
+		ListDirectoryContent ls = new ListDirectoryContent(fs, new Path());
+
+		List<String> options = new ArrayList<String>();
+		List<String> arguments = new ArrayList<String>();
+		arguments.add("dir1");
+
+		assertEquals("dir2 dir3 ", ls.execute(options, arguments));
 	}
 }
