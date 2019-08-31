@@ -2,25 +2,28 @@ package fileSystem.commands;
 
 import java.util.List;
 
+import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
 
 public class MakeDirectory implements Command {
 	private AbstractFileSystem fs;
-
-	public MakeDirectory(AbstractFileSystem fs) {
+	private Path currentDirectory;
+	
+	public MakeDirectory(AbstractFileSystem fs, Path currentDirectory) {
 		this.fs = fs;
+		this.currentDirectory = currentDirectory;
 	}
 
 	@Override
 	public String execute(List<String> options, List<String> arguments) {
 		if (options.size() != 0) {
-			return "Invalid option";
+			return "Invalid option!";
 		}
 
 		StringBuilder results = new StringBuilder();
 
 		for (String argument : arguments) {
-			String result = fs.makeDirectory(argument);
+			String result = fs.makeDirectory(currentDirectory.getAbsolutePath(argument));
 			
 			if (result != null) {
 				results.append("Cannot create directory: ");
