@@ -229,4 +229,40 @@ public class FileSystemTest {
 		
 		assertEquals(expectedResult, result);
 	}
+	
+	@Test
+	public void isDirectory_ExistingDirectory_ReturnNull() {
+		FileSystem fs = new FileSystem();
+		
+		assertEquals(null, fs.isDirectory("/home"));
+	}
+	
+	@Test
+	public void isDirectory_Root_ReturnNull() {
+		FileSystem fs = new FileSystem();
+		
+		assertEquals(null, fs.isDirectory("/"));
+	}
+	
+	@Test
+	public void isDirectory_DirectoryWithWrongPath_ReturnPathDoesNotExistsMessage() {
+		FileSystem fs = new FileSystem();
+		
+		assertEquals("Path doesn't exists!", fs.isDirectory("/home/dir1/dir2"));
+	}
+	
+	@Test
+	public void isDirectory_NonExistentDirectory_ReturnFileDoesNotExistsMessage() {
+		FileSystem fs = new FileSystem();
+		
+		assertEquals("File doesn't exists!", fs.isDirectory("/home/dir1"));
+	}
+	
+	@Test
+	public void isDirectory_FileIsNotDirectory_ReturnFileIsNotDirectoryMessage() {
+		FileSystem fs = new FileSystem();
+		fs.createTextFile("/home/f1");
+		
+		assertEquals("File is text file!", fs.isDirectory("/home/f1"));
+	}
 }

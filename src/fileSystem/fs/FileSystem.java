@@ -109,6 +109,27 @@ public class FileSystem implements AbstractFileSystem {
 
 		return result.toString();
 	}
+	
+	@Override
+	public String isDirectory(String absolutePath) {
+		Directory workDirectory = goToWorkDirectory(absolutePath);
+
+		if (workDirectory == null) {
+			return "Path doesn't exists!";
+		}
+		
+		File file = workDirectory.getFile(getCurrentFile(absolutePath));
+
+		if (file == null) {
+			return "File doesn't exists!";
+		}
+
+		if (file.isTextFile()) {
+			return "File is text file!";
+		}
+		
+		return null;
+	}
 
 	private Directory goToWorkDirectory(String absolutePath) {
 		Directory workDirectory = root;
