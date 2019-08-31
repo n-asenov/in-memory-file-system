@@ -2,13 +2,16 @@ package fileSystem.commands;
 
 import java.util.List;
 
+import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
 
 public class WriteToTextFile implements Command {
 	private AbstractFileSystem fs;
-
-	public WriteToTextFile(AbstractFileSystem fs) {
+	private Path currentDirectory;
+	
+	public WriteToTextFile(AbstractFileSystem fs, Path currentDirectory) {
 		this.fs = fs;
+		this.currentDirectory = currentDirectory;
 	}
 
 	@Override
@@ -30,7 +33,7 @@ public class WriteToTextFile implements Command {
 			return "Second argument must be a positive number!";
 		}
 
-		String absolutePath = arguments.get(0);
+		String absolutePath = currentDirectory.getAbsolutePath(arguments.get(0));
 		int line = Integer.parseInt(arguments.get(1));
 		String lineContent = arguments.get(2);
 

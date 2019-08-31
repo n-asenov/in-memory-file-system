@@ -7,13 +7,14 @@ import java.util.List;
 
 import org.junit.Test;
 
+import fileSystem.Path;
 import fileSystem.fs.FileSystem;
 
 public class WriteToTextFileTest {
 
 	@Test
 	public void execute_CommandWithInvalidOption_ReturnInvalidOptionMessage() {
-		WriteToTextFile command = new WriteToTextFile(new FileSystem());
+		WriteToTextFile command = new WriteToTextFile(new FileSystem(), new Path());
 
 		List<String> options = new ArrayList<String>();
 		options.add("append");
@@ -27,7 +28,7 @@ public class WriteToTextFileTest {
 
 	@Test
 	public void execute_CommandWithInvalidNumberOfArguments_ReturnInvalidNumberOfArgumentsMessage() {
-		WriteToTextFile command = new WriteToTextFile(new FileSystem());
+		WriteToTextFile command = new WriteToTextFile(new FileSystem(), new Path());
 
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
@@ -41,7 +42,7 @@ public class WriteToTextFileTest {
 
 	@Test
 	public void execute_CommnadWithWrongSecondArgument_ReturnSecondArgumentErrorMessage() {
-		WriteToTextFile command = new WriteToTextFile(new FileSystem());
+		WriteToTextFile command = new WriteToTextFile(new FileSystem(), new Path());
 
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
@@ -60,7 +61,7 @@ public class WriteToTextFileTest {
 		FileSystem fs = new FileSystem();
 		fs.createTextFile("/home/f1");
 
-		WriteToTextFile command = new WriteToTextFile(fs);
+		WriteToTextFile command = new WriteToTextFile(fs, new Path());
 
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
@@ -79,12 +80,31 @@ public class WriteToTextFileTest {
 		FileSystem fs = new FileSystem();
 		fs.createTextFile("/home/f1");
 
-		WriteToTextFile command = new WriteToTextFile(fs);
+		WriteToTextFile command = new WriteToTextFile(fs, new Path());
 
 		List<String> options = new ArrayList<String>();
-		options.add("overwrite");
+		options.add("-overwrite");
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("/home/f1");
+		arguments.add("2");
+		arguments.add("Hello, World!");
+
+		String result = command.execute(options, arguments);
+		String expectedResult = null;
+
+		assertEquals(expectedResult, result);
+	}
+	
+	@Test
+	public void execute_ValidCommandWithRelativePath_WriteContentToTextFile() {
+		FileSystem fs = new FileSystem();
+		fs.createTextFile("/home/f1");
+
+		WriteToTextFile command = new WriteToTextFile(fs, new Path());
+
+		List<String> options = new ArrayList<String>();
+		List<String> arguments = new ArrayList<String>();
+		arguments.add("f1");
 		arguments.add("2");
 		arguments.add("Hello, World!");
 
