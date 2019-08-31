@@ -38,7 +38,7 @@ public class WriteToTextFileTest {
 
 		assertEquals(expectedResult, result);
 	}
-	
+
 	@Test
 	public void execute_CommnadWithWrongSecondArgument_ReturnSecondArgumentErrorMessage() {
 		WriteToTextFile command = new WriteToTextFile(new FileSystem());
@@ -54,44 +54,43 @@ public class WriteToTextFileTest {
 
 		assertEquals(expectedResult, result);
 	}
-	
-	@Test 
+
+	@Test
 	public void execute_ValidCommandWithNoOption_WriteContentToTextFile() {
-		FileSystem  fs = new FileSystem();
+		FileSystem fs = new FileSystem();
 		fs.createTextFile("/home/f1");
-		
+
 		WriteToTextFile command = new WriteToTextFile(fs);
-		
+
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("/home/f1");
 		arguments.add("2");
 		arguments.add("Hello, World!");
-		
+
 		String result = command.execute(options, arguments);
 		String expectedResult = null;
-		
+
 		assertEquals(expectedResult, result);
 	}
-	
+
 	@Test
 	public void execute_ValidCommandWithOverwriteOption_WriteContentToTextFile() {
-		FileSystem  fs = new FileSystem();
+		FileSystem fs = new FileSystem();
 		fs.createTextFile("/home/f1");
-		
+
 		WriteToTextFile command = new WriteToTextFile(fs);
-		
+
 		List<String> options = new ArrayList<String>();
 		options.add("overwrite");
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("/home/f1");
 		arguments.add("2");
 		arguments.add("Hello, World!");
-		
+
 		String result = command.execute(options, arguments);
 		String expectedResult = null;
-		
+
 		assertEquals(expectedResult, result);
 	}
-
 }

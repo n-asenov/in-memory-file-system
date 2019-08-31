@@ -42,4 +42,5 @@ public class WriteToTextFile implements Command {
 	private boolean isNumber(String number) {
 		return number.matches("\\d*");
 	}
+	
 }
