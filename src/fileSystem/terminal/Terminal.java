@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import fileSystem.Path;
 import fileSystem.commands.*;
 import fileSystem.fs.AbstractFileSystem;
 import fileSystem.output.Output;
@@ -14,21 +15,21 @@ public class Terminal {
 	private Parser parser;
 	private Output output;
 	private HashMap<String, Command> commands;
-	private String currentDirectory;
+	private Path currentDirectory;
 
 	public Terminal(AbstractFileSystem fs, Parser parser, Output output) {
 		this.fs = fs;
 		this.parser = parser;
 		this.output = output;
-		currentDirectory = "/home";
+		currentDirectory = new Path();
 
 		commands = new HashMap<String, Command>();
-		// commands.put("cd", new ChangeDirectory());
-		commands.put("mkdir", new MakeDirectory(fs));
-		commands.put("create_file", new CreateTextFile(fs));
-		commands.put("cat", new PrintTextFileContent(fs));
-		commands.put("write", new WriteToTextFile(fs));
-		commands.put("ls", new ListDirectoryContent(fs));
+		commands.put("cd", new ChangeDirectory(fs, currentDirectory));
+		commands.put("mkdir", new MakeDirectory(fs, currentDirectory));
+		commands.put("create_file", new CreateTextFile(fs, currentDirectory));
+		commands.put("cat", new PrintTextFileContent(fs, currentDirectory));
+		commands.put("write", new WriteToTextFile(fs, currentDirectory));
+		commands.put("ls", new ListDirectoryContent(fs, currentDirectory));
 	}
 
 	public void run() {
