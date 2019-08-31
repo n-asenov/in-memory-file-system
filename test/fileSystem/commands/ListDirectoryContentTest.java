@@ -83,4 +83,14 @@ public class ListDirectoryContentTest {
 
 		assertEquals("dir2 dir3 ", ls.execute(options, arguments));
 	}
+	
+	@Test
+	public void execute_listDirectoryWithNoArguments_ReturnContentOfCurrentDirectory() {
+		ListDirectoryContent ls = new ListDirectoryContent(new FileSystem(), new Path());
+		
+		List<String> options = new ArrayList<String>();
+		List<String> arguments = new ArrayList<String>();
+		
+		assertEquals("", ls.execute(options, arguments));
+	}
 }
