@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import fileSystem.Path;
 import fileSystem.commands.PrintTextFileContent;
 import fileSystem.fs.FileSystem;
 
@@ -14,7 +15,7 @@ public class PrintTextFileContentTest {
 
 	@Test
 	public void execute_CommandWithOption_ReturnInvalidOptionError() {
-		PrintTextFileContent command = new PrintTextFileContent(new FileSystem());
+		PrintTextFileContent command = new PrintTextFileContent(new FileSystem(), new Path());
 
 		List<String> options = new ArrayList<String>();
 		options.add("-option");
@@ -22,14 +23,14 @@ public class PrintTextFileContentTest {
 		arguments.add("alabala");
 
 		String result = command.execute(options, arguments);
-		String expectedResult = "Invalid option";
+		String expectedResult = "Invalid option!";
 
 		assertEquals(expectedResult, result);
 	}
 
 	@Test
 	public void execute_PathToTextFileIsInvalid_ReturnErrorMessage() {
-		PrintTextFileContent command = new PrintTextFileContent(new FileSystem());
+		PrintTextFileContent command = new PrintTextFileContent(new FileSystem(), new Path());
 
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
@@ -43,7 +44,7 @@ public class PrintTextFileContentTest {
 
 	@Test
 	public void execute_FileDoesNotExsist_ReturnErrorMessage() {
-		PrintTextFileContent command = new PrintTextFileContent(new FileSystem());
+		PrintTextFileContent command = new PrintTextFileContent(new FileSystem(), new Path());
 
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
@@ -57,7 +58,7 @@ public class PrintTextFileContentTest {
 
 	@Test
 	public void execute_FileIsDirectory_ReturnErrorMessage() {
-		PrintTextFileContent command = new PrintTextFileContent(new FileSystem());
+		PrintTextFileContent command = new PrintTextFileContent(new FileSystem(), new Path());
 
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
@@ -74,7 +75,7 @@ public class PrintTextFileContentTest {
 		FileSystem fs = new FileSystem();
 		fs.createTextFile("/home/f1");
 		
-		PrintTextFileContent command = new PrintTextFileContent(fs);
+		PrintTextFileContent command = new PrintTextFileContent(fs, new Path());
 
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
@@ -85,4 +86,22 @@ public class PrintTextFileContentTest {
 
 		assertEquals(expectedResult, result);
 	}
+	
+	@Test
+	public void execute_EmptyTextFileWithRelativePath_ReturnEmptyString() {
+		FileSystem fs = new FileSystem();
+		fs.createTextFile("/home/f1");
+		
+		PrintTextFileContent command = new PrintTextFileContent(fs, new Path());
+
+		List<String> options = new ArrayList<String>();
+		List<String> arguments = new ArrayList<String>();
+		arguments.add("f1");
+
+		String result = command.execute(options, arguments);
+		String expectedResult = "";
+
+		assertEquals(expectedResult, result);
+	}
+	
 }
