@@ -46,9 +46,9 @@ public class TextFile extends File {
 		return fileContent.toString();
 	}
 
-	public String write(int lineNumber, String lineContent, boolean overwrite) {
+	public void write(int lineNumber, String lineContent, boolean overwrite) throws IllegalArgumentException {
 		if (lineNumber <= 0) {
-			return "Invalid line number!";
+			throw new IllegalArgumentException("Line number must be a positive integer");
 		}
 
 		if (!overwrite) {
@@ -56,8 +56,6 @@ public class TextFile extends File {
 		} else {
 			overwrite(lineNumber, lineContent);
 		}
-
-		return null;
 	}
 
 	private void append(int lineNumber, String lineContent) {

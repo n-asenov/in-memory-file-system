@@ -2,267 +2,176 @@ package fileSystem.fs;
 
 import static org.junit.Assert.*;
 
+import java.io.FileNotFoundException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.InvalidPathException;
+import java.nio.file.NotDirectoryException;
+
+import org.junit.Before;
 import org.junit.Test;
 
 public class FileSystemTest {
+	private FileSystem fs;
 
-	@Test
-	public void makeDirectory_newDirectory_DirectoryAddedToFileSystem() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePathToNewDirectory = "/home/newDir";
-
-		String result = fs.makeDirectory(absolutePathToNewDirectory);
-		String expectedResult = null;
-
-		assertEquals(expectedResult, result);
+	@Before
+	public void init() throws FileAlreadyExistsException {
+		fs = new FileSystem();
 	}
 
 	@Test
-	public void makeDirectory_PathDoesNotExists_ReturnErrorMessage() {
-		FileSystem fs = new FileSystem();
+	public void makeDirectory_NewDirectory_DirectoryAddedToFileSystem()
+			throws FileAlreadyExistsException, InvalidPathException, NotDirectoryException, FileNotFoundException {
+		fs.makeDirectory("/home/newDir");
 
-		String absolutePath = "/wrongPath/dir1";
+		assertEquals("newDir ", fs.getDirectoryContent("/home", FilterBy.DEFAULT));
+	}
 
-		String result = fs.makeDirectory(absolutePath);
-		String expectedResult = "Path doesn't exists!";
+	@Test(expected = InvalidPathException.class)
+	public void makeDirectory_PathDoesNotExists_ThrowInvalidPathException()
+			throws FileAlreadyExistsException, InvalidPathException {
+		fs.makeDirectory("/wrongPath/dir1");
+	}
 
-		assertEquals(expectedResult, result);
+	@Test(expected = FileAlreadyExistsException.class)
+	public void makeDirectory_AddExistingDirectory_ThrowFileAlreadyExistsException()
+			throws FileAlreadyExistsException, InvalidPathException {
+		fs.makeDirectory("/");
 	}
 
 	@Test
-	public void makeDirectory_AddExistingDirectory_ReturnErrorMessage() {
-		FileSystem fs = new FileSystem();
+	public void createTextFile_NewTextFile_TextFileAddedInDirectory()
+			throws FileAlreadyExistsException, InvalidPathException, NotDirectoryException, FileNotFoundException {
+		fs.createTextFile("/home/f1");
 
-		String absolutePath = "/";
-
-		fs.makeDirectory(absolutePath);
-		String result = fs.makeDirectory(absolutePath);
-		String expectedResult = "File already exists!";
-
-		assertEquals(expectedResult, result);
+		assertEquals("f1 ", fs.getDirectoryContent("/home", FilterBy.DEFAULT));
 	}
 
-	@Test
-	public void createTextFile_NewFile_FileAddedInDirectory() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePathToNewFile = "/home/f1";
-
-		String result = fs.createTextFile(absolutePathToNewFile);
-		String expectedResult = null;
-
-		assertEquals(expectedResult, result);
+	@Test(expected = InvalidPathException.class)
+	public void createTextFile_PathDoesNotExists_ThrowInvalidPathException()
+			throws FileAlreadyExistsException, InvalidPathException {
+		fs.createTextFile("/wrongPath/f1");
 	}
 
-	@Test
-	public void createTextFile_PathDoesNotExists_ReturnErrorMessage() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/wrongPath/f1";
-
-		String result = fs.createTextFile(absolutePath);
-		String expectedResult = "Path doesn't exists!";
-
-		assertEquals(expectedResult, result);
-	}
-
-	@Test
-	public void createTextFile_AddExistingFile_ReturnErrorMessage() {
-		FileSystem fs = new FileSystem();
-
+	@Test(expected = FileAlreadyExistsException.class)
+	public void createTextFile_AddExistingFile_ThrowFileAlreadyExistsException()
+			throws FileAlreadyExistsException, InvalidPathException {
 		String absolutePath = "/home/f1";
 
 		fs.createTextFile(absolutePath);
-		String result = fs.createTextFile(absolutePath);
-		String expectedResult = "File already exists!";
-
-		assertEquals(expectedResult, result);
+		fs.createTextFile(absolutePath);
 	}
 
 	@Test
-	public void getTextFileContent_ExistingEmptyFile_ReturnEmptyString() {
-		FileSystem fs = new FileSystem();
-
+	public void getTextFileContent_ExistingEmptyFile_ReturnEmptyString()
+			throws FileAlreadyExistsException, InvalidPathException, FileNotFoundException {
 		String absolutePath = "/home/f1";
 
 		fs.createTextFile(absolutePath);
 
-		String result = fs.getTextFileContent(absolutePath);
-		String expectedResult = "";
+		assertEquals("", fs.getTextFileContent(absolutePath));
+	}
 
-		assertEquals(expectedResult, result);
+	@Test(expected = InvalidPathException.class)
+	public void getTextFileContent_PathDoesNotExists_ThrowInvalidPathException()
+			throws InvalidPathException, FileNotFoundException {
+		fs.getTextFileContent("/home/dir1/f1");
+	}
+
+	@Test(expected = FileNotFoundException.class)
+	public void getTextFileContent_FileDoesNotExists_ThrowFileNotFoundException()
+			throws InvalidPathException, FileNotFoundException {
+		fs.getTextFileContent("/home/f1");
+	}
+
+	@Test(expected = FileNotFoundException.class)
+	public void getTextFileContent_FileIsDirectory_ThrowFileNotFoundException()
+			throws InvalidPathException, FileNotFoundException {
+		fs.getTextFileContent("/home");
+	}
+
+	@Test(expected = FileNotFoundException.class)
+	public void writeToTextFile_WriteToNonExistingFile_ThrowFileNotFoundException()
+			throws InvalidPathException, FileNotFoundException {
+		fs.writeToTextFile("/home/f1", 1, "Test", false);
+	}
+
+	@Test(expected = InvalidPathException.class)
+	public void writeToTextFile_PathToFileDoesNotExists_ThrowInvalidPathException()
+			throws InvalidPathException, FileNotFoundException {
+		fs.writeToTextFile("/home/dir1/f1", 1, "Test", false);
 	}
 
 	@Test
-	public void getTextFileContent_PathDoesNotExists_ReturnErrorMessage() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/home/dir1/f1";
-
-		fs.createTextFile(absolutePath);
-		
-		String result = fs.getTextFileContent(absolutePath);
-		String expectedResult = "Path doesn't exists!";
-		
-		assertEquals(expectedResult, result);
-	}
-
-	@Test
-	public void getTextFileContent_FileDoesNotExists_ReturnErrorMessage() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/home/f1";
-		
-		String result = fs.getTextFileContent(absolutePath);
-		String expectedResult = "File doesn't exists!";
-		
-		assertEquals(expectedResult, result);
-	}
-	
-	@Test
-	public void getTextFileContent_FileIsDirectory_ReturnErrorMessage() {
-		FileSystem fs = new FileSystem();
-		
-		String absolutePath = "/home";
-		
-		String result = fs.getTextFileContent(absolutePath);
-		String expectedResult = "File is directory!";
-		
-		assertEquals(expectedResult, result);
-	}
-	
-
-	@Test
-	public void writeToTextFile_WriteToNonExistingFile_ReturnErrorMessage() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/home/f1";
-
-		String result = fs.writeToTextFile(absolutePath, 1, "Test", false);
-		String expectedResult = "File doesn't exists!";
-		
-		assertEquals(expectedResult, result);
-	}
-
-	@Test
-	public void writeToTextFile_PathToFileDoesNotExists_ReturnErrorMessage() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/home/dir1/f1";
-
-		String result = fs.writeToTextFile(absolutePath, 1, "Test", false);
-		String expectedResult = "Path doesn't exists!";
-		
-		assertEquals(expectedResult, result);
-	}
-
-	@Test
-	public void writeToTextFile_WriteToEmptyFile_ContentWrittenToFile() {
-		FileSystem fs = new FileSystem();
-
+	public void writeToTextFile_WriteToEmptyFile_ContentWrittenToFile()
+			throws InvalidPathException, FileNotFoundException, FileAlreadyExistsException {
 		String absolutePath = "/home/f1";
 
 		fs.createTextFile(absolutePath);
 
-		String result = fs.writeToTextFile(absolutePath, 1, "Test", false);
-		String expectedResult = null;
-		
-		assertEquals(expectedResult, result);
+		fs.writeToTextFile(absolutePath, 1, "Test", false);
+
+		assertEquals("Test", fs.getTextFileContent(absolutePath));
+	}
+
+	@Test(expected = FileNotFoundException.class)
+	public void writeToTextFile_FileIsDirectory_ThrowFileNotFoundException()
+			throws InvalidPathException, FileNotFoundException {
+		fs.writeToTextFile("/home", 1, "hello", false);
+	}
+
+	@Test(expected = FileNotFoundException.class)
+	public void getDirectoryContent_NonExistingDirectory_ThrowFileNotFoundException()
+			throws InvalidPathException, NotDirectoryException, FileNotFoundException {
+		fs.getDirectoryContent("/home/dir1", FilterBy.DEFAULT);
+	}
+
+	@Test(expected = InvalidPathException.class)
+	public void getDirectoryContent_PathDoesNotExists_ThrowInvalidPathException()
+			throws InvalidPathException, NotDirectoryException, FileNotFoundException {
+		fs.getDirectoryContent("/home/dir1/dir2/", FilterBy.DEFAULT);
 	}
 
 	@Test
-	public void writeToTextFile_FileIsDirectory_ReturnErrorMessage() {
-		FileSystem fs = new FileSystem();
-		
-		String absolutePath = "/home";
-		
-		String result = fs.writeToTextFile(absolutePath, 1, "hello", false);
-		String expectedResult = "File is directory!";
-		
-		assertEquals(expectedResult, result);
-	}
-	
-	@Test
-	public void getDirectoryContent_NonExistingDirectory_ReturnErrorMessage() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/home/dir1";
-
-		String result = fs.getDirectoryContent(absolutePath, FilterBy.DEFAULT);
-		String expectedResult = "File doesn't exists!";
-		
-		assertEquals(expectedResult, result);
+	public void getDirectoryContent_EmptyDirectory_ReturnEmptyString()
+			throws InvalidPathException, NotDirectoryException, FileNotFoundException {
+		assertEquals("", fs.getDirectoryContent("/home", FilterBy.DEFAULT));
 	}
 
 	@Test
-	public void getDirectoryContent_PathDoesNotExists_ReturnErrorMessage() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/home/dir1/dir2/";
-
-		String result  = fs.getDirectoryContent(absolutePath, FilterBy.DEFAULT);
-		String expectedResult = "Path doesn't exists!";
-		
-		assertEquals(expectedResult, result);
+	public void getDirectoryContent_RootDirectory_ReturnRootContent()
+			throws InvalidPathException, NotDirectoryException, FileNotFoundException {
+		assertEquals("home ", fs.getDirectoryContent("/", FilterBy.DEFAULT));
 	}
 
 	@Test
-	public void getDirectoryContent_EmptyDirectory_ReturnEmptyString() {
-		FileSystem fs = new FileSystem();
-
-		String absolutePath = "/home";
-
-		String result = fs.getDirectoryContent(absolutePath, FilterBy.DEFAULT);
-
-		assertEquals("", result);
+	public void isDirectory_ExistingDirectory_True() throws InvalidPathException, FileNotFoundException {
+		assertTrue(fs.isDirectory("/home"));
 	}
-	
-	@Test
-	public void getDirectoryContent_RootDirectory_ReturnRootContent() {
-		FileSystem fs = new FileSystem();
 
-		String absolutePath = "/";
+	@Test
+	public void isDirectory_Root_True() throws InvalidPathException, FileNotFoundException {
+		assertTrue(fs.isDirectory("/"));
+	}
 
-		String result = fs.getDirectoryContent(absolutePath, FilterBy.DEFAULT);
-		String expectedResult = "home ";
-		
-		assertEquals(expectedResult, result);
+	@Test(expected = InvalidPathException.class)
+	public void isDirectory_DirectoryWithWrongPath_ThrowInvalidPathException()
+			throws InvalidPathException, FileNotFoundException {
+		fs.isDirectory("/home/dir1/dir2");
 	}
-	
-	@Test
-	public void isDirectory_ExistingDirectory_ReturnNull() {
-		FileSystem fs = new FileSystem();
-		
-		assertEquals(null, fs.isDirectory("/home"));
-	}
-	
-	@Test
-	public void isDirectory_Root_ReturnNull() {
-		FileSystem fs = new FileSystem();
-		
-		assertEquals(null, fs.isDirectory("/"));
-	}
-	
-	@Test
-	public void isDirectory_DirectoryWithWrongPath_ReturnPathDoesNotExistsMessage() {
-		FileSystem fs = new FileSystem();
-		
-		assertEquals("Path doesn't exists!", fs.isDirectory("/home/dir1/dir2"));
-	}
-	
-	@Test
-	public void isDirectory_NonExistentDirectory_ReturnFileDoesNotExistsMessage() {
-		FileSystem fs = new FileSystem();
-		
+
+	@Test(expected = FileNotFoundException.class)
+	public void isDirectory_NonExistentDirectory_ThrowFileNotFoundException()
+			throws InvalidPathException, FileNotFoundException {
 		assertEquals("File doesn't exists!", fs.isDirectory("/home/dir1"));
 	}
-	
+
 	@Test
-	public void isDirectory_FileIsNotDirectory_ReturnFileIsNotDirectoryMessage() {
-		FileSystem fs = new FileSystem();
-		fs.createTextFile("/home/f1");
-		
-		assertEquals("File is text file!", fs.isDirectory("/home/f1"));
+	public void isDirectory_FileIsNotDirectory_False()
+			throws InvalidPathException, FileNotFoundException, FileAlreadyExistsException {
+		String absolutePath = "/home/f1";
+
+		fs.createTextFile(absolutePath);
+
+		assertFalse(fs.isDirectory(absolutePath));
 	}
 }

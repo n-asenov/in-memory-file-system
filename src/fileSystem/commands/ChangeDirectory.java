@@ -1,5 +1,7 @@
 package fileSystem.commands;
 
+import java.io.FileNotFoundException;
+import java.nio.file.InvalidPathException;
 import java.util.List;
 
 import fileSystem.Path;
@@ -15,30 +17,27 @@ public class ChangeDirectory implements Command {
 	}
 
 	@Override
-	public String execute(List<String> options, List<String> arguments) {
+	public void execute(List<String> options, List<String> arguments)
+			throws IllegalArgumentException, InvalidPathException, FileNotFoundException {
 		if (options.size() != 0) {
-			return "Invalid option!";
+			throw new IllegalArgumentException("Invalid option");
 		}
 
 		int size = arguments.size();
 
 		if (size == 0) {
 			currentDirectory.setCurrentDirectory(null);
-			return null;
+			return;
 		}
 
 		if (size > 1) {
-			return "Invalid number of arguments!";
+			throw new IllegalArgumentException("Invalid number of arguments");
 		}
 
 		String newCurrentDirectory = currentDirectory.getAbsolutePath(arguments.get(0));
 
-		String result = fs.isDirectory(newCurrentDirectory);
-
-		if (result == null) {
+		if (fs.isDirectory(newCurrentDirectory)) {
 			currentDirectory.setCurrentDirectory(newCurrentDirectory);
 		}
-
-		return result;
 	}
 }

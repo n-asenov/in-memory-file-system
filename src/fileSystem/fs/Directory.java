@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
+import java.nio.file.FileAlreadyExistsException;
 
 public class Directory extends File {
 	private TreeMap<String, File> content;
@@ -44,13 +45,14 @@ public class Directory extends File {
 		return false;
 	}
 	
-	public String addFile(File file) {
-		if (content.get(file.getName()) == null) {
-			content.put(file.getName(), file);
-			return null;
+	public void addFile(File file) throws FileAlreadyExistsException {
+		String fileName = file.getName();
+		
+		if (content.get(fileName) != null) {
+			throw new FileAlreadyExistsException("File " + fileName + " already exists");
 		}
 
-		return "File already exists!";
+		content.put(fileName, file);
 	}
 		
 	public File getFile(String name) {

@@ -5,16 +5,11 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class TextFileTest {
-	@Test
-	public void write_WriteContentOnInvalidLine_ReturnErrorMessage() {
+	@Test (expected = IllegalArgumentException.class)
+	public void write_WriteContentOnInvalidLine_ThrowIllegalArgumentException() {
 		TextFile file = new TextFile("test");
 
-		int lineNumber = -10;
-		String lineContent = "New line";
-		int expectedSize = 0;
-
-		assertEquals("Invalid line number!", file.write(lineNumber, lineContent, false));
-		assertEquals(expectedSize, file.getSize());
+		file.write(-20, "Hello, World", false);
 	}
 
 	@Test
@@ -25,7 +20,8 @@ public class TextFileTest {
 		String lineContent = "New line";
 		int expectedSize = lineContent.length() + 1;
 
-		assertEquals(null, file.write(lineNumber, lineContent, false));
+		file.write(lineNumber, lineContent, false);
+		
 		assertEquals(lineContent, file.getContent());
 		assertEquals(expectedSize, file.getSize());
 	}
@@ -46,7 +42,8 @@ public class TextFileTest {
 		expectedContent += lineContent;
 		expectedSize += lineContent.length();
 
-		assertEquals(null, file.write(lineNumber, lineContent, false));
+		file.write(lineNumber, lineContent, false);
+		
 		assertEquals(expectedContent, file.getContent());
 		assertEquals(expectedSize, file.getSize());
 	}
@@ -65,7 +62,8 @@ public class TextFileTest {
 		String expectedContent = lineContent;
 		int expectedSize = lineContent.length() + 1;
 
-		assertEquals(null, file.write(lineNumber, lineContent, true));
+		file.write(lineNumber, lineContent, true);
+		
 		assertEquals(expectedContent, file.getContent());
 		assertEquals(expectedSize, file.getSize());
 	}
@@ -76,7 +74,7 @@ public class TextFileTest {
 
 		String newContent = "Hello world";
 
-		assertEquals(null, file.write(1, newContent, true));
+		file.write(1, newContent, true);
 
 		int expectedSize = newContent.length() + 1;
 

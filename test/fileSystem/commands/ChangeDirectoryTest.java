@@ -2,6 +2,9 @@ package fileSystem.commands;
 
 import static org.junit.Assert.*;
 
+import java.io.FileNotFoundException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +16,8 @@ import fileSystem.fs.FileSystem;
 public class ChangeDirectoryTest {
 
 	@Test
-	public void execute_RelativePathToGoBackToParentDirectory_ReturnToParentDirectory() {
+	public void execute_RelativePathToGoBackToParentDirectory_ReturnToParentDirectory()
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
 		Path path = new Path();
 
 		ChangeDirectory command = new ChangeDirectory(new FileSystem(), path);
@@ -22,12 +26,14 @@ public class ChangeDirectoryTest {
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("..");
 
-		assertEquals(null, command.execute(options, arguments));
+		command.execute(options, arguments);
+
 		assertEquals("/home/..", path.getCurrentDirectory());
 	}
 
 	@Test
-	public void execute_ChangeDirectoryToCurrentDirectory_CurrentDirectoryDoesntChange() {
+	public void execute_ChangeDirectoryToCurrentDirectory_CurrentDirectoryDoesntChange()
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
 		Path path = new Path();
 
 		ChangeDirectory command = new ChangeDirectory(new FileSystem(), path);
@@ -36,12 +42,14 @@ public class ChangeDirectoryTest {
 		List<String> arguments = new ArrayList<String>();
 		arguments.add(".");
 
-		assertEquals(null, command.execute(options, arguments));
+		command.execute(options, arguments);
+		
 		assertEquals("/home/.", path.getCurrentDirectory());
 	}
 
 	@Test
-	public void execute_ChangeDirectoryWithNoArguments_ReturnToHomeDirectory() {
+	public void execute_ChangeDirectoryWithNoArguments_ReturnToHomeDirectory()
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
 		Path path = new Path();
 		path.setCurrentDirectory("/");
 
@@ -50,8 +58,8 @@ public class ChangeDirectoryTest {
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
 
-		assertEquals(null, command.execute(options, arguments));
+		command.execute(options, arguments);
+		
 		assertEquals("/home", path.getCurrentDirectory());
 	}
-
 }

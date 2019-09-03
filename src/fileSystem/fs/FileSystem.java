@@ -1,53 +1,41 @@
 package fileSystem.fs;
 
+import java.io.FileNotFoundException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.InvalidPathException;
+import java.nio.file.NotDirectoryException;
 import java.util.List;
 
 public class FileSystem implements AbstractFileSystem {
 	private Directory root;
 
-	public FileSystem() {
+	public FileSystem() throws FileAlreadyExistsException {
 		root = new Directory("/");
 		root.addFile(new Directory("home", root));
 	}
 
 	@Override
-	public String makeDirectory(String absolutePath) {
+	public void makeDirectory(String absolutePath) throws FileAlreadyExistsException, InvalidPathException {
 		Directory workDirectory = goToWorkDirectory(absolutePath);
 
-		if (workDirectory == null) {
-			return "Path doesn't exists!";
-		}
-
-		return workDirectory.addFile(new Directory(getCurrentFile(absolutePath), workDirectory));
+		workDirectory.addFile(new Directory(getCurrentFile(absolutePath), workDirectory));
 	}
 
 	@Override
-	public String createTextFile(String absolutePath) {
+	public void createTextFile(String absolutePath) throws FileAlreadyExistsException, InvalidPathException {
 		Directory workDirectory = goToWorkDirectory(absolutePath);
 
-		if (workDirectory == null) {
-			return "Path doesn't exists!";
-		}
-
-		return workDirectory.addFile(new TextFile(getCurrentFile(absolutePath)));
+		workDirectory.addFile(new TextFile(getCurrentFile(absolutePath)));
 	}
 
 	@Override
-	public String getTextFileContent(String absolutePath) {
+	public String getTextFileContent(String absolutePath) throws InvalidPathException, FileNotFoundException {
 		Directory workDirectory = goToWorkDirectory(absolutePath);
-
-		if (workDirectory == null) {
-			return "Path doesn't exists!";
-		}
 
 		File file = workDirectory.getFile(getCurrentFile(absolutePath));
 
-		if (file == null) {
-			return "File doesn't exists!";
-		}
-
-		if (file.isDirectory()) {
-			return "File is directory!";
+		if (file == null || file.isDirectory()) {
+			throw new FileNotFoundException("Text file doesn't exists");
 		}
 
 		TextFile textFile = (TextFile) file;
@@ -56,45 +44,33 @@ public class FileSystem implements AbstractFileSystem {
 	}
 
 	@Override
-	public String writeToTextFile(String absolutePath, int line, String content, boolean overwrite) {
+	public void writeToTextFile(String absolutePath, int line, String content, boolean overwrite)
+			throws InvalidPathException, FileNotFoundException {
 		Directory workDirectory = goToWorkDirectory(absolutePath);
-
-		if (workDirectory == null) {
-			return "Path doesn't exists!";
-		}
 
 		File file = workDirectory.getFile(getCurrentFile(absolutePath));
 
-		if (file == null) {
-			return "File doesn't exists!";
-		}
-
-		if (file.isDirectory()) {
-			return "File is directory!";
+		if (file == null || file.isDirectory()) {
+			throw new FileNotFoundException("Text file doesn't exists");
 		}
 
 		TextFile textFile = (TextFile) file;
 		textFile.write(line, content, overwrite);
-
-		return null;
 	}
 
 	@Override
-	public String getDirectoryContent(String absolutePath, FilterBy option) {
+	public String getDirectoryContent(String absolutePath, FilterBy option)
+			throws InvalidPathException, NotDirectoryException, FileNotFoundException {
 		Directory workDirectory = goToWorkDirectory(absolutePath);
-
-		if (workDirectory == null) {
-			return "Path doesn't exists!";
-		}
 
 		File file = workDirectory.getFile(getCurrentFile(absolutePath));
 
 		if (file == null) {
-			return "File doesn't exists!";
+			throw new FileNotFoundException("Directory doesn't exists");
 		}
 
 		if (file.isTextFile()) {
-			return "File is text file!";
+			throw new NotDirectoryException(file.getName());
 		}
 
 		Directory directory = (Directory) file;
@@ -109,29 +85,21 @@ public class FileSystem implements AbstractFileSystem {
 
 		return result.toString();
 	}
-	
+
 	@Override
-	public String isDirectory(String absolutePath) {
+	public boolean isDirectory(String absolutePath) throws InvalidPathException, FileNotFoundException {
 		Directory workDirectory = goToWorkDirectory(absolutePath);
 
-		if (workDirectory == null) {
-			return "Path doesn't exists!";
-		}
-		
 		File file = workDirectory.getFile(getCurrentFile(absolutePath));
 
 		if (file == null) {
-			return "File doesn't exists!";
-		}
-
-		if (file.isTextFile()) {
-			return "File is text file!";
+			throw new FileNotFoundException("Directory doesn't exist");
 		}
 		
-		return null;
+		return file.isDirectory();
 	}
 
-	private Directory goToWorkDirectory(String absolutePath) {
+	private Directory goToWorkDirectory(String absolutePath) throws InvalidPathException {
 		Directory workDirectory = root;
 
 		String[] pathSpliteedByDirectories = absolutePath.split("/");
@@ -141,7 +109,7 @@ public class FileSystem implements AbstractFileSystem {
 				File next = workDirectory.getFile(pathSpliteedByDirectories[i]);
 
 				if (next == null || !next.isDirectory()) {
-					return null;
+					throw new InvalidPathException(absolutePath, "Path doesn't exists");
 				}
 
 				workDirectory = (Directory) next;
@@ -153,10 +121,11 @@ public class FileSystem implements AbstractFileSystem {
 
 	private String getCurrentFile(String absolutePath) {
 		String[] path = absolutePath.split("/");
+
 		if (path.length == 0) {
 			return ".";
 		}
-		
+
 		return path[path.length - 1];
 	}
 }

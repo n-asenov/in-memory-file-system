@@ -1,5 +1,7 @@
 package fileSystem.commands;
 
+import java.io.FileNotFoundException;
+import java.nio.file.InvalidPathException;
 import java.util.List;
 
 import fileSystem.Path;
@@ -8,42 +10,48 @@ import fileSystem.fs.AbstractFileSystem;
 public class WriteToTextFile implements Command {
 	private AbstractFileSystem fs;
 	private Path currentDirectory;
-	
+
 	public WriteToTextFile(AbstractFileSystem fs, Path currentDirectory) {
 		this.fs = fs;
 		this.currentDirectory = currentDirectory;
 	}
 
 	@Override
-	public String execute(List<String> options, List<String> arguments) {
+	public void execute(List<String> options, List<String> arguments)
+			throws IllegalArgumentException, InvalidPathException, FileNotFoundException {
 		boolean overwrite = false;
 
 		for (String option : options) {
 			if (!option.equals("-overwrite")) {
-				return "Invalid option!";
+				throw new IllegalArgumentException("Invalid option");
 			}
 			overwrite = true;
 		}
 
-		if (arguments.size() != 3) {
-			return "Invalid number of arguments!";
+		if (arguments.size() < 3) {
+			throw new IllegalArgumentException("Commmand expects more arguments");
 		}
 
 		if (!isNumber(arguments.get(1))) {
-			return "Second argument must be a positive number!";
+			throw new IllegalArgumentException("Second argument must be a number");
 		}
 
 		String absolutePath = currentDirectory.getAbsolutePath(arguments.get(0));
 		int line = Integer.parseInt(arguments.get(1));
-		String lineContent = arguments.get(2);
+		StringBuilder lineContent = new StringBuilder();
 
-		String result = fs.writeToTextFile(absolutePath, line, lineContent, overwrite);
+		for (int i = 2; i < arguments.size(); i++) {
+			lineContent.append(arguments.get(i));
+			if (i != arguments.size() - 1) {
+				lineContent.append(" ");
+			}
 
-		return result;
+		}
+
+		fs.writeToTextFile(absolutePath, line, lineContent.toString(), overwrite);
 	}
 
 	private boolean isNumber(String number) {
 		return number.matches("\\d*");
 	}
-	
 }

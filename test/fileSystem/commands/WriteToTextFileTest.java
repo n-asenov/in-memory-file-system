@@ -2,6 +2,9 @@ package fileSystem.commands;
 
 import static org.junit.Assert.*;
 
+import java.io.FileNotFoundException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,36 +15,33 @@ import fileSystem.fs.FileSystem;
 
 public class WriteToTextFileTest {
 
-	@Test
-	public void execute_CommandWithInvalidOption_ReturnInvalidOptionMessage() {
+	@Test(expected = IllegalArgumentException.class)
+	public void execute_CommandWithInvalidOption_ThrowIllegalArgumentException()
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
 		WriteToTextFile command = new WriteToTextFile(new FileSystem(), new Path());
 
 		List<String> options = new ArrayList<String>();
 		options.add("append");
 		List<String> arguments = new ArrayList<String>();
 
-		String result = command.execute(options, arguments);
-		String expectedResult = "Invalid option!";
-
-		assertEquals(expectedResult, result);
+		command.execute(options, arguments);
 	}
 
-	@Test
-	public void execute_CommandWithInvalidNumberOfArguments_ReturnInvalidNumberOfArgumentsMessage() {
+	@Test(expected = IllegalArgumentException.class)
+	public void execute_CommandWithInvalidNumberOfArguments_ThrowIllegalArgumentException()
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
 		WriteToTextFile command = new WriteToTextFile(new FileSystem(), new Path());
 
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("/home/f1");
 
-		String result = command.execute(options, arguments);
-		String expectedResult = "Invalid number of arguments!";
-
-		assertEquals(expectedResult, result);
+		command.execute(options, arguments);
 	}
 
-	@Test
-	public void execute_CommnadWithWrongSecondArgument_ReturnSecondArgumentErrorMessage() {
+	@Test (expected = IllegalArgumentException.class)
+	public void execute_CommnadWithWrongSecondArgument_ThrowIllegalArgumentException()
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
 		WriteToTextFile command = new WriteToTextFile(new FileSystem(), new Path());
 
 		List<String> options = new ArrayList<String>();
@@ -50,14 +50,12 @@ public class WriteToTextFileTest {
 		arguments.add("Number");
 		arguments.add("Hello, World!");
 
-		String result = command.execute(options, arguments);
-		String expectedResult = "Second argument must be a positive number!";
-
-		assertEquals(expectedResult, result);
+		command.execute(options, arguments);
 	}
 
 	@Test
-	public void execute_ValidCommandWithNoOption_WriteContentToTextFile() {
+	public void execute_ValidCommandWithNoOption_WriteContentToTextFile()
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
 		FileSystem fs = new FileSystem();
 		fs.createTextFile("/home/f1");
 
@@ -66,17 +64,17 @@ public class WriteToTextFileTest {
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("/home/f1");
-		arguments.add("2");
+		arguments.add("1");
 		arguments.add("Hello, World!");
 
-		String result = command.execute(options, arguments);
-		String expectedResult = null;
+		command.execute(options, arguments);
 
-		assertEquals(expectedResult, result);
+		assertEquals("Hello, World!", fs.getTextFileContent("/home/f1"));
 	}
 
 	@Test
-	public void execute_ValidCommandWithOverwriteOption_WriteContentToTextFile() {
+	public void execute_ValidCommandWithOverwriteOption_WriteContentToTextFile()
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
 		FileSystem fs = new FileSystem();
 		fs.createTextFile("/home/f1");
 
@@ -86,17 +84,17 @@ public class WriteToTextFileTest {
 		options.add("-overwrite");
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("/home/f1");
-		arguments.add("2");
+		arguments.add("1");
 		arguments.add("Hello, World!");
 
-		String result = command.execute(options, arguments);
-		String expectedResult = null;
-
-		assertEquals(expectedResult, result);
+		command.execute(options, arguments);
+		
+		assertEquals("Hello, World!", fs.getTextFileContent("/home/f1"));
 	}
-	
+
 	@Test
-	public void execute_ValidCommandWithRelativePath_WriteContentToTextFile() {
+	public void execute_ValidCommandWithRelativePath_WriteContentToTextFile()
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
 		FileSystem fs = new FileSystem();
 		fs.createTextFile("/home/f1");
 
@@ -105,12 +103,11 @@ public class WriteToTextFileTest {
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("f1");
-		arguments.add("2");
+		arguments.add("1");
 		arguments.add("Hello, World!");
 
-		String result = command.execute(options, arguments);
-		String expectedResult = null;
-
-		assertEquals(expectedResult, result);
+		command.execute(options, arguments);
+		
+		assertEquals("Hello, World!", fs.getTextFileContent("/home/f1"));
 	}
 }

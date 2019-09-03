@@ -2,6 +2,10 @@ package fileSystem.commands;
 
 import static org.junit.Assert.*;
 
+import java.io.FileNotFoundException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.InvalidPathException;
+import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,11 +13,13 @@ import org.junit.Test;
 
 import fileSystem.Path;
 import fileSystem.fs.FileSystem;
+import fileSystem.fs.FilterBy;
 
 public class MakeDirectoryTest {
 
-	@Test
-	public void execute_MakeDirectoryWithOption_ReturnErrorMessage() {
+	@Test(expected = IllegalArgumentException.class)
+	public void execute_MakeDirectoryWithOption_ThrowIllegalArgumentException()
+			throws InvalidPathException, FileAlreadyExistsException, IllegalArgumentException {
 		MakeDirectory mkdir = new MakeDirectory(new FileSystem(), new Path());
 
 		List<String> options = new ArrayList<String>();
@@ -21,58 +27,63 @@ public class MakeDirectoryTest {
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("/home/dir1");
 
-		assertEquals("Invalid option!", mkdir.execute(options, arguments));
+		mkdir.execute(options, arguments);
 	}
 
 	@Test
-	public void execute_NewDirectory_DirectoryAddedToFileSystem() {
-		MakeDirectory mkdir = new MakeDirectory(new FileSystem(), new Path());
+	public void execute_NewDirectory_DirectoryAddedToFileSystem() throws InvalidPathException,
+			FileAlreadyExistsException, IllegalArgumentException, NotDirectoryException, FileNotFoundException {
+		FileSystem fs = new FileSystem();
+
+		MakeDirectory mkdir = new MakeDirectory(fs, new Path());
 
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("/home/dir1");
 
-		assertEquals("", mkdir.execute(options, arguments));
+		mkdir.execute(options, arguments);
+
+		assertEquals("dir1 ", fs.getDirectoryContent("/home", FilterBy.DEFAULT));
 	}
-	
+
 	@Test
-	public void execute_NewDirectoryWithRelativePath_DirectoryAddedToFileSystem() {
-		MakeDirectory mkdir = new MakeDirectory(new FileSystem(), new Path());
-		
+	public void execute_NewDirectoryWithRelativePath_DirectoryAddedToFileSystem()
+			throws NotDirectoryException, FileNotFoundException, FileAlreadyExistsException, IllegalArgumentException {
+		FileSystem fs = new FileSystem();
+
+		MakeDirectory mkdir = new MakeDirectory(fs, new Path());
+
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("dir1");
-		
-		assertEquals("", mkdir.execute(options, arguments));
+
+		mkdir.execute(options, arguments);
+
+		assertEquals("dir1 ", fs.getDirectoryContent("/home", FilterBy.DEFAULT));
 	}
 
-	@Test
-	public void execute_MakeExistingDirectory_ReturnErrorMessage() {
+	@Test (expected = FileAlreadyExistsException.class)
+	public void execute_MakeExistingDirectory_ThrowFileAlreadyExistsException()
+			throws InvalidPathException, FileAlreadyExistsException, IllegalArgumentException {
 		MakeDirectory mkdir = new MakeDirectory(new FileSystem(), new Path());
-		String dir = "/home";
-		
+
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
-		arguments.add(dir);
+		arguments.add("/home");
 
-		String result = mkdir.execute(options, arguments);
-		String expectedResult = "Cannot create directory: " + dir + " : File already exists!";
-
-		assertEquals(expectedResult, result);
+		mkdir.execute(options, arguments);
 	}
 
-	@Test
-	public void execute_MakeDirectoryWithNonExistentPath_ReturnErrorMessage() {
+	@Test (expected = InvalidPathException.class )
+	public void execute_MakeDirectoryWithNonExistentPath_ThrowInvalidPathException()
+			throws InvalidPathException, FileAlreadyExistsException, IllegalArgumentException {
 		MakeDirectory mkdir = new MakeDirectory(new FileSystem(), new Path());
 		String dir = "/home/dir1/dir2";
-		
+
 		List<String> options = new ArrayList<String>();
 		List<String> arguments = new ArrayList<String>();
 		arguments.add(dir);
-		
-		String result = mkdir.execute(options, arguments);
-		String expectedResult = "Cannot create directory: " + dir + " : Path doesn't exists!";
-	
-		assertEquals(expectedResult, result);
+
+		mkdir.execute(options, arguments);
 	}
 }

@@ -1,5 +1,7 @@
 package fileSystem.commands;
 
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.InvalidPathException;
 import java.util.List;
 
 import fileSystem.Path;
@@ -15,23 +17,14 @@ public class MakeDirectory implements Command {
 	}
 
 	@Override
-	public String execute(List<String> options, List<String> arguments) {
+	public void execute(List<String> options, List<String> arguments)
+			throws InvalidPathException, FileAlreadyExistsException, IllegalArgumentException {
 		if (options.size() != 0) {
-			return "Invalid option!";
+			throw new IllegalArgumentException("Invalid option");
 		}
-
-		StringBuilder results = new StringBuilder();
 
 		for (String argument : arguments) {
-			String result = fs.makeDirectory(currentDirectory.getAbsolutePath(argument));
-			
-			if (result != null) {
-				results.append("Cannot create directory: ");
-				results.append(argument + " : ");
-				results.append(result);
-			}
+			fs.makeDirectory(currentDirectory.getAbsolutePath(argument));	
 		}
-
-		return results.toString();
 	}
 }		
