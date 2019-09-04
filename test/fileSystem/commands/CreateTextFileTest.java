@@ -9,6 +9,7 @@ import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import fileSystem.Path;
@@ -16,15 +17,23 @@ import fileSystem.fs.FileSystem;
 import fileSystem.fs.FilterBy;
 
 public class CreateTextFileTest {
+	private CreateTextFile command;
+	private FileSystem fs;
+	private List<String> options;
+	private List<String> arguments;
+	
+	@Before
+	public void init() throws FileAlreadyExistsException {
+		fs = new FileSystem();
+		command = new CreateTextFile(fs, new Path());
+		options = new ArrayList<String>();
+		arguments = new ArrayList<String>();
+	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void execute_CommandWithOption_ThrowIllegalArgumentException()
 			throws InvalidPathException, FileAlreadyExistsException, IllegalArgumentException {
-		CreateTextFile command = new CreateTextFile(new FileSystem(), new Path());
-
-		List<String> options = new ArrayList<String>();
 		options.add("-l");
-		List<String> arguments = new ArrayList<String>();
 		arguments.add("/home/f1");
 
 		command.execute(options, arguments);
@@ -32,13 +41,8 @@ public class CreateTextFileTest {
 
 	@Test(expected = FileAlreadyExistsException.class)
 	public void execute_CreateAlreadyExistingFile_ThrowFileAlreadyExistsException()
-			throws InvalidPathException, FileAlreadyExistsException, IllegalArgumentException {
-		CreateTextFile command = new CreateTextFile(new FileSystem(), new Path());
-		String fileName = "/home";
-
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
-		arguments.add(fileName);
+			throws InvalidPathException, IllegalArgumentException, FileAlreadyExistsException {
+		arguments.add("/home");
 
 		command.execute(options, arguments);
 	}
@@ -46,12 +50,7 @@ public class CreateTextFileTest {
 	@Test(expected = InvalidPathException.class)
 	public void execute_CreateTextFileWithWrongAbsolutePath_ThrowInvalidPathException()
 			throws InvalidPathException, FileAlreadyExistsException, IllegalArgumentException {
-		CreateTextFile command = new CreateTextFile(new FileSystem(), new Path());
-		String file = "/home/dir1/f1";
-
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
-		arguments.add(file);
+		arguments.add("/home/dir1/f1");
 
 		command.execute(options, arguments);
 	}
@@ -59,14 +58,7 @@ public class CreateTextFileTest {
 	@Test
 	public void execute_CreateNewTextFile_TextFileAddedToFileSystem() throws InvalidPathException,
 			FileAlreadyExistsException, IllegalArgumentException, NotDirectoryException, FileNotFoundException {
-		FileSystem fs = new FileSystem();
-
-		CreateTextFile command = new CreateTextFile(fs, new Path());
-		String file = "/home/f1";
-
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
-		arguments.add(file);
+		arguments.add("/home/f1");
 
 		command.execute(options, arguments);
 
@@ -76,12 +68,6 @@ public class CreateTextFileTest {
 	@Test
 	public void execute_CreateTextFileWithRelativePath_TextFileAddedToFileSystem() throws InvalidPathException,
 			FileAlreadyExistsException, IllegalArgumentException, NotDirectoryException, FileNotFoundException {
-		FileSystem fs = new FileSystem();
-
-		CreateTextFile command = new CreateTextFile(fs, new Path());
-
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
 		arguments.add("f1");
 
 		command.execute(options, arguments);
@@ -92,12 +78,6 @@ public class CreateTextFileTest {
 	@Test
 	public void execute_CreateSeveralTextFiles_TextFilesAddedToFileSystem() throws InvalidPathException,
 			FileAlreadyExistsException, IllegalArgumentException, NotDirectoryException, FileNotFoundException {
-		FileSystem fs = new FileSystem();
-
-		CreateTextFile command = new CreateTextFile(fs, new Path());
-
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
 		arguments.add("f1");
 		arguments.add("f2");
 		arguments.add("f3");

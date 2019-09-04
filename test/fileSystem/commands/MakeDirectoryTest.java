@@ -9,6 +9,7 @@ import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import fileSystem.Path;
@@ -16,32 +17,34 @@ import fileSystem.fs.FileSystem;
 import fileSystem.fs.FilterBy;
 
 public class MakeDirectoryTest {
+	private MakeDirectory command;
+	private FileSystem fs;
+	private List<String> options;
+	private List<String> arguments;
+
+	@Before
+	public void init() throws FileAlreadyExistsException {
+		fs = new FileSystem();
+		command = new MakeDirectory(fs, new Path());
+		options = new ArrayList<String>();
+		arguments = new ArrayList<String>();
+	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void execute_MakeDirectoryWithOption_ThrowIllegalArgumentException()
-			throws InvalidPathException, FileAlreadyExistsException, IllegalArgumentException {
-		MakeDirectory mkdir = new MakeDirectory(new FileSystem(), new Path());
-
-		List<String> options = new ArrayList<String>();
+			throws InvalidPathException, IllegalArgumentException, FileAlreadyExistsException {
 		options.add("-l");
-		List<String> arguments = new ArrayList<String>();
 		arguments.add("/home/dir1");
 
-		mkdir.execute(options, arguments);
+		command.execute(options, arguments);
 	}
 
 	@Test
 	public void execute_NewDirectory_DirectoryAddedToFileSystem() throws InvalidPathException,
 			FileAlreadyExistsException, IllegalArgumentException, NotDirectoryException, FileNotFoundException {
-		FileSystem fs = new FileSystem();
-
-		MakeDirectory mkdir = new MakeDirectory(fs, new Path());
-
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
 		arguments.add("/home/dir1");
 
-		mkdir.execute(options, arguments);
+		command.execute(options, arguments);
 
 		assertEquals("dir1 ", fs.getDirectoryContent("/home", FilterBy.DEFAULT));
 	}
@@ -49,41 +52,26 @@ public class MakeDirectoryTest {
 	@Test
 	public void execute_NewDirectoryWithRelativePath_DirectoryAddedToFileSystem()
 			throws NotDirectoryException, FileNotFoundException, FileAlreadyExistsException, IllegalArgumentException {
-		FileSystem fs = new FileSystem();
-
-		MakeDirectory mkdir = new MakeDirectory(fs, new Path());
-
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
 		arguments.add("dir1");
 
-		mkdir.execute(options, arguments);
+		command.execute(options, arguments);
 
 		assertEquals("dir1 ", fs.getDirectoryContent("/home", FilterBy.DEFAULT));
 	}
 
-	@Test (expected = FileAlreadyExistsException.class)
+	@Test(expected = FileAlreadyExistsException.class)
 	public void execute_MakeExistingDirectory_ThrowFileAlreadyExistsException()
 			throws InvalidPathException, FileAlreadyExistsException, IllegalArgumentException {
-		MakeDirectory mkdir = new MakeDirectory(new FileSystem(), new Path());
-
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
 		arguments.add("/home");
 
-		mkdir.execute(options, arguments);
+		command.execute(options, arguments);
 	}
 
-	@Test (expected = InvalidPathException.class )
+	@Test(expected = InvalidPathException.class)
 	public void execute_MakeDirectoryWithNonExistentPath_ThrowInvalidPathException()
 			throws InvalidPathException, FileAlreadyExistsException, IllegalArgumentException {
-		MakeDirectory mkdir = new MakeDirectory(new FileSystem(), new Path());
-		String dir = "/home/dir1/dir2";
+		arguments.add("/home/dir1/dir2");
 
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
-		arguments.add(dir);
-
-		mkdir.execute(options, arguments);
+		command.execute(options, arguments);
 	}
 }

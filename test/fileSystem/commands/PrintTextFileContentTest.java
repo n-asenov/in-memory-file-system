@@ -10,6 +10,7 @@ import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import fileSystem.Path;
@@ -18,27 +19,31 @@ import fileSystem.fs.FileSystem;
 import fileSystem.output.ConsoleOutput;
 
 public class PrintTextFileContentTest {
+	private PrintTextFileContent command;
+	private FileSystem fs;
+	private List<String> options;
+	private List<String> arguments;
+	
+	@Before
+	public void init() throws FileAlreadyExistsException {
+		fs = new FileSystem();
+		fs.createTextFile("/home/f1");
+		command = new PrintTextFileContent(fs, new Path(), new ConsoleOutput());
+		options = new ArrayList<String>();
+		arguments = new ArrayList<String>();
+	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void execute_CommandWithOption_ThrowIllegalArgumentException()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
-		PrintTextFileContent command = new PrintTextFileContent(new FileSystem(), new Path(), new ConsoleOutput());
-
-		List<String> options = new ArrayList<String>();
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
 		options.add("-option");
-		List<String> arguments = new ArrayList<String>();
-		arguments.add("alabala");
 
 		command.execute(options, arguments);
 	}
 
 	@Test(expected = InvalidPathException.class)
 	public void execute_PathToTextFileIsInvalid_ThrowInvalidPathException()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
-		PrintTextFileContent command = new PrintTextFileContent(new FileSystem(), new Path(), new ConsoleOutput());
-
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
 		arguments.add("/home/dir1/f1");
 
 		command.execute(options, arguments);
@@ -46,23 +51,15 @@ public class PrintTextFileContentTest {
 
 	@Test(expected = FileNotFoundException.class)
 	public void execute_FileDoesNotExsist_ThrowFileNotFoundException()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
-		PrintTextFileContent command = new PrintTextFileContent(new FileSystem(), new Path(), new ConsoleOutput());
-
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
-		arguments.add("/home/f1");
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
+		arguments.add("/home/f2");
 
 		command.execute(options, arguments);
 	}
 
 	@Test(expected = FileNotFoundException.class)
 	public void execute_FileIsDirectory_ThrowFileNotFoundException()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
-		PrintTextFileContent command = new PrintTextFileContent(new FileSystem(), new Path(), new ConsoleOutput());
-
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
 		arguments.add("/home");
 
 		command.execute(options, arguments);
@@ -70,14 +67,7 @@ public class PrintTextFileContentTest {
 
 	@Test
 	public void execute_EmptyTextFile_OutputEmptyString()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
-		FileSystem fs = new FileSystem();
-		fs.createTextFile("/home/f1");
-
-		PrintTextFileContent command = new PrintTextFileContent(fs, new Path(), new ConsoleOutput());
-
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
 		arguments.add("/home/f1");
 
 		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -92,14 +82,8 @@ public class PrintTextFileContentTest {
 
 	@Test
 	public void execute_EmptyTextFileWithRelativePath_ReturnEmptyString()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
-		FileSystem fs = new FileSystem();
-		fs.createTextFile("/home/f1");
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
 
-		PrintTextFileContent command = new PrintTextFileContent(fs, new Path(), new ConsoleOutput());
-
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
 		arguments.add("f1");
 
 		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -111,5 +95,4 @@ public class PrintTextFileContentTest {
 
 		System.setOut(System.out);
 	}
-
 }

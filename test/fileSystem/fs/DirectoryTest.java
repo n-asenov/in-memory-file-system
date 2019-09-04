@@ -6,37 +6,44 @@ import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class DirectoryTest {
-	@Test
-	public void addFile_AddNewTextFileInDirectory_TextFileAddedInDirectory() {
-		Directory directory = new Directory("test");
-		File file = new TextFile("f1");
+	private Directory directory;
 
-		try {
-			directory.addFile(file);
-		} catch (FileAlreadyExistsException e) {
-			assertFalse("Unexpected exception thrown", true);
-		}
+	@Before
+	public void init() {
+		directory = new Directory("test");
 	}
 
 	@Test
-	public void addFile_AddSeveralNewTextFilesInDirectory_TextFilesAddedInDirectory() throws FileAlreadyExistsException {
-		Directory directory = new Directory("test");
+	public void addFile_AddNewTextFileInDirectory_TextFileAddedInDirectory() throws FileAlreadyExistsException {
+		directory.addFile(new TextFile("f1"));
 
-		int numberOfFiles = 10;
+		List<String> expectedResult = new ArrayList<String>();
+		expectedResult.add("f1");
+		
+		assertArrayEquals(expectedResult.toArray(), directory.getContent(FilterBy.DEFAULT).toArray());
+	}
 
-		for (int i = 0; i < numberOfFiles; i++) {
-			File file = new TextFile("f" + i);
-			directory.addFile(file);
+	@Test
+	public void addFile_AddSeveralNewTextFilesInDirectory_TextFilesAddedInDirectory()
+			throws FileAlreadyExistsException {
+		List<String> expectedResult = new ArrayList<String>();
+		
+		for (int i = 0; i < 10; i++) {
+			String fileName = "f" + i;
+			directory.addFile(new TextFile(fileName));
+			expectedResult.add(fileName);
 		}
+		
+		assertArrayEquals(expectedResult.toArray(), directory.getContent(FilterBy.DEFAULT).toArray());
 	}
 
 	@Test(expected = FileAlreadyExistsException.class)
-	public void addFile_AddExistingTextFile_ThrowFileAlreadyExistsExceptionException() throws FileAlreadyExistsException {
-		Directory directory = new Directory("test");
-
+	public void addFile_AddExistingTextFile_ThrowFileAlreadyExistsExceptionException()
+			throws FileAlreadyExistsException {
 		File file = new TextFile("f1");
 
 		directory.addFile(file);
@@ -46,17 +53,20 @@ public class DirectoryTest {
 
 	@Test
 	public void addFile_addNewDirectory_DirectoryAddedToContent() throws FileAlreadyExistsException {
-		Directory directory = new Directory("test");
-
-		Directory newSubDirectory = new Directory("dir1");
-
+		String dirName = "dir1";
+		Directory newSubDirectory = new Directory(dirName);
+		
+		List<String> expectedResult = new ArrayList<String>();
+		expectedResult.add(dirName);
+		
 		directory.addFile(newSubDirectory);
+	
+		assertArrayEquals(expectedResult.toArray(), directory.getContent(FilterBy.DEFAULT).toArray());
 	}
 
-	@Test (expected = FileAlreadyExistsException.class)
-	public void addFile_addExistingDirectory_ThrowFileAlreadyExistsExceptionException() throws FileAlreadyExistsException {
-		Directory directory = new Directory("Test");
-
+	@Test(expected = FileAlreadyExistsException.class)
+	public void addFile_addExistingDirectory_ThrowFileAlreadyExistsExceptionException()
+			throws FileAlreadyExistsException {
 		Directory subDirectoryName = new Directory("dir1");
 
 		directory.addFile(subDirectoryName);
@@ -65,27 +75,20 @@ public class DirectoryTest {
 
 	@Test
 	public void getContent_getContentByDefaultOption_ContentSortedByName() throws FileAlreadyExistsException {
-		Directory directory = new Directory("Test");
-
-		int size = 5;
-
 		List<String> expectedResult = new ArrayList<String>();
 
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < 5; i++) {
 			Directory dir = new Directory("dir" + i);
 			expectedResult.add(dir.getName());
 			directory.addFile(dir);
 		}
-		
-		List<String> result = directory.getContent(FilterBy.DEFAULT);
 
-		assertArrayEquals(expectedResult.toArray(), result.toArray());
+		assertArrayEquals(expectedResult.toArray(), directory.getContent(FilterBy.DEFAULT).toArray());
 	}
 
 	@Test
-	public void getContent_getContentBySizeDescending_ReturnContentSortedBySizeDescending() throws FileAlreadyExistsException {
-		Directory directory = new Directory("Test");
-
+	public void getContent_getContentBySizeDescending_ReturnContentSortedBySizeDescending()
+			throws FileAlreadyExistsException {
 		TextFile f1 = new TextFile("f1");
 		f1.write(1, "hello", false);
 		TextFile f2 = new TextFile("f2");
@@ -96,15 +99,11 @@ public class DirectoryTest {
 		directory.addFile(f2);
 		directory.addFile(dir);
 
-		List<String> result = directory.getContent(FilterBy.SIZE_DESCENDING);
-
 		List<String> expectedResult = new ArrayList<String>();
-
 		expectedResult.add(f2.getName());
 		expectedResult.add(f1.getName());
 		expectedResult.add(dir.getName());
 
-		assertArrayEquals(expectedResult.toArray(), result.toArray());
+		assertArrayEquals(expectedResult.toArray(), directory.getContent(FilterBy.SIZE_DESCENDING).toArray());
 	}
-
 }

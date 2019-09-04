@@ -8,22 +8,29 @@ import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import fileSystem.Path;
 import fileSystem.fs.FileSystem;
 
 public class ChangeDirectoryTest {
-
+	private ChangeDirectory command;
+	private Path path;
+	private List<String> options;
+	private List<String> arguments;
+	
+	@Before
+	public void init() throws FileAlreadyExistsException {
+		path = new Path();
+		command = new ChangeDirectory(new FileSystem(), path);
+		options = new ArrayList<String>();
+		arguments = new ArrayList<String>();
+	}
+	
 	@Test
 	public void execute_RelativePathToGoBackToParentDirectory_ReturnToParentDirectory()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
-		Path path = new Path();
-
-		ChangeDirectory command = new ChangeDirectory(new FileSystem(), path);
-
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
 		arguments.add("..");
 
 		command.execute(options, arguments);
@@ -33,13 +40,7 @@ public class ChangeDirectoryTest {
 
 	@Test
 	public void execute_ChangeDirectoryToCurrentDirectory_CurrentDirectoryDoesntChange()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
-		Path path = new Path();
-
-		ChangeDirectory command = new ChangeDirectory(new FileSystem(), path);
-
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
 		arguments.add(".");
 
 		command.execute(options, arguments);
@@ -49,14 +50,8 @@ public class ChangeDirectoryTest {
 
 	@Test
 	public void execute_ChangeDirectoryWithNoArguments_ReturnToHomeDirectory()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, FileAlreadyExistsException {
-		Path path = new Path();
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
 		path.setCurrentDirectory("/");
-
-		ChangeDirectory command = new ChangeDirectory(new FileSystem(), path);
-
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
 
 		command.execute(options, arguments);
 		
