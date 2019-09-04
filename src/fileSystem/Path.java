@@ -22,10 +22,14 @@ public class Path {
 	}
 
 	public String getAbsolutePath(String relativePath) {
-		if (relativePath.indexOf('/') == 0) { 
+		if (currentDirectory.equals("/")) {
+			return currentDirectory + relativePath;
+		}
+
+		if (relativePath.indexOf('/') == 0) {
 			return relativePath;
 		}
-		
+
 		return currentDirectory + "/" + relativePath;
 	}
 }
