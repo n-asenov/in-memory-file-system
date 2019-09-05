@@ -17,7 +17,7 @@ public class ChangeDirectory implements Command {
 	}
 
 	@Override
-	public void execute(List<String> options, List<String> arguments)
+	public String execute(List<String> options, List<String> arguments)
 			throws IllegalArgumentException, InvalidPathException, FileNotFoundException {
 		if (options.size() != 0) {
 			throw new IllegalArgumentException("Invalid option");
@@ -27,7 +27,7 @@ public class ChangeDirectory implements Command {
 
 		if (size == 0) {
 			currentDirectory.setCurrentDirectory(null);
-			return;
+			return null;
 		}
 
 		if (size > 1) {
@@ -39,5 +39,7 @@ public class ChangeDirectory implements Command {
 		if (fs.isDirectory(newCurrentDirectory)) {
 			currentDirectory.setCurrentDirectory(newCurrentDirectory);
 		}
+		
+		return null;
 	}
 }

@@ -1,6 +1,7 @@
 package fileSystem.terminal;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
@@ -30,9 +31,9 @@ public class Terminal {
 		commands.put("cd", new ChangeDirectory(fs, currentDirectory));
 		commands.put("mkdir", new MakeDirectory(fs, currentDirectory));
 		commands.put("create_file", new CreateTextFile(fs, currentDirectory));
-		commands.put("cat", new PrintTextFileContent(fs, currentDirectory, output));
+		commands.put("cat", new PrintTextFileContent(fs, currentDirectory));
 		commands.put("write", new WriteToTextFile(fs, currentDirectory));
-		commands.put("ls", new ListDirectoryContent(fs, currentDirectory, output));
+		commands.put("ls", new ListDirectoryContent(fs, currentDirectory));
 	}
 
 	public void run() {
@@ -47,9 +48,11 @@ public class Terminal {
 
 					if (command != null) {
 						 try {
-							command.execute(options, arguments);
+							output.print(command.execute(options, arguments));
 						} catch (NotDirectoryException | FileAlreadyExistsException | IllegalArgumentException
 								| FileNotFoundException e) {
+							output.print(e.getMessage());
+						} catch (IOException e) {
 							output.print(e.getMessage());
 						}
 					} else {

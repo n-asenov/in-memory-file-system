@@ -17,7 +17,7 @@ public class WriteToTextFile implements Command {
 	}
 
 	@Override
-	public void execute(List<String> options, List<String> arguments)
+	public String execute(List<String> options, List<String> arguments)
 			throws IllegalArgumentException, InvalidPathException, FileNotFoundException {
 		boolean overwrite = false;
 
@@ -49,6 +49,8 @@ public class WriteToTextFile implements Command {
 		}
 
 		fs.writeToTextFile(absolutePath, line, lineContent.toString(), overwrite);
+	
+		return null;
 	}
 
 	private boolean isNumber(String number) {

@@ -6,28 +6,32 @@ import java.util.List;
 
 import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
-import fileSystem.output.Output;
 
 public class PrintTextFileContent implements Command {
 	private AbstractFileSystem fs;
 	private Path currentDirectory;
-	private Output output;
 
-	public PrintTextFileContent(AbstractFileSystem fs, Path currentDirectory, Output output) {
+	public PrintTextFileContent(AbstractFileSystem fs, Path currentDirectory) {
 		this.fs = fs;
 		this.currentDirectory = currentDirectory;
-		this.output = output;
 	}
 
 	@Override
-	public void execute(List<String> options, List<String> arguments)
+	public String execute(List<String> options, List<String> arguments)
 			throws IllegalArgumentException, InvalidPathException, FileNotFoundException {
 		if (options.size() != 0) {
 			throw new IllegalArgumentException("Invalid option");
 		}
 
+		StringBuilder result = new StringBuilder();
+	
 		for (String file : arguments) {
-			output.print(fs.getTextFileContent(currentDirectory.getAbsolutePath(file)));
+			result.append(fs.getTextFileContent(currentDirectory.getAbsolutePath(file)));
+			result.append(System.lineSeparator());
 		}
+		
+		result.delete(result.lastIndexOf(System.lineSeparator()), result.length());
+		
+		return result.toString();
 	}
 }

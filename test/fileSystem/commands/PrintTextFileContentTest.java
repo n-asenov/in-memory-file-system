@@ -2,9 +2,7 @@ package fileSystem.commands;
 
 import static org.junit.Assert.*;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.PrintStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
@@ -16,7 +14,6 @@ import org.junit.Test;
 import fileSystem.Path;
 import fileSystem.commands.PrintTextFileContent;
 import fileSystem.fs.FileSystem;
-import fileSystem.output.ConsoleOutput;
 
 public class PrintTextFileContentTest {
 	private PrintTextFileContent command;
@@ -28,7 +25,7 @@ public class PrintTextFileContentTest {
 	public void init() throws FileAlreadyExistsException {
 		fs = new FileSystem();
 		fs.createTextFile("/home/f1");
-		command = new PrintTextFileContent(fs, new Path(), new ConsoleOutput());
+		command = new PrintTextFileContent(fs, new Path());
 		options = new ArrayList<String>();
 		arguments = new ArrayList<String>();
 	}
@@ -70,29 +67,14 @@ public class PrintTextFileContentTest {
 			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
 		arguments.add("/home/f1");
 
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		System.setOut(new PrintStream(outContent));
-
-		command.execute(options, arguments);
-
-		assertEquals("", outContent.toString());
-
-		System.setOut(System.out);
+		assertEquals("", command.execute(options, arguments));
 	}
 
 	@Test
 	public void execute_EmptyTextFileWithRelativePath_ReturnEmptyString()
 			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
-
 		arguments.add("f1");
 
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		System.setOut(new PrintStream(outContent));
-
-		command.execute(options, arguments);
-
-		assertEquals("", outContent.toString());
-
-		System.setOut(System.out);
+		assertEquals("", command.execute(options, arguments));
 	}
 }

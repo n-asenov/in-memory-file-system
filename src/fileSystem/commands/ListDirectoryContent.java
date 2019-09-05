@@ -7,21 +7,18 @@ import java.util.List;
 import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
 import fileSystem.fs.FilterBy;
-import fileSystem.output.Output;
 
 public class ListDirectoryContent implements Command {
 	private AbstractFileSystem fs;
 	private Path currentDirectory;
-	private Output output;
 
-	public ListDirectoryContent(AbstractFileSystem fs, Path currentDirectory, Output output) {
+	public ListDirectoryContent(AbstractFileSystem fs, Path currentDirectory) {
 		this.fs = fs;
 		this.currentDirectory = currentDirectory;
-		this.output = output;
 	}
 
 	@Override
-	public void execute(List<String> options, List<String> arguments)
+	public String execute(List<String> options, List<String> arguments)
 			throws IllegalArgumentException, NotDirectoryException, FileNotFoundException {
 		FilterBy flag = FilterBy.DEFAULT;
 
@@ -35,8 +32,7 @@ public class ListDirectoryContent implements Command {
 		int size = arguments.size();
 
 		if (size == 0) {
-			output.print(fs.getDirectoryContent(currentDirectory.getCurrentDirectory(), flag));
-			return;
+			return fs.getDirectoryContent(currentDirectory.getCurrentDirectory(), flag);
 		}
 
 		StringBuilder result = new StringBuilder();
@@ -48,6 +44,6 @@ public class ListDirectoryContent implements Command {
 
 		result.append(fs.getDirectoryContent(currentDirectory.getAbsolutePath(arguments.get(size - 1)), flag));
 
-		output.print(result.toString());
+		return result.toString();
 	}
 }
