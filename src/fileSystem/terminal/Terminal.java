@@ -15,25 +15,16 @@ import fileSystem.output.Output;
 import fileSystem.parser.Parser;
 
 public class Terminal {
-	private AbstractFileSystem fs;
 	private Parser parser;
 	private Output output;
-	private HashMap<String, Command> commands;
+	private CommandFactory factory;
 	private Path currentDirectory;
 
 	public Terminal(AbstractFileSystem fs, Parser parser, Output output) {
-		this.fs = fs;
 		this.parser = parser;
 		this.output = output;
-		currentDirectory = new Path();
-
-		commands = new HashMap<String, Command>();
-		commands.put("cd", new ChangeDirectory(fs, currentDirectory));
-		commands.put("mkdir", new MakeDirectory(fs, currentDirectory));
-		commands.put("create_file", new CreateTextFile(fs, currentDirectory));
-		commands.put("cat", new PrintTextFileContent(fs, currentDirectory));
-		commands.put("write", new WriteToTextFile(fs, currentDirectory));
-		commands.put("ls", new ListDirectoryContent(fs, currentDirectory));
+		currentDirectory = new Path();	
+		factory = new CommandFactory(fs, currentDirectory);
 	}
 
 	public void run() {
@@ -44,7 +35,7 @@ public class Terminal {
 				String commnandName = parser.getCommand(options, arguments);
 
 				if (commnandName != null) {
-					Command command = commands.get(commnandName);
+					Command command = factory.make(commnandName);
 
 					if (command != null) {
 						 try {
