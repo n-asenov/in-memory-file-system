@@ -22,38 +22,42 @@ public class WriteToTextFile implements Command {
 		boolean overwrite = false;
 
 		for (String option : options) {
-			if (!option.equals("-overwrite")) {
-				throw new IllegalArgumentException("Invalid option");
-			}
+			validateOption(option);
 			overwrite = true;
 		}
 
-		if (arguments.size() < 3) {
-			throw new IllegalArgumentException("Commmand expects more arguments");
-		}
-
-		if (!isNumber(arguments.get(1))) {
-			throw new IllegalArgumentException("Second argument must be a number");
-		}
+		validateArguments(arguments);
 
 		String absolutePath = currentDirectory.getAbsolutePath(arguments.get(0));
 		int line = Integer.parseInt(arguments.get(1));
-		StringBuilder lineContent = new StringBuilder();
+		String lineContent = getLineContent(arguments);
 
-		for (int i = 2; i < arguments.size(); i++) {
-			lineContent.append(arguments.get(i));
-			if (i != arguments.size() - 1) {
-				lineContent.append(" ");
-			}
-
-		}
-
-		fs.writeToTextFile(absolutePath, line, lineContent.toString(), overwrite);
+		fs.writeToTextFile(absolutePath, line, lineContent, overwrite);
 	
 		return null;
 	}
 
-	private boolean isNumber(String number) {
-		return number.matches("\\d*");
+	private void validateOption(String option) {
+		if (!option.equals("-overwrite")) {
+			throw new IllegalArgumentException("Invalid option");
+		}
+	}
+	
+	private void validateArguments(List<String> arguments) {
+		if (arguments.size() < 3) {
+			throw new IllegalArgumentException("Commmand expects more arguments");
+		}
+	}
+	
+	private String getLineContent(List<String> arguments) {
+		StringBuilder lineContent = new StringBuilder();
+		int size = arguments.size() - 1;
+		
+		for (int i = 2; i < size; i++) {
+			lineContent.append(arguments.get(i)).append(" ");
+		}
+		lineContent.append(arguments.get(size));
+		
+		return lineContent.toString();
 	}
 }

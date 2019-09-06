@@ -21,13 +21,7 @@ public class ListDirectoryContent implements Command {
 	public String execute(List<String> options, List<String> arguments)
 			throws IllegalArgumentException, NotDirectoryException, FileNotFoundException {
 		FilterBy flag = FilterBy.DEFAULT;
-
-		for (String option : options) {
-			if (!option.equals("-sortedDesc")) {
-				throw new IllegalArgumentException("Invalid option");
-			}
-			flag = FilterBy.SIZE_DESCENDING;
-		}
+		validateOptions(options, flag);
 
 		int size = arguments.size();
 
@@ -36,14 +30,21 @@ public class ListDirectoryContent implements Command {
 		}
 
 		StringBuilder result = new StringBuilder();
-
 		for (int i = 0; i < size - 1; i++) {
 			result.append(fs.getDirectoryContent(currentDirectory.getAbsolutePath(arguments.get(i)), flag));
 			result.append(System.lineSeparator());
 		}
-
 		result.append(fs.getDirectoryContent(currentDirectory.getAbsolutePath(arguments.get(size - 1)), flag));
 
 		return result.toString();
+	}
+	
+	private void validateOptions(List<String> options, FilterBy flag) throws IllegalArgumentException {
+		for (String option : options) {
+			if (!option.equals("-sortedDesc")) {
+				throw new IllegalArgumentException("Invalid option");
+			}
+			flag = FilterBy.SIZE_DESCENDING;
+		}
 	}
 }

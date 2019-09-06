@@ -19,12 +19,9 @@ public class PrintTextFileContent implements Command {
 	@Override
 	public String execute(List<String> options, List<String> arguments)
 			throws IllegalArgumentException, InvalidPathException, FileNotFoundException {
-		if (options.size() != 0) {
-			throw new IllegalArgumentException("Invalid option");
-		}
+		validateOptions(options);
 
 		StringBuilder result = new StringBuilder();
-	
 		for (String file : arguments) {
 			result.append(fs.getTextFileContent(currentDirectory.getAbsolutePath(file)));
 			result.append(System.lineSeparator());
@@ -33,5 +30,11 @@ public class PrintTextFileContent implements Command {
 		result.delete(result.lastIndexOf(System.lineSeparator()), result.length());
 		
 		return result.toString();
+	}
+	
+	private void validateOptions(List<String> options) throws IllegalArgumentException {
+		if (options.size() != 0) {
+			throw new IllegalArgumentException("Invalid option");
+		}
 	}
 }

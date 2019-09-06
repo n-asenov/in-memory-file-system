@@ -19,14 +19,18 @@ public class CreateTextFile implements Command {
 	@Override
 	public String execute(List<String> options, List<String> arguments)
 			throws IllegalArgumentException, InvalidPathException, FileAlreadyExistsException {
-		if (options.size() != 0) {
-			throw new IllegalArgumentException("Invalid option");
-		}
+		validateOptions(options);
 		
 		for (String argument : arguments) {
 			fs.createTextFile(currentDirectory.getAbsolutePath(argument));
 		}
 		
 		return null;
+	}
+	
+	private void validateOptions(List<String> options) throws IllegalArgumentException {
+		if (options.size() != 0) {
+			throw new IllegalArgumentException("Invalid option");
+		}
 	}
 }

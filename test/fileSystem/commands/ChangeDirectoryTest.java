@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.InvalidPathException;
+import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class ChangeDirectoryTest {
 	
 	@Test
 	public void execute_RelativePathToGoBackToParentDirectory_ReturnToParentDirectory()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, NotDirectoryException {
 		arguments.add("..");
 
 		command.execute(options, arguments);
@@ -40,7 +41,7 @@ public class ChangeDirectoryTest {
 
 	@Test
 	public void execute_ChangeDirectoryToCurrentDirectory_CurrentDirectoryDoesntChange()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, NotDirectoryException {
 		arguments.add(".");
 
 		command.execute(options, arguments);
@@ -50,7 +51,7 @@ public class ChangeDirectoryTest {
 
 	@Test
 	public void execute_ChangeDirectoryWithNoArguments_ReturnToHomeDirectory()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, NotDirectoryException {
 		path.setCurrentDirectory("/");
 
 		command.execute(options, arguments);

@@ -2,6 +2,7 @@ package fileSystem.commands;
 
 import java.io.FileNotFoundException;
 import java.nio.file.InvalidPathException;
+import java.nio.file.NotDirectoryException;
 import java.util.List;
 
 import fileSystem.Path;
@@ -18,28 +19,38 @@ public class ChangeDirectory implements Command {
 
 	@Override
 	public String execute(List<String> options, List<String> arguments)
-			throws IllegalArgumentException, InvalidPathException, FileNotFoundException {
+			throws IllegalArgumentException, InvalidPathException, FileNotFoundException, NotDirectoryException {
+		validateOptions(options);
+		validateArguments(arguments);
+
+		String newCurrentDirectory = null;
+
+		if (arguments.size() != 0) {
+			newCurrentDirectory = currentDirectory.getAbsolutePath(arguments.get(0));
+			validateNewCurrentDirectory(newCurrentDirectory);
+		}
+
+		currentDirectory.setCurrentDirectory(newCurrentDirectory);
+
+		return null;
+	}
+
+	private void validateOptions(List<String> options) throws IllegalArgumentException {
 		if (options.size() != 0) {
 			throw new IllegalArgumentException("Invalid option");
 		}
+	}
 
-		int size = arguments.size();
-
-		if (size == 0) {
-			currentDirectory.setCurrentDirectory(null);
-			return null;
-		}
-
-		if (size > 1) {
+	private void validateArguments(List<String> arguments) throws IllegalArgumentException {
+		if (arguments.size() > 1) {
 			throw new IllegalArgumentException("Invalid number of arguments");
 		}
+	}
 
-		String newCurrentDirectory = currentDirectory.getAbsolutePath(arguments.get(0));
-
-		if (fs.isDirectory(newCurrentDirectory)) {
-			currentDirectory.setCurrentDirectory(newCurrentDirectory);
+	private void validateNewCurrentDirectory(String newCurrentDirectory)
+			throws NotDirectoryException, InvalidPathException, FileNotFoundException {
+		if (!fs.isDirectory(newCurrentDirectory)) {
+			throw new NotDirectoryException("File is not a directory");
 		}
-		
-		return null;
 	}
 }

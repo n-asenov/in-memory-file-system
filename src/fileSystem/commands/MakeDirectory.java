@@ -19,14 +19,18 @@ public class MakeDirectory implements Command {
 	@Override
 	public String execute(List<String> options, List<String> arguments)
 			throws InvalidPathException, FileAlreadyExistsException, IllegalArgumentException {
-		if (options.size() != 0) {
-			throw new IllegalArgumentException("Invalid option");
-		}
+		validateOptions(options);
 
 		for (String argument : arguments) {
 			fs.makeDirectory(currentDirectory.getAbsolutePath(argument));	
 		}
 		
 		return null;
+	}
+	
+	private void validateOptions(List<String> options) throws IllegalArgumentException {
+		if (options.size() != 0) {
+			throw new IllegalArgumentException("Invalid option");
+		}
 	}
 }		
