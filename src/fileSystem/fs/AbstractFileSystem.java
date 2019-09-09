@@ -12,9 +12,11 @@ public interface AbstractFileSystem {
 
 	abstract String getTextFileContent(String absolutePath) throws InvalidPathException, FileNotFoundException;
 
-	abstract void writeToTextFile(String absolutePath, int line, String content, boolean overwrite) throws InvalidPathException, FileNotFoundException;
+	abstract void writeToTextFile(String absolutePath, int line, String content, boolean overwrite) throws InvalidPathException, FileNotFoundException, NotEnoughMemoryException;
 
 	abstract String getDirectoryContent(String absolutePath, FilterBy option) throws InvalidPathException, NotDirectoryException, FileNotFoundException;
 	
 	abstract boolean isDirectory(String absolutePath) throws InvalidPathException, FileNotFoundException;
+
+	abstract void removeTextFile(String absolutePath) throws InvalidPathException, FileNotFoundException;
 }

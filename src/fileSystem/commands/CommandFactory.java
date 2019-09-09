@@ -33,10 +33,18 @@ public class CommandFactory {
 			return new PrintTextFileContent(fileSystem, currentDirectory);
 		}
 
-		if (command.contentEquals("write")) {
+		if (command.equals("write")) {
 			return new WriteToTextFile(fileSystem, currentDirectory);
 		}
 
+		if (command.equals("wc")) {
+			return new WordCount(fileSystem, currentDirectory);
+		}
+
+		if (command.equals("rm")) {
+			return new RemoveTextFile(fileSystem, currentDirectory);
+		}
+		
 		return null;
 	}
 }

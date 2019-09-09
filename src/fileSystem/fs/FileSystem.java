@@ -4,14 +4,24 @@ import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.NotDirectoryException;
+import java.util.LinkedList;
 import java.util.List;
 
 public class FileSystem implements AbstractFileSystem {
+	public static final int CAPACITY = 1000;
+	private int usedMemory;
+	private LinkedList<File> deletedFiles;
 	private Directory root;
 
 	public FileSystem() throws FileAlreadyExistsException {
 		root = new Directory("/");
 		root.addFile(new Directory("home", root));
+		usedMemory = 0;
+		deletedFiles = new LinkedList<File>();
+	}
+	
+	public int getUsedMemory() {
+		return usedMemory;
 	}
 
 	@Override
@@ -45,7 +55,7 @@ public class FileSystem implements AbstractFileSystem {
 
 	@Override
 	public void writeToTextFile(String absolutePath, int line, String content, boolean overwrite)
-			throws InvalidPathException, FileNotFoundException {
+			throws InvalidPathException, FileNotFoundException, NotEnoughMemoryException {
 		Directory workDirectory = goToWorkDirectory(absolutePath);
 
 		File file = workDirectory.getFile(getCurrentFile(absolutePath));
@@ -55,6 +65,11 @@ public class FileSystem implements AbstractFileSystem {
 		}
 
 		TextFile textFile = (TextFile) file;
+
+		if (!freeEnoughSpace(textFile, line, content, overwrite)) {
+			throw new NotEnoughMemoryException("Not enough memory");
+		}
+		
 		textFile.write(line, content, overwrite);
 	}
 
@@ -95,10 +110,17 @@ public class FileSystem implements AbstractFileSystem {
 		if (file == null) {
 			throw new FileNotFoundException("Directory doesn't exist");
 		}
-		
+
 		return file.isDirectory();
 	}
 
+	@Override
+	public void removeTextFile(String absolutePath) throws InvalidPathException, FileNotFoundException {
+		Directory workingDirectory = goToWorkDirectory(absolutePath);
+		
+		deletedFiles.addLast(workingDirectory.removeTextFile(getCurrentFile(absolutePath)));
+	}
+	
 	private Directory goToWorkDirectory(String absolutePath) throws InvalidPathException {
 		Directory workDirectory = root;
 
@@ -128,4 +150,30 @@ public class FileSystem implements AbstractFileSystem {
 
 		return path[path.length - 1];
 	}
+
+	private boolean freeEnoughSpace(TextFile file, int line, String newContent, boolean overwrite)
+			throws NotEnoughMemoryException {
+		int sizeToAdd = newContent.length();
+
+		if (file.isEmptyLine(line)) {
+			sizeToAdd += 1;
+		}
+
+		if (overwrite) {
+			sizeToAdd -= file.getLineSize(line);
+		}
+
+		while (!deletedFiles.isEmpty() && usedMemory + sizeToAdd > CAPACITY) {
+			File deletedFile = deletedFiles.removeFirst();
+			usedMemory -= deletedFile.getSize();
+		}
+
+		if (usedMemory + sizeToAdd > CAPACITY) {
+			return false;
+		}
+		
+		usedMemory += sizeToAdd;
+		return true;
+	}
+
 }

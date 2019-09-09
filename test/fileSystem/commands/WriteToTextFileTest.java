@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import fileSystem.Path;
 import fileSystem.fs.FileSystem;
+import fileSystem.fs.NotEnoughMemoryException;
 
 public class WriteToTextFileTest {
 	private WriteToTextFile command;
@@ -32,7 +33,7 @@ public class WriteToTextFileTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void execute_CommandWithInvalidOption_ThrowIllegalArgumentException()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, NotEnoughMemoryException {
 		options.add("append");
 
 		command.execute(options, arguments);
@@ -40,7 +41,7 @@ public class WriteToTextFileTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void execute_CommandWithInvalidNumberOfArguments_ThrowIllegalArgumentException()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, NotEnoughMemoryException {
 		arguments.add("/home/f1");
 
 		command.execute(options, arguments);
@@ -48,7 +49,7 @@ public class WriteToTextFileTest {
 
 	@Test (expected = IllegalArgumentException.class)
 	public void execute_CommnadWithWrongSecondArgument_ThrowIllegalArgumentException()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, NotEnoughMemoryException {
 		arguments.add("/home/f1");
 		arguments.add("Number");
 		arguments.add("Hello, World!");
@@ -58,7 +59,7 @@ public class WriteToTextFileTest {
 
 	@Test
 	public void execute_ValidCommandWithNoOption_WriteContentToTextFile()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, NotEnoughMemoryException {
 		arguments.add("/home/f1");
 		arguments.add("1");
 		arguments.add("Hello, World!");
@@ -70,7 +71,7 @@ public class WriteToTextFileTest {
 
 	@Test
 	public void execute_ValidCommandWithOverwriteOption_WriteContentToTextFile()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, NotEnoughMemoryException {
 		options.add("-overwrite");
 		arguments.add("/home/f1");
 		arguments.add("1");
@@ -83,7 +84,7 @@ public class WriteToTextFileTest {
 
 	@Test
 	public void execute_ValidCommandWithRelativePath_WriteContentToTextFile()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
+			throws InvalidPathException, IllegalArgumentException, FileNotFoundException, NotEnoughMemoryException {
 		arguments.add("f1");
 		arguments.add("1");
 		arguments.add("Hello, World!");

@@ -6,6 +6,7 @@ import java.util.List;
 
 import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
+import fileSystem.fs.NotEnoughMemoryException;
 
 public class WriteToTextFile implements Command {
 	private AbstractFileSystem fs;
@@ -18,7 +19,7 @@ public class WriteToTextFile implements Command {
 
 	@Override
 	public String execute(List<String> options, List<String> arguments)
-			throws IllegalArgumentException, InvalidPathException, FileNotFoundException {
+			throws IllegalArgumentException, InvalidPathException, FileNotFoundException, NotEnoughMemoryException {
 		boolean overwrite = false;
 
 		for (String option : options) {

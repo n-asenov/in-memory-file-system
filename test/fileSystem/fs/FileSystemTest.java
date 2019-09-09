@@ -91,19 +91,19 @@ public class FileSystemTest {
 
 	@Test(expected = FileNotFoundException.class)
 	public void writeToTextFile_WriteToNonExistingFile_ThrowFileNotFoundException()
-			throws InvalidPathException, FileNotFoundException {
+			throws InvalidPathException, FileNotFoundException, NotEnoughMemoryException {
 		fs.writeToTextFile("/home/f1", 1, "Test", false);
 	}
 
 	@Test(expected = InvalidPathException.class)
 	public void writeToTextFile_PathToFileDoesNotExists_ThrowInvalidPathException()
-			throws InvalidPathException, FileNotFoundException {
+			throws InvalidPathException, FileNotFoundException, NotEnoughMemoryException {
 		fs.writeToTextFile("/home/dir1/f1", 1, "Test", false);
 	}
 
 	@Test
 	public void writeToTextFile_WriteToEmptyFile_ContentWrittenToFile()
-			throws InvalidPathException, FileNotFoundException, FileAlreadyExistsException {
+			throws InvalidPathException, FileNotFoundException, FileAlreadyExistsException, NotEnoughMemoryException {
 		String absolutePath = "/home/f1";
 
 		fs.createTextFile(absolutePath);
@@ -111,12 +111,71 @@ public class FileSystemTest {
 		fs.writeToTextFile(absolutePath, 1, "Test", false);
 
 		assertEquals("Test", fs.getTextFileContent(absolutePath));
+		assertEquals(5, fs.getUsedMemory());
 	}
 
 	@Test(expected = FileNotFoundException.class)
 	public void writeToTextFile_FileIsDirectory_ThrowFileNotFoundException()
-			throws InvalidPathException, FileNotFoundException {
+			throws InvalidPathException, FileNotFoundException, NotEnoughMemoryException {
 		fs.writeToTextFile("/home", 1, "hello", false);
+	}
+
+	@Test(expected = NotEnoughMemoryException.class)
+	public void writeToTextFile_NotEnoughSpaceInFileSystem_ThrowNotEnoughMemoryException()
+			throws FileAlreadyExistsException, InvalidPathException, FileNotFoundException, NotEnoughMemoryException {
+		String absolutePath = "/home/f1";
+		fs.createTextFile(absolutePath);
+		assertEquals(0, fs.getUsedMemory());
+
+		StringBuilder content = new StringBuilder();
+
+		for (int i = 0; i <= FileSystem.CAPACITY; i++) {
+			content.append('a');
+		}
+		
+		fs.writeToTextFile(absolutePath, 1, content.toString(), false);
+	}
+	
+	@Test
+	public void writeToTextFile_OverwriteLine_NewContentAddedToTextFile() throws FileAlreadyExistsException, InvalidPathException, FileNotFoundException, NotEnoughMemoryException {
+		String absolutePath = "/home/f1";
+		
+		fs.createTextFile(absolutePath);
+		fs.writeToTextFile(absolutePath, 1, "Hello", false);
+		assertEquals(6, fs.getUsedMemory());
+		
+		fs.writeToTextFile(absolutePath, 1, "A", true);
+		assertEquals(2, fs.getUsedMemory());
+	}
+	
+	@Test
+	public void writeToTextFile_AppendLine_NewContentAddedToTextFile() throws FileAlreadyExistsException, InvalidPathException, FileNotFoundException, NotEnoughMemoryException {
+		String absolutePath = "/home/f1";
+		
+		fs.createTextFile(absolutePath);
+		fs.writeToTextFile(absolutePath, 1, "hello", false);
+		assertEquals(6, fs.getUsedMemory());
+		fs.writeToTextFile(absolutePath, 1, " world", false);
+		assertEquals(12, fs.getUsedMemory());
+	}
+	
+	@Test
+	public void writeToTextFile_FreeEnoughSpaceByDeletingFilesToDelete_ContentWrittenToTextFile() throws FileAlreadyExistsException, InvalidPathException, FileNotFoundException, NotEnoughMemoryException {
+		fs.createTextFile("/home/f1");
+		fs.writeToTextFile("/home/f1", 1, "Hello", false);
+		fs.removeTextFile("/home/f1");
+		
+		StringBuilder content = new StringBuilder();
+
+		for (int i = 1; i < FileSystem.CAPACITY; i++) {
+			content.append('a');
+		}
+		
+		fs.createTextFile("/home/f2");
+		fs.writeToTextFile("/home/f2", 1, content.toString(), false);
+		
+		assertEquals(content.toString(), fs.getTextFileContent("/home/f2"));
+		assertEquals(FileSystem.CAPACITY, fs.getUsedMemory());
 	}
 
 	@Test(expected = FileNotFoundException.class)

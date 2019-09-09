@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import fileSystem.Path;
 import fileSystem.commands.*;
 import fileSystem.fs.AbstractFileSystem;
+import fileSystem.fs.NotEnoughMemoryException;
 import fileSystem.output.Output;
 import fileSystem.parser.Parser;
 
@@ -41,7 +41,7 @@ public class Terminal {
 						 try {
 							output.print(command.execute(options, arguments));
 						} catch (NotDirectoryException | FileAlreadyExistsException | IllegalArgumentException
-								| FileNotFoundException e) {
+								| FileNotFoundException | NotEnoughMemoryException e) {
 							output.print(e.getMessage());
 						} catch (IOException e) {
 							output.print(e.getMessage());

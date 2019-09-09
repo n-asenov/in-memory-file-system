@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
+import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 
 public class Directory extends File {
@@ -44,26 +45,40 @@ public class Directory extends File {
 	boolean isTextFile() {
 		return false;
 	}
-	
+
 	public void addFile(File file) throws FileAlreadyExistsException {
 		String fileName = file.getName();
-		
+
 		if (content.get(fileName) != null) {
 			throw new FileAlreadyExistsException("File " + fileName + " already exists");
 		}
 
 		content.put(fileName, file);
 	}
-		
+
 	public File getFile(String name) {
 		return content.get(name);
+	}
+
+	public File removeTextFile(String name) throws FileNotFoundException {
+		File file = content.get(name);
+
+		if (file == null) {
+			throw new FileNotFoundException("Text file doesn't exists");
+		}
+
+		if (file.isDirectory()) {
+			throw new FileNotFoundException("File is directory");
+		}
+
+		return content.remove(name);
 	}
 
 	public List<String> getContent(FilterBy option) {
 		List<File> list = new ArrayList<File>();
 
 		for (String fileName : content.keySet()) {
-			if(!fileName.equals(".") && !fileName.equals("..")) {
+			if (!fileName.equals(".") && !fileName.equals("..")) {
 				list.add(content.get(fileName));
 			}
 		}
@@ -71,11 +86,11 @@ public class Directory extends File {
 		Collections.sort(list, getComparator(option));
 
 		List<String> result = new ArrayList<String>();
-		
-		for(int i = 0; i < list.size(); i++) {
+
+		for (int i = 0; i < list.size(); i++) {
 			result.add(list.get(i).getName());
 		}
-		
+
 		return result;
 	}
 

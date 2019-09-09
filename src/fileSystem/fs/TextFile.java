@@ -46,6 +46,20 @@ public class TextFile extends File {
 		return fileContent.toString();
 	}
 
+	public boolean isEmptyLine(int line) {
+		return content.get(line) == null;
+	}
+
+	public int getLineSize(int line) {
+		String lineContent = content.get(line);
+
+		if (lineContent == null) {
+			return 0;
+		}
+		
+		return lineContent.length();
+	}
+
 	public void write(int lineNumber, String lineContent, boolean overwrite) throws IllegalArgumentException {
 		if (lineNumber <= 0) {
 			throw new IllegalArgumentException("Line number must be a positive integer");

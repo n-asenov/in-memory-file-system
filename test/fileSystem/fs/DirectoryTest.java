@@ -2,6 +2,7 @@ package fileSystem.fs;
 
 import static org.junit.Assert.*;
 
+import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,5 +106,25 @@ public class DirectoryTest {
 		expectedResult.add(dir.getName());
 
 		assertArrayEquals(expectedResult.toArray(), directory.getContent(FilterBy.SIZE_DESCENDING).toArray());
+	}
+	
+	@Test (expected = FileNotFoundException.class)
+	public void removeTextFile_FileDoesNotExists_ThrowFileNotFoundException() throws FileNotFoundException {
+		directory.removeTextFile("dir1");
+	}
+	
+	@Test (expected = FileNotFoundException.class) 
+	public void removeTextFile_FileIsDirectory_ThrowFileNotFoundException() throws FileAlreadyExistsException, FileNotFoundException {
+		String fileName = "dir1";
+		directory.addFile(new Directory(fileName, directory));
+		directory.removeTextFile(fileName);
+	}
+	
+	@Test
+	public void removeTextFile_TextFile_RemoveTextFileFromDirectory() throws FileNotFoundException, FileAlreadyExistsException {
+		String fileName = "f1";
+		directory.addFile(new TextFile(fileName));
+		directory.removeTextFile(fileName);
+		assertNull(directory.getFile(fileName));
 	}
 }
