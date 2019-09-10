@@ -12,10 +12,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fileSystem.Path;
+import fileSystem.fs.AbstractFileSystem;
 import fileSystem.fs.FileSystem;
 import fileSystem.fs.InvalidArgumentException;
 
 public class ChangeDirectoryTest {
+	private AbstractFileSystem fileSystem;
 	private ChangeDirectory command;
 	private Path path;
 	private List<String> options;
@@ -24,11 +26,47 @@ public class ChangeDirectoryTest {
 	@Before
 	public void init() throws FileAlreadyExistsException {
 		path = new Path();
-		command = new ChangeDirectory(new FileSystem(), path);
+		fileSystem = new FileSystem();
+		command = new ChangeDirectory(fileSystem, path);
 		options = new ArrayList<String>();
 		arguments = new ArrayList<String>();
 	}
 
+	@Test(expected = InvalidArgumentException.class)
+	public void execute_InvalidOption_ThrowInvalidArgumentException()
+			throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
+		options.add("-a");
+
+		command.execute(options, arguments);
+	}
+
+	@Test(expected = InvalidArgumentException.class)
+	public void execute_InvalidArguments_ThrowInvalidArgumentException()
+			throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
+		arguments.add("/home");
+		arguments.add("/dir1");
+
+		command.execute(options, arguments);
+	}
+	
+	@Test(expected = FileNotFoundException.class) 
+	public void execute_ChangeDirectoryToNonExistentDirectory_ThrowFileNotFoundExcepiton()
+			throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
+		arguments.add("/home/dir1");
+		
+		command.execute(options, arguments);
+	}
+
+	@Test (expected = NotDirectoryException.class) 
+	public void execute_ChangeDirectoryToTextFile_ThrowNotDirectoryException()
+			throws FileAlreadyExistsException, InvalidArgumentException, NotDirectoryException, FileNotFoundException {
+		fileSystem.createTextFile("/home/f1");
+		
+		arguments.add("f1");
+		
+		command.execute(options, arguments);
+	}
+	
 	@Test
 	public void execute_RelativePathToGoBackToParentDirectory_ReturnToParentDirectory()
 			throws FileNotFoundException, NotDirectoryException, InvalidArgumentException {
