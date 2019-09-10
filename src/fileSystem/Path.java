@@ -1,12 +1,14 @@
 package fileSystem;
 
+import java.util.ArrayDeque;
+
 public class Path {
 	private String homeDirectory;
 	private String currentDirectory;
 
 	public Path() {
-		homeDirectory = "/home";
-		currentDirectory = "/home";
+		homeDirectory = "/home/";
+		currentDirectory = "/home/";
 	}
 
 	public String getCurrentDirectory() {
@@ -22,14 +24,37 @@ public class Path {
 	}
 
 	public String getAbsolutePath(String relativePath) {
-		if (currentDirectory.equals("/")) {
-			return currentDirectory + relativePath;
-		}
-
 		if (relativePath.indexOf('/') == 0) {
-			return relativePath;
+			if (relativePath.length() == 1) {
+				return relativePath;
+			}
+
+			return trimAbsolutePath(relativePath);
 		}
 
-		return currentDirectory + "/" + relativePath;
+		return trimAbsolutePath(currentDirectory + relativePath);
+	}
+
+	private String trimAbsolutePath(String absolutePath) {
+		ArrayDeque<String> deque = new ArrayDeque<String>();
+
+		for (String fileName : absolutePath.split("/")) {
+			if (fileName.equals("..")) {
+				if (!deque.peekLast().equals("")) {
+					deque.removeLast();
+				}
+			}
+			else if (!fileName.equals(".")) {
+				deque.addLast(fileName);
+			}
+		}
+
+		StringBuilder path = new StringBuilder();
+
+		while (!deque.isEmpty()) {
+			path.append(deque.removeFirst()).append("/");
+		}
+
+		return path.toString();
 	}
 }

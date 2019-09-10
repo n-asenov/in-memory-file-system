@@ -36,7 +36,7 @@ public class ChangeDirectoryTest {
 
 		command.execute(options, arguments);
 
-		assertEquals("/home/..", path.getCurrentDirectory());
+		assertEquals("/", path.getCurrentDirectory());
 	}
 
 	@Test
@@ -46,7 +46,7 @@ public class ChangeDirectoryTest {
 
 		command.execute(options, arguments);
 
-		assertEquals("/home/.", path.getCurrentDirectory());
+		assertEquals("/home/", path.getCurrentDirectory());
 	}
 
 	@Test
@@ -56,6 +56,6 @@ public class ChangeDirectoryTest {
 
 		command.execute(options, arguments);
 
-		assertEquals("/home", path.getCurrentDirectory());
+		assertEquals("/home/", path.getCurrentDirectory());
 	}
 }
