@@ -1,11 +1,11 @@
 package fileSystem.commands;
 
 import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.InvalidPathException;
 import java.util.List;
 
 import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
+import fileSystem.fs.InvalidArgumentException;
 
 public class CreateTextFile implements Command {
 	private AbstractFileSystem fs;
@@ -18,7 +18,7 @@ public class CreateTextFile implements Command {
 
 	@Override
 	public String execute(List<String> options, List<String> arguments)
-			throws IllegalArgumentException, InvalidPathException, FileAlreadyExistsException {
+			throws FileAlreadyExistsException, InvalidArgumentException {
 		validateOptions(options);
 		
 		for (String argument : arguments) {
@@ -28,9 +28,9 @@ public class CreateTextFile implements Command {
 		return null;
 	}
 	
-	private void validateOptions(List<String> options) throws IllegalArgumentException {
+	private void validateOptions(List<String> options) throws InvalidArgumentException {
 		if (options.size() != 0) {
-			throw new IllegalArgumentException("Invalid option");
+			throw new InvalidArgumentException("Invalid option");
 		}
 	}
 }

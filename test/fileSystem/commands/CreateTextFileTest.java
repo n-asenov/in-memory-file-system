@@ -15,6 +15,7 @@ import org.junit.Test;
 import fileSystem.Path;
 import fileSystem.fs.FileSystem;
 import fileSystem.fs.FilterBy;
+import fileSystem.fs.InvalidArgumentException;
 
 public class CreateTextFileTest {
 	private CreateTextFile command;
@@ -30,9 +31,9 @@ public class CreateTextFileTest {
 		arguments = new ArrayList<String>();
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = InvalidArgumentException.class)
 	public void execute_CommandWithOption_ThrowIllegalArgumentException()
-			throws InvalidPathException, FileAlreadyExistsException, IllegalArgumentException {
+			throws FileAlreadyExistsException, InvalidArgumentException {
 		options.add("-l");
 		arguments.add("/home/f1");
 
@@ -41,15 +42,15 @@ public class CreateTextFileTest {
 
 	@Test(expected = FileAlreadyExistsException.class)
 	public void execute_CreateAlreadyExistingFile_ThrowFileAlreadyExistsException()
-			throws InvalidPathException, IllegalArgumentException, FileAlreadyExistsException {
+			throws FileAlreadyExistsException, InvalidArgumentException {
 		arguments.add("/home");
 
 		command.execute(options, arguments);
 	}
 
-	@Test(expected = InvalidPathException.class)
+	@Test(expected = InvalidArgumentException.class)
 	public void execute_CreateTextFileWithWrongAbsolutePath_ThrowInvalidPathException()
-			throws InvalidPathException, FileAlreadyExistsException, IllegalArgumentException {
+			throws  FileAlreadyExistsException, InvalidArgumentException {
 		arguments.add("/home/dir1/f1");
 
 		command.execute(options, arguments);
@@ -57,7 +58,7 @@ public class CreateTextFileTest {
 
 	@Test
 	public void execute_CreateNewTextFile_TextFileAddedToFileSystem() throws InvalidPathException,
-			FileAlreadyExistsException, IllegalArgumentException, NotDirectoryException, FileNotFoundException {
+			FileAlreadyExistsException, NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 		arguments.add("/home/f1");
 
 		command.execute(options, arguments);
@@ -67,7 +68,7 @@ public class CreateTextFileTest {
 
 	@Test
 	public void execute_CreateTextFileWithRelativePath_TextFileAddedToFileSystem() throws InvalidPathException,
-			FileAlreadyExistsException, IllegalArgumentException, NotDirectoryException, FileNotFoundException {
+			FileAlreadyExistsException, NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 		arguments.add("f1");
 
 		command.execute(options, arguments);
@@ -77,7 +78,7 @@ public class CreateTextFileTest {
 
 	@Test
 	public void execute_CreateSeveralTextFiles_TextFilesAddedToFileSystem() throws InvalidPathException,
-			FileAlreadyExistsException, IllegalArgumentException, NotDirectoryException, FileNotFoundException {
+			FileAlreadyExistsException, NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 		arguments.add("f1");
 		arguments.add("f2");
 		arguments.add("f3");

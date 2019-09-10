@@ -1,11 +1,11 @@
 package fileSystem.commands;
 
 import java.io.FileNotFoundException;
-import java.nio.file.InvalidPathException;
 import java.util.List;
 
 import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
+import fileSystem.fs.InvalidArgumentException;
 
 public class PrintTextFileContent implements Command {
 	private AbstractFileSystem fs;
@@ -18,7 +18,7 @@ public class PrintTextFileContent implements Command {
 
 	@Override
 	public String execute(List<String> options, List<String> arguments)
-			throws IllegalArgumentException, InvalidPathException, FileNotFoundException {
+			throws FileNotFoundException, InvalidArgumentException {
 		validateOptions(options);
 
 		StringBuilder result = new StringBuilder();
@@ -32,9 +32,9 @@ public class PrintTextFileContent implements Command {
 		return result.toString();
 	}
 	
-	private void validateOptions(List<String> options) throws IllegalArgumentException {
+	private void validateOptions(List<String> options) throws InvalidArgumentException {
 		if (options.size() != 0) {
-			throw new IllegalArgumentException("Invalid option");
+			throw new InvalidArgumentException("Invalid option");
 		}
 	}
 }

@@ -89,7 +89,7 @@ public class DirectoryTest {
 
 	@Test
 	public void getContent_getContentBySizeDescending_ReturnContentSortedBySizeDescending()
-			throws FileAlreadyExistsException {
+			throws FileAlreadyExistsException, InvalidArgumentException {
 		TextFile f1 = new TextFile("f1");
 		f1.write(1, "hello", false);
 		TextFile f2 = new TextFile("f2");

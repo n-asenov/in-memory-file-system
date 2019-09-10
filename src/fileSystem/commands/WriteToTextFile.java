@@ -1,11 +1,11 @@
 package fileSystem.commands;
 
 import java.io.FileNotFoundException;
-import java.nio.file.InvalidPathException;
 import java.util.List;
 
 import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
+import fileSystem.fs.InvalidArgumentException;
 import fileSystem.fs.NotEnoughMemoryException;
 
 public class WriteToTextFile implements Command {
@@ -19,7 +19,7 @@ public class WriteToTextFile implements Command {
 
 	@Override
 	public String execute(List<String> options, List<String> arguments)
-			throws IllegalArgumentException, InvalidPathException, FileNotFoundException, NotEnoughMemoryException {
+			throws FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException {
 		boolean overwrite = false;
 
 		for (String option : options) {
@@ -38,15 +38,15 @@ public class WriteToTextFile implements Command {
 		return null;
 	}
 
-	private void validateOption(String option) {
+	private void validateOption(String option) throws InvalidArgumentException {
 		if (!option.equals("-overwrite")) {
-			throw new IllegalArgumentException("Invalid option");
+			throw new InvalidArgumentException("Invalid option");
 		}
 	}
 	
-	private void validateArguments(List<String> arguments) {
+	private void validateArguments(List<String> arguments) throws InvalidArgumentException {
 		if (arguments.size() < 3) {
-			throw new IllegalArgumentException("Commmand expects more arguments");
+			throw new InvalidArgumentException("Commmand expects more arguments");
 		}
 	}
 	

@@ -2,9 +2,7 @@ package fileSystem.commands;
 
 import static org.junit.Assert.*;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.PrintStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
@@ -15,6 +13,7 @@ import org.junit.Test;
 
 import fileSystem.Path;
 import fileSystem.fs.FileSystem;
+import fileSystem.fs.InvalidArgumentException;
 
 public class ListDirectoryContentTest {
 	private ListDirectoryContent command;
@@ -23,8 +22,8 @@ public class ListDirectoryContentTest {
 	private List<String> arguments;
 
 	@Before
-	public void init() throws FileAlreadyExistsException {
-		fs = new FileSystem();		
+	public void init() throws FileAlreadyExistsException, InvalidArgumentException {
+		fs = new FileSystem();
 		fs.makeDirectory("/home/dir1");
 		fs.makeDirectory("/home/dir1/dir2");
 		fs.makeDirectory("/home/dir1/dir3");
@@ -33,9 +32,9 @@ public class ListDirectoryContentTest {
 		arguments = new ArrayList<String>();
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = InvalidArgumentException.class)
 	public void execute_CommandWithInvalidOptions_ThrowIllegalArgumentException()
-			throws NotDirectoryException, IllegalArgumentException, FileNotFoundException {
+			throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 		options.add("al");
 
 		command.execute(options, arguments);
@@ -43,48 +42,41 @@ public class ListDirectoryContentTest {
 
 	@Test
 	public void execute_listEmptyDirectory_ReturnEmptyString()
-			throws NotDirectoryException, IllegalArgumentException, FileNotFoundException {
+			throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 		arguments.add("/home/dir1/dir2");
 
-		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		System.setOut(new PrintStream(outContent));
-
-		command.execute(options, arguments);
-
-		assertEquals("", outContent.toString());
-
-		System.setOut(System.out);
+		assertEquals("", command.execute(options, arguments));
 	}
 
 	@Test
 	public void execute_listTwoDirectories_ReturnContetnOfDirectories()
-			throws NotDirectoryException, IllegalArgumentException, FileNotFoundException {
+			throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 		arguments.add("/");
 		arguments.add("/home");
 
-		assertEquals("home "+ System.lineSeparator() + "dir1 ", command.execute(options, arguments));
+		assertEquals("home " + System.lineSeparator() + "dir1 ", command.execute(options, arguments));
 	}
-	
+
 	@Test
 	public void execute_listDirectoryWithSortedDescOption_ReturnContentSortedDesc()
-			throws NotDirectoryException, IllegalArgumentException, FileNotFoundException {
+			throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 		options.add("-sortedDesc");
 		arguments.add("/");
-		
+
 		assertEquals("home ", command.execute(options, arguments));
 	}
 
 	@Test
 	public void execute_listDirectoryWithRelativePath_ReturnContentOfDirectory()
-			throws NotDirectoryException, IllegalArgumentException, FileNotFoundException {
+			throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 		arguments.add("dir1");
-		
+
 		assertEquals("dir2 dir3 ", command.execute(options, arguments));
 	}
 
 	@Test
 	public void execute_listDirectoryWithNoArguments_ReturnContentOfCurrentDirectory()
-			throws NotDirectoryException, IllegalArgumentException, FileNotFoundException {
+			throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 		assertEquals("dir1 ", command.execute(options, arguments));
 	}
 }

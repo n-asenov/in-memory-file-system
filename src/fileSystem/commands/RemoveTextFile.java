@@ -1,11 +1,11 @@
 package fileSystem.commands;
 
 import java.io.FileNotFoundException;
-import java.nio.file.InvalidPathException;
 import java.util.List;
 
 import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
+import fileSystem.fs.InvalidArgumentException;
 import fileSystem.fs.NotEnoughMemoryException;
 
 public class RemoveTextFile implements Command {
@@ -19,7 +19,7 @@ public class RemoveTextFile implements Command {
 
 	@Override
 	public String execute(List<String> options, List<String> arguments)
-			throws IllegalArgumentException, InvalidPathException, FileNotFoundException, NotEnoughMemoryException {
+			throws FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException {
 		validateOptions(options);
 
 		for (String argument : arguments) {
@@ -29,9 +29,9 @@ public class RemoveTextFile implements Command {
 		return null;
 	}
 
-	private void validateOptions(List<String> options) throws IllegalArgumentException {
+	private void validateOptions(List<String> options) throws InvalidArgumentException {
 		if (options.size() != 0) {
-			throw new IllegalArgumentException("Invalid option");
+			throw new InvalidArgumentException("Invalid option");
 		}
 	}
 }

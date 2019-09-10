@@ -7,6 +7,7 @@ import java.util.List;
 import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
 import fileSystem.fs.FilterBy;
+import fileSystem.fs.InvalidArgumentException;
 
 public class ListDirectoryContent implements Command {
 	private AbstractFileSystem fs;
@@ -19,9 +20,8 @@ public class ListDirectoryContent implements Command {
 
 	@Override
 	public String execute(List<String> options, List<String> arguments)
-			throws IllegalArgumentException, NotDirectoryException, FileNotFoundException {
-		FilterBy flag = FilterBy.DEFAULT;
-		validateOptions(options, flag);
+			throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
+		FilterBy flag = validateOptions(options);
 
 		int size = arguments.size();
 
@@ -39,12 +39,16 @@ public class ListDirectoryContent implements Command {
 		return result.toString();
 	}
 	
-	private void validateOptions(List<String> options, FilterBy flag) throws IllegalArgumentException {
+	private FilterBy validateOptions(List<String> options) throws InvalidArgumentException {
+		FilterBy flag = FilterBy.DEFAULT;
+		
 		for (String option : options) {
 			if (!option.equals("-sortedDesc")) {
-				throw new IllegalArgumentException("Invalid option");
+				throw new InvalidArgumentException("Invalid option");
 			}
 			flag = FilterBy.SIZE_DESCENDING;
 		}
+		
+		return flag;
 	}
 }

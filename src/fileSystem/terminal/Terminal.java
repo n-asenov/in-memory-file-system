@@ -10,6 +10,7 @@ import java.util.List;
 import fileSystem.Path;
 import fileSystem.commands.*;
 import fileSystem.fs.AbstractFileSystem;
+import fileSystem.fs.InvalidArgumentException;
 import fileSystem.fs.NotEnoughMemoryException;
 import fileSystem.output.Output;
 import fileSystem.parser.Parser;
@@ -41,7 +42,7 @@ public class Terminal {
 						 try {
 							output.print(command.execute(options, arguments));
 						} catch (NotDirectoryException | FileAlreadyExistsException | IllegalArgumentException
-								| FileNotFoundException | NotEnoughMemoryException e) {
+								| FileNotFoundException | NotEnoughMemoryException | InvalidArgumentException e) {
 							output.print(e.getMessage());
 						} catch (IOException e) {
 							output.print(e.getMessage());

@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +13,7 @@ import org.junit.Test;
 import fileSystem.Path;
 import fileSystem.commands.PrintTextFileContent;
 import fileSystem.fs.FileSystem;
+import fileSystem.fs.InvalidArgumentException;
 
 public class PrintTextFileContentTest {
 	private PrintTextFileContent command;
@@ -22,7 +22,7 @@ public class PrintTextFileContentTest {
 	private List<String> arguments;
 	
 	@Before
-	public void init() throws FileAlreadyExistsException {
+	public void init() throws FileAlreadyExistsException, InvalidArgumentException {
 		fs = new FileSystem();
 		fs.createTextFile("/home/f1");
 		command = new PrintTextFileContent(fs, new Path());
@@ -30,17 +30,17 @@ public class PrintTextFileContentTest {
 		arguments = new ArrayList<String>();
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = InvalidArgumentException.class)
 	public void execute_CommandWithOption_ThrowIllegalArgumentException()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
+			throws FileNotFoundException, InvalidArgumentException {
 		options.add("-option");
 
 		command.execute(options, arguments);
 	}
 
-	@Test(expected = InvalidPathException.class)
+	@Test(expected = InvalidArgumentException.class)
 	public void execute_PathToTextFileIsInvalid_ThrowInvalidPathException()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
+			throws FileNotFoundException, InvalidArgumentException {
 		arguments.add("/home/dir1/f1");
 
 		command.execute(options, arguments);
@@ -48,7 +48,7 @@ public class PrintTextFileContentTest {
 
 	@Test(expected = FileNotFoundException.class)
 	public void execute_FileDoesNotExsist_ThrowFileNotFoundException()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
+			throws  FileNotFoundException, InvalidArgumentException {
 		arguments.add("/home/f2");
 
 		command.execute(options, arguments);
@@ -56,7 +56,7 @@ public class PrintTextFileContentTest {
 
 	@Test(expected = FileNotFoundException.class)
 	public void execute_FileIsDirectory_ThrowFileNotFoundException()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
+			throws FileNotFoundException, InvalidArgumentException {
 		arguments.add("/home");
 
 		command.execute(options, arguments);
@@ -64,7 +64,7 @@ public class PrintTextFileContentTest {
 
 	@Test
 	public void execute_EmptyTextFile_OutputEmptyString()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
+			throws FileNotFoundException, InvalidArgumentException {
 		arguments.add("/home/f1");
 
 		assertEquals("", command.execute(options, arguments));
@@ -72,7 +72,7 @@ public class PrintTextFileContentTest {
 
 	@Test
 	public void execute_EmptyTextFileWithRelativePath_ReturnEmptyString()
-			throws InvalidPathException, IllegalArgumentException, FileNotFoundException {
+			throws FileNotFoundException, InvalidArgumentException {
 		arguments.add("f1");
 
 		assertEquals("", command.execute(options, arguments));

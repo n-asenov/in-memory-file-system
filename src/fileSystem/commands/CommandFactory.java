@@ -45,6 +45,10 @@ public class CommandFactory {
 			return new RemoveTextFile(fileSystem, currentDirectory);
 		}
 		
+		if(command.equals("remove")) {
+			return new RemoveLineContentFromTextFile(fileSystem, currentDirectory);
+		}
+		
 		return null;
 	}
 }

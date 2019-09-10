@@ -7,29 +7,29 @@ import org.junit.Test;
 
 public class TextFileTest {
 	private TextFile file;
-	
+
 	@Before
 	public void init() {
 		file = new TextFile("test");
 	}
-	
-	@Test (expected = IllegalArgumentException.class)
-	public void write_WriteContentOnInvalidLine_ThrowIllegalArgumentException() {
+
+	@Test(expected = InvalidArgumentException.class)
+	public void write_WriteContentOnInvalidLine_ThrowIllegalArgumentException() throws InvalidArgumentException {
 		file.write(-20, "Hello, World", false);
 	}
 
 	@Test
-	public void write_WriteContentOnNewLine_NewContentWrittenOnTheLine() {
+	public void write_WriteContentOnNewLine_NewContentWrittenOnTheLine() throws InvalidArgumentException {
 		String lineContent = "New line";
 
 		file.write(1, lineContent, false);
-		
+
 		assertEquals(lineContent, file.getContent());
 		assertEquals(lineContent.length() + 1, file.getSize());
 	}
 
 	@Test
-	public void write_AppendContent_ContentAppendedToExistingContent() {
+	public void write_AppendContent_ContentAppendedToExistingContent() throws InvalidArgumentException {
 		int lineNumber = 1;
 		String lineContent = "Existing content";
 
@@ -43,13 +43,13 @@ public class TextFileTest {
 		expectedSize += lineContent.length();
 
 		file.write(lineNumber, lineContent, false);
-		
+
 		assertEquals(expectedContent, file.getContent());
 		assertEquals(expectedSize, file.getSize());
 	}
 
 	@Test
-	public void write_OverwriteLine_OnlyTheNewContentIsInTheLine() {
+	public void write_OverwriteLine_OnlyTheNewContentIsInTheLine() throws InvalidArgumentException {
 		int lineNumber = 1;
 		String lineContent = "Current content";
 
@@ -58,13 +58,13 @@ public class TextFileTest {
 		lineContent = "New content";
 
 		file.write(lineNumber, lineContent, true);
-		
+
 		assertEquals(lineContent, file.getContent());
 		assertEquals(lineContent.length() + 1, file.getSize());
 	}
 
 	@Test
-	public void write_OverwriteEmptyLine_NewContentWrittenToTheLine() {
+	public void write_OverwriteEmptyLine_NewContentWrittenToTheLine() throws InvalidArgumentException {
 		String newContent = "Hello world";
 
 		file.write(1, newContent, true);
@@ -74,14 +74,14 @@ public class TextFileTest {
 	}
 
 	@Test
-	public void getContent_SingleLineContent_ContentReturnedAsString() {
+	public void getContent_SingleLineContent_ContentReturnedAsString() throws InvalidArgumentException {
 		file.write(1, "Hello", false);
 
 		assertEquals("Hello", file.getContent());
 	}
 
 	@Test
-	public void getContent_SeveralConsecutiveLines_ContentReturnedAsString() {
+	public void getContent_SeveralConsecutiveLines_ContentReturnedAsString() throws InvalidArgumentException {
 		StringBuilder expectedResult = new StringBuilder();
 		String newLine = System.lineSeparator();
 
@@ -96,7 +96,7 @@ public class TextFileTest {
 	}
 
 	@Test
-	public void getContent_TwoContentLinesWithGapInbetween_ContentReturnedAsString() {
+	public void getContent_TwoContentLinesWithGapInbetween_ContentReturnedAsString() throws InvalidArgumentException {
 		StringBuilder expectedResult = new StringBuilder();
 		String newLine = System.lineSeparator();
 
@@ -110,7 +110,7 @@ public class TextFileTest {
 	}
 
 	@Test
-	public void getContent_SeveralContentLinesWithGapInbetween_ContentReturnedAsString() {
+	public void getContent_SeveralContentLinesWithGapInbetween_ContentReturnedAsString() throws InvalidArgumentException {
 		StringBuilder expectedResult = new StringBuilder();
 		String newLine = System.lineSeparator();
 
@@ -131,6 +131,40 @@ public class TextFileTest {
 
 	@Test
 	public void getContent_EmptyFile_ReturnedEmptyString() {
+		assertEquals("", file.getContent());
+		assertEquals(0, file.getSize());
+	}
+
+	@Test(expected = InvalidArgumentException.class)
+	public void removeContentFromLines_StartIsBiggerThanEnd_ThrowInvalidArgumentException()
+			throws InvalidArgumentException {
+		int start = 1;
+		int end = 5;
+
+		for (int i = start; i < end; i++) {
+			file.write(i, "Hello", false);
+		}
+
+		file.removeContentFromLines(end, start);
+	}
+
+	@Test(expected = InvalidArgumentException.class)
+	public void removeContentFromLines_RemoveContentFromNegativeLineNumber_ThrowInvalidArgumentException()
+			throws InvalidArgumentException {
+		file.removeContentFromLines(-1, 2);
+	}
+
+	@Test
+	public void removeContentFromLines_RemoveContentFromAllLines_EmptyTextFile() throws InvalidArgumentException {
+		int start = 1;
+		int end = 5;
+
+		for (int i = start; i < end; i++) {
+			file.write(i, "Hello", false);
+		}
+
+		file.removeContentFromLines(start, end);
+
 		assertEquals("", file.getContent());
 		assertEquals(0, file.getSize());
 	}

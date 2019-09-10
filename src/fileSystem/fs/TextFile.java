@@ -56,13 +56,35 @@ public class TextFile extends File {
 		if (lineContent == null) {
 			return 0;
 		}
-		
+
 		return lineContent.length();
 	}
 
-	public void write(int lineNumber, String lineContent, boolean overwrite) throws IllegalArgumentException {
+	public void removeContentFromLines(int start, int end) throws InvalidArgumentException {
+		if (end < start) {
+			throw new InvalidArgumentException("Second line number must be bigger than first");
+		}
+
+		for (int i = start; i <= end; i++) {
+			removeLineContent(i);
+		}
+	}
+
+	private void removeLineContent(int line) throws InvalidArgumentException {
+		if (line <= 0) {
+			throw new InvalidArgumentException("Line number must be positive");
+		}
+
+		String deletedContent = content.remove(line);
+
+		if (deletedContent != null) {
+			size -= deletedContent.length() + 1;
+		}
+	}
+
+	public void write(int lineNumber, String lineContent, boolean overwrite) throws InvalidArgumentException {
 		if (lineNumber <= 0) {
-			throw new IllegalArgumentException("Line number must be a positive integer");
+			throw new InvalidArgumentException("Line number must be a positive integer");
 		}
 
 		if (!overwrite) {

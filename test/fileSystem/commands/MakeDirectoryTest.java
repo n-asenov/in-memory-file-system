@@ -15,6 +15,7 @@ import org.junit.Test;
 import fileSystem.Path;
 import fileSystem.fs.FileSystem;
 import fileSystem.fs.FilterBy;
+import fileSystem.fs.InvalidArgumentException;
 
 public class MakeDirectoryTest {
 	private MakeDirectory command;
@@ -30,9 +31,9 @@ public class MakeDirectoryTest {
 		arguments = new ArrayList<String>();
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = InvalidArgumentException.class)
 	public void execute_MakeDirectoryWithOption_ThrowIllegalArgumentException()
-			throws InvalidPathException, IllegalArgumentException, FileAlreadyExistsException {
+			throws FileAlreadyExistsException, InvalidArgumentException {
 		options.add("-l");
 		arguments.add("/home/dir1");
 
@@ -41,7 +42,7 @@ public class MakeDirectoryTest {
 
 	@Test
 	public void execute_NewDirectory_DirectoryAddedToFileSystem() throws InvalidPathException,
-			FileAlreadyExistsException, IllegalArgumentException, NotDirectoryException, FileNotFoundException {
+			FileAlreadyExistsException, NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 		arguments.add("/home/dir1");
 
 		command.execute(options, arguments);
@@ -51,7 +52,7 @@ public class MakeDirectoryTest {
 
 	@Test
 	public void execute_NewDirectoryWithRelativePath_DirectoryAddedToFileSystem()
-			throws NotDirectoryException, FileNotFoundException, FileAlreadyExistsException, IllegalArgumentException {
+			throws NotDirectoryException, FileNotFoundException, FileAlreadyExistsException, InvalidArgumentException {
 		arguments.add("dir1");
 
 		command.execute(options, arguments);
@@ -61,15 +62,15 @@ public class MakeDirectoryTest {
 
 	@Test(expected = FileAlreadyExistsException.class)
 	public void execute_MakeExistingDirectory_ThrowFileAlreadyExistsException()
-			throws InvalidPathException, FileAlreadyExistsException, IllegalArgumentException {
+			throws FileAlreadyExistsException, InvalidArgumentException {
 		arguments.add("/home");
 
 		command.execute(options, arguments);
 	}
 
-	@Test(expected = InvalidPathException.class)
+	@Test(expected = InvalidArgumentException.class)
 	public void execute_MakeDirectoryWithNonExistentPath_ThrowInvalidPathException()
-			throws InvalidPathException, FileAlreadyExistsException, IllegalArgumentException {
+			throws  FileAlreadyExistsException, InvalidArgumentException{
 		arguments.add("/home/dir1/dir2");
 
 		command.execute(options, arguments);
