@@ -49,6 +49,10 @@ public class CommandFactory {
 			return new RemoveLineContentFromTextFile(fileSystem, currentDirectory);
 		}
 		
+		if(command.equals("pwd")) {
+			return new PrintWorkingDirectory(currentDirectory);
+		}
+		
 		return null;
 	}
 }
