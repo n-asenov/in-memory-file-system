@@ -6,7 +6,6 @@ import java.util.List;
 import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
 import fileSystem.fs.InvalidArgumentException;
-import fileSystem.fs.NotEnoughMemoryException;
 
 public class RemoveTextFile implements Command {
 	private AbstractFileSystem fileSystem;
@@ -19,7 +18,7 @@ public class RemoveTextFile implements Command {
 
 	@Override
 	public String execute(List<String> options, List<String> arguments)
-			throws FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException {
+			throws FileNotFoundException, InvalidArgumentException {
 		validateOptions(options);
 
 		for (String argument : arguments) {
