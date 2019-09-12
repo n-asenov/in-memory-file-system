@@ -24,7 +24,7 @@ public class RemoveTextFileTest {
 	private List<String> arguments;
 
 	@Before
-	public void init() throws FileAlreadyExistsException {
+	public void init() {
 		fileSystem = new FileSystem();
 		command = new RemoveTextFile(fileSystem, new Path());
 		options = new ArrayList<String>();

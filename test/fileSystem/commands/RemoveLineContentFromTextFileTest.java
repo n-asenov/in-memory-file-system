@@ -23,7 +23,7 @@ public class RemoveLineContentFromTextFileTest {
 	private List<String> arguments;
 	
 	@Before
-	public void init() throws FileAlreadyExistsException {
+	public void init() {
 		fileSystem = new FileSystem();
 		command = new RemoveLineContentFromTextFile(fileSystem, new Path());
 		options = new ArrayList<String>();

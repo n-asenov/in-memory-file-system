@@ -24,7 +24,7 @@ public class ChangeDirectoryTest {
 	private List<String> arguments;
 
 	@Before
-	public void init() throws FileAlreadyExistsException {
+	public void init() {
 		path = new Path();
 		fileSystem = new FileSystem();
 		command = new ChangeDirectory(fileSystem, path);

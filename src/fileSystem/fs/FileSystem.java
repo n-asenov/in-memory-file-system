@@ -12,9 +12,13 @@ public class FileSystem implements AbstractFileSystem {
 	private LinkedList<File> deletedFiles;
 	private Directory root;
 
-	public FileSystem() throws FileAlreadyExistsException {
+	public FileSystem() {
 		root = new Directory("/");
-		root.addFile(new Directory("home", root));
+		try {
+			root.addFile(new Directory("home", root));
+		} catch (FileAlreadyExistsException e) {
+			//TODO throw unchecked exception
+		}
 		usedMemory = 0;
 		deletedFiles = new LinkedList<File>();
 	}

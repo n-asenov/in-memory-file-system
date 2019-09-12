@@ -22,9 +22,13 @@ public class WriteToTextFileTest {
 	private List<String> arguments;
 	
 	@Before
-	public void init() throws FileAlreadyExistsException, InvalidArgumentException {
+	public void init() {
 		fs = new FileSystem();
-		fs.createTextFile("/home/f1");
+		try {
+			fs.createTextFile("/home/f1");
+		} catch (FileAlreadyExistsException | InvalidArgumentException e) {
+			throw new IllegalArgumentException();
+		}
 		
 		command = new WriteToTextFile(fs, new Path());
 		options = new ArrayList<String>();

@@ -24,7 +24,7 @@ public class CreateTextFileTest {
 	private List<String> arguments;
 	
 	@Before
-	public void init() throws FileAlreadyExistsException {
+	public void init() {
 		fs = new FileSystem();
 		command = new CreateTextFile(fs, new Path());
 		options = new ArrayList<String>();

@@ -22,11 +22,15 @@ public class ListDirectoryContentTest {
 	private List<String> arguments;
 
 	@Before
-	public void init() throws FileAlreadyExistsException, InvalidArgumentException {
+	public void init() {
 		fs = new FileSystem();
-		fs.makeDirectory("/home/dir1");
-		fs.makeDirectory("/home/dir1/dir2");
-		fs.makeDirectory("/home/dir1/dir3");
+		try {
+			fs.makeDirectory("/home/dir1");
+			fs.makeDirectory("/home/dir1/dir2");
+			fs.makeDirectory("/home/dir1/dir3");
+		} catch (FileAlreadyExistsException | InvalidArgumentException e) {
+			throw new IllegalArgumentException();
+		}
 		command = new ListDirectoryContent(fs, new Path());
 		options = new ArrayList<String>();
 		arguments = new ArrayList<String>();
