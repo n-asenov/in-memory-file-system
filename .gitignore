@@ -3,3 +3,4 @@ bin/
 .classpath
 .project
 src/fileSystem/commands/WordCount.java
+test/AllTests.java
