@@ -30,11 +30,11 @@ public class WriteToTextFile implements Command {
 		validateArguments(arguments);
 
 		String absolutePath = currentDirectory.getAbsolutePath(arguments.get(0));
-		int line = Integer.parseInt(arguments.get(1));
+		int line = getLine(arguments);
 		String lineContent = getLineContent(arguments);
 
 		fs.writeToTextFile(absolutePath, line, lineContent, overwrite);
-	
+
 		return null;
 	}
 
@@ -43,22 +43,34 @@ public class WriteToTextFile implements Command {
 			throw new InvalidArgumentException("Invalid option");
 		}
 	}
-	
+
 	private void validateArguments(List<String> arguments) throws InvalidArgumentException {
 		if (arguments.size() < 3) {
 			throw new InvalidArgumentException("Commmand expects more arguments");
 		}
 	}
-	
+
+	private int getLine(List<String> arguments) throws InvalidArgumentException {
+		int line = 0;
+
+		try {
+			line = Integer.parseInt(arguments.get(1));
+		} catch (NumberFormatException e) {
+			throw new InvalidArgumentException("Second argument must be a integer");
+		}
+
+		return line;
+	}
+
 	private String getLineContent(List<String> arguments) {
 		StringBuilder lineContent = new StringBuilder();
 		int size = arguments.size() - 1;
-		
+
 		for (int i = 2; i < size; i++) {
 			lineContent.append(arguments.get(i)).append(" ");
 		}
 		lineContent.append(arguments.get(size));
-		
+
 		return lineContent.toString();
 	}
 }

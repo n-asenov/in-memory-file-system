@@ -51,7 +51,7 @@ public class WriteToTextFileTest {
 	public void execute_CommnadWithWrongSecondArgument_ThrowIllegalArgumentException()
 			throws FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException {
 		arguments.add("/home/f1");
-		arguments.add("-2");
+		arguments.add("Hello");
 		arguments.add("Hello, World!");
 
 		command.execute(options, arguments);
