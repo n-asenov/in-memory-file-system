@@ -84,6 +84,14 @@ public class RemoveLineContentFromTextFileTest {
 		command.execute(options, arguments);
 	}
 	
+	@Test (expected = InvalidArgumentException.class)
+	public void execute_WrongInterval_ThrowInvalidArgumentException() throws FileNotFoundException, InvalidArgumentException {
+		arguments.add("f1");
+		arguments.add("asdas-asdasd");
+		
+		command.execute(options, arguments);
+	}
+	
 	@Test 
 	public void execute_TextFile_ClearTextFileContent() throws FileAlreadyExistsException, InvalidArgumentException, FileNotFoundException, NotEnoughMemoryException {
 		String absolutePath = "/home/f1";

@@ -22,16 +22,11 @@ public class RemoveLineContentFromTextFile implements Command {
 		validateOptions(options);
 		validateArguments(arguments);
 
-		String[] interval = arguments.get(1).split("-");
-		if (interval.length != 2) {
-			throw new InvalidArgumentException("Wrong interval");
-		}
+		int[] interval = validateInterval(arguments.get(1).split("-"));
 
 		String file = currentDirectory.getAbsolutePath(arguments.get(0));
-		int start = Integer.parseInt(interval[0]);
-		int end = Integer.parseInt(interval[1]);
 
-		fileSystem.removeContentFromLinesInTextFile(file, start, end);
+		fileSystem.removeContentFromLinesInTextFile(file, interval[0], interval[1]);
 
 		return null;
 	}
@@ -42,6 +37,24 @@ public class RemoveLineContentFromTextFile implements Command {
 		}
 	}
 
+	private int[] validateInterval(String[] interval) throws InvalidArgumentException {
+		if (interval.length != 2) {
+			throw new InvalidArgumentException("Wrong interval");
+		}
+		
+		int[] result = new int[2];
+		
+		try {
+			result[0] = Integer.parseInt(interval[0]);
+			result[1] = Integer.parseInt(interval[1]);
+		}
+		catch (NumberFormatException e) {
+			throw new InvalidArgumentException("Interval must have 2 integers");
+		}
+
+		return result;
+	}
+	
 	private void validateArguments(List<String> arguments) throws InvalidArgumentException {
 		if (arguments.size() != 2) {
 			throw new InvalidArgumentException("Command should receive 2 arguments");
