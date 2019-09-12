@@ -3,6 +3,7 @@ package fileSystem.fs;
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NotDirectoryException;
+import java.util.List;
 
 public interface AbstractFileSystem {
 	abstract void makeDirectory(String absolutePath) throws InvalidArgumentException, FileAlreadyExistsException;
@@ -13,7 +14,7 @@ public interface AbstractFileSystem {
 
 	abstract void writeToTextFile(String absolutePath, int line, String content, boolean overwrite) throws InvalidArgumentException, FileNotFoundException, NotEnoughMemoryException;
 
-	abstract String getDirectoryContent(String absolutePath, FilterBy option) throws InvalidArgumentException, NotDirectoryException, FileNotFoundException;
+	abstract List<String> getDirectoryContent(String absolutePath, FilterBy option) throws InvalidArgumentException, NotDirectoryException, FileNotFoundException;
 	
 	abstract boolean isDirectory(String absolutePath) throws InvalidArgumentException, FileNotFoundException;
 

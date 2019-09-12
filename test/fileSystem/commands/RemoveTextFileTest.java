@@ -69,8 +69,9 @@ public class RemoveTextFileTest {
 		fileSystem.createTextFile("/home/f1");
 		arguments.add("/home/f1");
 
+		String[] expectedResult = {};
 		assertNull(command.execute(options, arguments));
-		assertEquals("", fileSystem.getDirectoryContent("/home", FilterBy.DEFAULT));
+		assertArrayEquals(expectedResult, fileSystem.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
 	}
 
 	@Test
@@ -82,8 +83,8 @@ public class RemoveTextFileTest {
 			fileSystem.createTextFile(fileName);
 			arguments.add(fileName);
 		}
-		
+		String[] expectedResult = {};
 		assertNull(command.execute(options, arguments));
-		assertEquals("", fileSystem.getDirectoryContent("/home", FilterBy.DEFAULT));
+		assertArrayEquals(expectedResult, fileSystem.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
 	}
 }

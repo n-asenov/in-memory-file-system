@@ -46,7 +46,7 @@ public class FileSystem implements AbstractFileSystem {
 		if (file == null) {
 			throw new FileNotFoundException("Text file doesn't exists");
 		}
-		
+
 		if (file.isDirectory()) {
 			throw new FileNotFoundException("File is directory");
 		}
@@ -66,7 +66,7 @@ public class FileSystem implements AbstractFileSystem {
 		if (file == null) {
 			throw new FileNotFoundException("Text file doesn't exists");
 		}
-		
+
 		if (file.isDirectory()) {
 			throw new FileNotFoundException("File is directory");
 		}
@@ -81,7 +81,7 @@ public class FileSystem implements AbstractFileSystem {
 	}
 
 	@Override
-	public String getDirectoryContent(String absolutePath, FilterBy option)
+	public List<String> getDirectoryContent(String absolutePath, FilterBy option)
 			throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 		Directory workDirectory = goToWorkDirectory(absolutePath);
 
@@ -97,19 +97,11 @@ public class FileSystem implements AbstractFileSystem {
 
 		Directory directory = (Directory) file;
 
-		List<String> content = directory.getContent(option);
-		StringBuilder result = new StringBuilder();
-
-		for (String fileName : content) {
-			result.append(fileName);
-			result.append(" ");
-		}
-
-		return result.toString();
+		return directory.getContent(option);
 	}
 
 	@Override
-	public boolean isDirectory(String absolutePath) throws  FileNotFoundException, InvalidArgumentException {
+	public boolean isDirectory(String absolutePath) throws FileNotFoundException, InvalidArgumentException {
 		Directory workDirectory = goToWorkDirectory(absolutePath);
 
 		File file = workDirectory.getFile(getCurrentFile(absolutePath));

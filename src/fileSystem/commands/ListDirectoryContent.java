@@ -26,29 +26,42 @@ public class ListDirectoryContent implements Command {
 		int size = arguments.size();
 
 		if (size == 0) {
-			return fs.getDirectoryContent(currentDirectory.getCurrentDirectory(), flag);
+			return appendDirectoryContent(fs.getDirectoryContent(currentDirectory.getCurrentDirectory(), flag));
 		}
 
 		StringBuilder result = new StringBuilder();
 		for (int i = 0; i < size - 1; i++) {
-			result.append(fs.getDirectoryContent(currentDirectory.getAbsolutePath(arguments.get(i)), flag));
+			result.append(appendDirectoryContent(
+					fs.getDirectoryContent(currentDirectory.getAbsolutePath(arguments.get(i)), flag)));
 			result.append(System.lineSeparator());
 		}
-		result.append(fs.getDirectoryContent(currentDirectory.getAbsolutePath(arguments.get(size - 1)), flag));
+		result.append(appendDirectoryContent(
+				fs.getDirectoryContent(currentDirectory.getAbsolutePath(arguments.get(size - 1)), flag)));
 
 		return result.toString();
 	}
-	
+
 	private FilterBy validateOptions(List<String> options) throws InvalidArgumentException {
 		FilterBy flag = FilterBy.DEFAULT;
-		
+
 		for (String option : options) {
 			if (!option.equals("-sortedDesc")) {
 				throw new InvalidArgumentException("Invalid option");
 			}
 			flag = FilterBy.SIZE_DESCENDING;
 		}
-		
+
 		return flag;
+	}
+
+	private String appendDirectoryContent(List<String> content) {
+		StringBuilder result = new StringBuilder();
+
+		for (String fileName : content) {
+			result.append(fileName);
+			result.append(" ");
+		}
+
+		return result.toString();
 	}
 }

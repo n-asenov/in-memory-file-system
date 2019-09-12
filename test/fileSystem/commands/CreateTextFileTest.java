@@ -62,8 +62,8 @@ public class CreateTextFileTest {
 		arguments.add("/home/f1");
 
 		command.execute(options, arguments);
-
-		assertEquals("f1 ", fs.getDirectoryContent("/home", FilterBy.DEFAULT));
+		String[] expectedResult = { "f1" };
+		assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
 	}
 
 	@Test
@@ -72,8 +72,8 @@ public class CreateTextFileTest {
 		arguments.add("f1");
 
 		command.execute(options, arguments);
-
-		assertEquals("f1 ", fs.getDirectoryContent("/home", FilterBy.DEFAULT));
+		String[] expectedResult = {"f1"};
+		assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
 	}
 
 	@Test
@@ -85,8 +85,9 @@ public class CreateTextFileTest {
 		arguments.add("/f1");
 
 		command.execute(options, arguments);
-
-		assertEquals("f1 f2 f3 ", fs.getDirectoryContent("/home", FilterBy.DEFAULT));
-		assertEquals("f1 home ", fs.getDirectoryContent("/", FilterBy.DEFAULT));
+		String[] expectedResult = { "f1", "f2", "f3" };
+		assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
+		String[] expectedResult2 = { "f1", "home" };
+		assertArrayEquals(expectedResult2, fs.getDirectoryContent("/", FilterBy.DEFAULT).toArray());
 	}
 }

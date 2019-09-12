@@ -46,8 +46,8 @@ public class MakeDirectoryTest {
 		arguments.add("/home/dir1");
 
 		command.execute(options, arguments);
-
-		assertEquals("dir1 ", fs.getDirectoryContent("/home", FilterBy.DEFAULT));
+		String[] expectedResult = { "dir1" };
+		assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
 	}
 
 	@Test
@@ -56,8 +56,8 @@ public class MakeDirectoryTest {
 		arguments.add("dir1");
 
 		command.execute(options, arguments);
-
-		assertEquals("dir1 ", fs.getDirectoryContent("/home", FilterBy.DEFAULT));
+		String[] expectedResult = { "dir1" };
+		assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
 	}
 
 	@Test(expected = FileAlreadyExistsException.class)
@@ -70,7 +70,7 @@ public class MakeDirectoryTest {
 
 	@Test(expected = InvalidArgumentException.class)
 	public void execute_MakeDirectoryWithNonExistentPath_ThrowInvalidPathException()
-			throws  FileAlreadyExistsException, InvalidArgumentException{
+			throws FileAlreadyExistsException, InvalidArgumentException {
 		arguments.add("/home/dir1/dir2");
 
 		command.execute(options, arguments);

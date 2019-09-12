@@ -22,8 +22,8 @@ public class FileSystemTest {
 	public void makeDirectory_NewDirectory_DirectoryAddedToFileSystem()
 			throws FileAlreadyExistsException, NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 		fs.makeDirectory("/home/newDir");
-
-		assertEquals("newDir ", fs.getDirectoryContent("/home", FilterBy.DEFAULT));
+		String[] expectedResult = { "newDir" };
+		assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
 	}
 
 	@Test(expected = InvalidArgumentException.class)
@@ -42,8 +42,8 @@ public class FileSystemTest {
 	public void createTextFile_NewTextFile_TextFileAddedInDirectory()
 			throws FileAlreadyExistsException, NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 		fs.createTextFile("/home/f1");
-
-		assertEquals("f1 ", fs.getDirectoryContent("/home", FilterBy.DEFAULT));
+		String[] expectedResult = { "f1" };
+		assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
 	}
 
 	@Test(expected = InvalidArgumentException.class)
@@ -198,13 +198,15 @@ public class FileSystemTest {
 	@Test
 	public void getDirectoryContent_EmptyDirectory_ReturnEmptyString()
 			throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
-		assertEquals("", fs.getDirectoryContent("/home", FilterBy.DEFAULT));
+		String[] expectedResult = {};
+		assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
 	}
 
 	@Test
 	public void getDirectoryContent_RootDirectory_ReturnRootContent()
 			throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
-		assertEquals("home ", fs.getDirectoryContent("/", FilterBy.DEFAULT));
+		String[] expectedResult = { "home" };
+		assertArrayEquals(expectedResult, fs.getDirectoryContent("/", FilterBy.DEFAULT).toArray());
 	}
 
 	@Test
