@@ -17,7 +17,7 @@ public class FileSystem implements AbstractFileSystem {
 		try {
 			root.addFile(new Directory("home", root));
 		} catch (FileAlreadyExistsException e) {
-			//TODO throw unchecked exception
+			throw new IllegalArgumentException("Should not reach here");
 		}
 		usedMemory = 0;
 		deletedFiles = new LinkedList<File>();
