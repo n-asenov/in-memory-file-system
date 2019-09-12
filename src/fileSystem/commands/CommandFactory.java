@@ -1,58 +1,27 @@
 package fileSystem.commands;
 
+import java.util.HashMap;
+
 import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
 
 public class CommandFactory {
-	private AbstractFileSystem fileSystem;
-	private Path currentDirectory;
+	private HashMap<String, Command> commands;
 
 	public CommandFactory(AbstractFileSystem fileSystem, Path currentDirectory) {
-		this.fileSystem = fileSystem;
-		this.currentDirectory = currentDirectory;
+		commands = new HashMap<String, Command>();
+		commands.put("cd", new ChangeDirectory(fileSystem, currentDirectory));
+		commands.put("create_file", new CreateTextFile(fileSystem, currentDirectory));
+		commands.put("ls", new ListDirectoryContent(fileSystem, currentDirectory));
+		commands.put("mkdir", new MakeDirectory(fileSystem, currentDirectory));
+		commands.put("cat", new PrintTextFileContent(fileSystem, currentDirectory));
+		commands.put("write", new WriteToTextFile(fileSystem, currentDirectory));
+		commands.put("rm", new RemoveTextFile(fileSystem, currentDirectory));
+		commands.put("remove", new RemoveLineContentFromTextFile(fileSystem, currentDirectory));
+		commands.put("pwd", new PrintWorkingDirectory(currentDirectory));
 	}
 
 	public Command make(String command) {
-		if (command.equals("cd")) {
-			return new ChangeDirectory(fileSystem, currentDirectory);
-		}
-
-		if (command.equals("create_file")) {
-			return new CreateTextFile(fileSystem, currentDirectory);
-		}
-
-		if (command.equals("ls")) {
-			return new ListDirectoryContent(fileSystem, currentDirectory);
-		}
-
-		if (command.equals("mkdir")) {
-			return new MakeDirectory(fileSystem, currentDirectory);
-		}
-
-		if (command.equals("cat")) {
-			return new PrintTextFileContent(fileSystem, currentDirectory);
-		}
-
-		if (command.equals("write")) {
-			return new WriteToTextFile(fileSystem, currentDirectory);
-		}
-
-		if (command.equals("wc")) {
-			return new WordCount(fileSystem, currentDirectory);
-		}
-
-		if (command.equals("rm")) {
-			return new RemoveTextFile(fileSystem, currentDirectory);
-		}
-		
-		if(command.equals("remove")) {
-			return new RemoveLineContentFromTextFile(fileSystem, currentDirectory);
-		}
-		
-		if(command.equals("pwd")) {
-			return new PrintWorkingDirectory(currentDirectory);
-		}
-		
-		return null;
+		return commands.get(command);
 	}
 }
