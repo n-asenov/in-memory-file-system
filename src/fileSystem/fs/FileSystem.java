@@ -143,6 +143,24 @@ public class FileSystem implements AbstractFileSystem {
 		textFile.removeContentFromLines(start, end);
 	}
 
+	@Override
+	public int getWordCount(String absolutePath) throws FileNotFoundException, InvalidArgumentException {
+		Directory workDirectory = goToWorkDirectory(absolutePath);
+
+		File file = workDirectory.getFile(getCurrentFile(absolutePath));
+
+		if (file == null) {
+			throw new FileNotFoundException("Text file doesn't exists");
+		}
+
+		if (file.isDirectory()) {
+			throw new FileNotFoundException("File is directory");
+		}
+
+		TextFile textFile = (TextFile) file;
+		return textFile.getNumberOfWords();
+	}
+
 	private Directory goToWorkDirectory(String absolutePath) throws InvalidArgumentException {
 		Directory workDirectory = root;
 
@@ -197,5 +215,4 @@ public class FileSystem implements AbstractFileSystem {
 		usedMemory += sizeToAdd;
 		return true;
 	}
-
 }

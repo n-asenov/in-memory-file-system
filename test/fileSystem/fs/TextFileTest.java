@@ -168,4 +168,24 @@ public class TextFileTest {
 		assertEquals("", file.getContent());
 		assertEquals(0, file.getSize());
 	}
+	
+	@Test
+	public void getNumberOfWords_EmptyFile_Return0() {
+		assertEquals(0, file.getNumberOfWords());
+	}
+	
+	@Test
+	public void getNumberOfWords_FileWithOneLine_ReturnNumberOfWords() throws InvalidArgumentException {
+		file.write(1, "Hello World", false);
+		assertEquals(2, file.getNumberOfWords());
+	}
+	
+	@Test
+	public void getNumberOfWords_FileWithSeveralLines_ReturnNumberOfWords() throws InvalidArgumentException {
+		file.write(1, "hello world", false);
+		file.write(3, "hello", false);
+		file.write(5, "hello world", false);
+		
+		assertEquals(5, file.getNumberOfWords());
+	}
 }

@@ -14,7 +14,7 @@ public class FileSystemTest {
 	private FileSystem fs;
 
 	@Before
-	public void init() throws FileAlreadyExistsException {
+	public void init() {
 		fs = new FileSystem();
 	}
 
@@ -271,5 +271,34 @@ public class FileSystemTest {
 		}
 		fs.removeContentFromLinesInTextFile("/home/f1", start, end);
 		assertEquals("", fs.getTextFileContent("/home/f1"));
+	}
+
+	@Test(expected = InvalidArgumentException.class)
+	public void getWordCount_WrongPathToTextFile_ThrowInvalidArgumentException() throws FileNotFoundException, InvalidArgumentException {
+		fs.getWordCount("/home/dir1/f1");
+	}
+	
+	@Test (expected = FileNotFoundException.class)
+	public void getWordCount_TextFileDoesNotExists_ThrowFileNotFoundException() throws FileNotFoundException, InvalidArgumentException {
+		fs.getWordCount("/home/f1");
+	}
+	
+	@Test (expected = FileNotFoundException.class)
+	public void getWordCount_Directory_ThrowFileNotFound() throws FileNotFoundException, InvalidArgumentException {
+		fs.getWordCount("/home");
+	}
+	
+	@Test
+	public void getWordCount_EmptyTextFile_ReturnNumberOfWordsInTextFile() throws FileAlreadyExistsException, InvalidArgumentException, FileNotFoundException {
+		fs.createTextFile("/home/f1");
+		assertEquals(0, fs.getWordCount("/home/f1"));
+	}
+	
+	@Test
+	public void getWordCount_TextFile_ReturnNumberOfWordsInTextFile() throws FileAlreadyExistsException, InvalidArgumentException, FileNotFoundException, NotEnoughMemoryException {
+		String absolutePath = "/home/f1";
+		fs.createTextFile(absolutePath);
+		fs.writeToTextFile(absolutePath, 1, "Hello World", false);
+		assertEquals(2, fs.getWordCount(absolutePath));
 	}
 }

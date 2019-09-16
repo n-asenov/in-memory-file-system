@@ -18,6 +18,8 @@ public interface AbstractFileSystem {
 	
 	abstract boolean isDirectory(String absolutePath) throws InvalidArgumentException, FileNotFoundException;
 
+	abstract int getWordCount(String absolutePath) throws FileNotFoundException, InvalidArgumentException;
+	
 	abstract void removeTextFile(String absolutePath) throws InvalidArgumentException, FileNotFoundException;
 
 	abstract void removeContentFromLinesInTextFile(String absolutePath, int start, int end) throws InvalidArgumentException, FileNotFoundException;

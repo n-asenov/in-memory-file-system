@@ -19,6 +19,7 @@ public class CommandFactory {
 		commands.put("rm", new RemoveTextFile(fileSystem, currentDirectory));
 		commands.put("remove", new RemoveLineContentFromTextFile(fileSystem, currentDirectory));
 		commands.put("pwd", new PrintWorkingDirectory(currentDirectory));
+		commands.put("wc", new WordCount(fileSystem, currentDirectory));
 	}
 
 	public Command make(String command) {

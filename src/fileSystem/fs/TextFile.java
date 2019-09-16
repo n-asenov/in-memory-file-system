@@ -46,6 +46,21 @@ public class TextFile extends File {
 		return fileContent.toString();
 	}
 
+	public int getNumberOfWords() {
+		int counter = 0;
+
+		if (content.size() != 0) {
+			for (int i = 1; i <= content.lastKey(); i++) {
+				String line = content.get(i);
+				if (line != null) {
+					counter += line.split(" ").length;
+				}
+			}
+		}
+
+		return counter;
+	}
+
 	public boolean isEmptyLine(int line) {
 		return content.get(line) == null;
 	}
