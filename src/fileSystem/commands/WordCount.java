@@ -19,22 +19,33 @@ public class WordCount implements Command {
 	@Override
 	public String execute(List<String> options, List<String> arguments)
 			throws InvalidArgumentException, FileNotFoundException {
-		validateOptions(options);
+		boolean getLines = validateOptions(options);
 		validateArguments(arguments);
 
 		Integer result = arguments.size();
-		
+
+		if (getLines) {
+			if (result.equals(1)) {
+				return fileSystem.getLineCount(currentDirectory.getAbsolutePath(arguments.get(0))).toString();
+			}
+		}
+
 		if (result.equals(1)) {
 			result = fileSystem.getWordCount(currentDirectory.getAbsolutePath(arguments.get(0)));
 		}
-		
+
 		return result.toString();
 	}
 
-	private void validateOptions(List<String> options) throws InvalidArgumentException {
-		if (options.size() != 0) {
-			throw new InvalidArgumentException("Invalid option");
+	private boolean validateOptions(List<String> options) throws InvalidArgumentException {
+		boolean lines = false;
+		for (String option : options) {
+			if (!option.equals("-l")) {
+				throw new InvalidArgumentException("Invalid option");
+			}
+			lines = true;
 		}
+		return lines;
 	}
 
 	private void validateArguments(List<String> arguments) throws InvalidArgumentException {

@@ -291,7 +291,7 @@ public class FileSystemTest {
 	@Test
 	public void getWordCount_EmptyTextFile_ReturnNumberOfWordsInTextFile() throws FileAlreadyExistsException, InvalidArgumentException, FileNotFoundException {
 		fs.createTextFile("/home/f1");
-		assertEquals(0, fs.getWordCount("/home/f1"));
+		assertEquals((Integer)0, fs.getWordCount("/home/f1"));
 	}
 	
 	@Test
@@ -299,6 +299,29 @@ public class FileSystemTest {
 		String absolutePath = "/home/f1";
 		fs.createTextFile(absolutePath);
 		fs.writeToTextFile(absolutePath, 1, "Hello World", false);
-		assertEquals(2, fs.getWordCount(absolutePath));
+		assertEquals((Integer)2, fs.getWordCount(absolutePath));
+	}
+	
+	@Test (expected = InvalidArgumentException.class)
+	public void getLineCount_WrongPathToTextFile_ThrowInvalidArgumentException() throws FileNotFoundException, InvalidArgumentException {
+		fs.getLineCount("/home/dir1/f1");
+	}
+	
+	@Test (expected = FileNotFoundException.class)
+	public void getLineContent_TextFileDoesNotExists_ThrowFileNotFoundException() throws FileNotFoundException, InvalidArgumentException {
+		fs.getLineCount("/home/f1");
+	}
+	
+	@Test (expected = FileNotFoundException.class)
+	public void getLineContent_FileIsDirectory_ThrowFileNotFoundException() throws FileNotFoundException, InvalidArgumentException {
+		fs.getLineCount("/home");
+	}
+	
+	@Test
+	public void getLineContent_TextFile_ReturnNumberOfLinesInTextFile() throws FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException, FileAlreadyExistsException {
+		String absolutePath = "/home/f1";
+		fs.createTextFile(absolutePath);
+		fs.writeToTextFile(absolutePath, 5, "hello world", false);
+		assertEquals((Integer)5, fs.getLineCount(absolutePath));
 	}
 }

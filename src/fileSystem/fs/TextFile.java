@@ -46,7 +46,7 @@ public class TextFile extends File {
 		return fileContent.toString();
 	}
 
-	public int getNumberOfWords() {
+	public Integer getNumberOfWords() {
 		int counter = 0;
 
 		if (content.size() != 0) {
@@ -60,7 +60,15 @@ public class TextFile extends File {
 
 		return counter;
 	}
-
+	
+	public Integer getNumberOfLines() {
+		if (content.size() == 0) {
+			return 0;
+		}
+		
+		return content.lastKey();
+	}
+	
 	public boolean isEmptyLine(int line) {
 		return content.get(line) == null;
 	}

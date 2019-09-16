@@ -59,4 +59,16 @@ public class WordCountTest {
 		
 		assertEquals("2", command.execute(options, arguments));
 	}
+	
+	@Test
+	public void execute_CommandWithLOptionAndTextFile_ReturnNumberOfLinesInTextFile() throws FileNotFoundException, InvalidArgumentException, NotEnoughMemoryException, FileAlreadyExistsException {
+		String absolutePath = "/home/f1";
+		fileSystem.createTextFile(absolutePath);
+		fileSystem.writeToTextFile(absolutePath, 5, "hello world", false);
+		
+		options.add("-l");
+		arguments.add(absolutePath);
+		
+		assertEquals("5", command.execute(options, arguments));
+	}
 }
