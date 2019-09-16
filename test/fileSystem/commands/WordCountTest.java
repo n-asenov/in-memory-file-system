@@ -38,9 +38,6 @@ public class WordCountTest {
 	
 	@Test (expected = InvalidArgumentException.class)
 	public void execute_InvalidNumberOfArguments_ThrowInvalidArgumentException() throws FileNotFoundException, InvalidArgumentException {
-		arguments.add("/home/f1");
-		arguments.add("/home/f2");
-		
 		command.execute(options, arguments);
 	}
 	
@@ -51,6 +48,14 @@ public class WordCountTest {
 		fileSystem.writeToTextFile(absolutePath, 2, "hello world", false);
 		
 		arguments.add(absolutePath);
+		
+		assertEquals("2", command.execute(options, arguments));
+	}
+	
+	@Test
+	public void execute_Text_ReturnNumberOfWordsInText() throws FileNotFoundException, InvalidArgumentException {
+		arguments.add("hello");
+		arguments.add("world");
 		
 		assertEquals("2", command.execute(options, arguments));
 	}
