@@ -71,4 +71,14 @@ public class WordCountTest {
 		
 		assertEquals("5", command.execute(options, arguments));
 	}
+	
+	@Test
+	public void execute_CommandWithOptionAndText_ReturnNumberOfLinesInText() throws FileNotFoundException, InvalidArgumentException {
+		options.add("-l");
+		arguments.add("First Line\\n");
+		arguments.add("Second Line\\n");
+		arguments.add("Third");
+		
+		assertEquals("3", command.execute(options, arguments));
+	}
 }

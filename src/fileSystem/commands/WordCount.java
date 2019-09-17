@@ -28,6 +28,8 @@ public class WordCount implements Command {
 			if (result.equals(1)) {
 				return fileSystem.getLineCount(currentDirectory.getAbsolutePath(arguments.get(0))).toString();
 			}
+
+			return getLinesInText(arguments).toString();
 		}
 
 		if (result.equals(1)) {
@@ -54,64 +56,18 @@ public class WordCount implements Command {
 		}
 	}
 
-	/*
-	 * @Override public String execute(List<String> options, List<String> arguments)
-	 * throws InvalidArgumentException, FileNotFoundException { boolean countLines =
-	 * false;
-	 * 
-	 * for (String option : options) { validateOption(option); countLines = true; }
-	 * 
-	 * if (countLines) { return getNumberOfLines(arguments).toString(); }
-	 * 
-	 * return getNumberOfWords(arguments).toString(); }
-	 */
-	/*
-	 * private Integer getNumberOfWords(List<String> arguments) throws
-	 * FileNotFoundException, InvalidArgumentException { if (isText(arguments)) {
-	 * return calculateNumberOfWords(arguments.toString()); }
-	 * 
-	 * int counter = 0;
-	 * 
-	 * for (String argument : arguments) { counter += calculateNumberOfWords(
-	 * fileSystem.getTextFileContent(currentDirectory.getAbsolutePath(argument))); }
-	 * 
-	 * return counter; }
-	 * 
-	 * private boolean isText(List<String> arguments) { String firstArgument =
-	 * arguments.get(0); String lastArgument = arguments.get(arguments.size() - 1);
-	 * 
-	 * return firstArgument.indexOf("\"") == 0 && lastArgument.indexOf("\"") ==
-	 * lastArgument.length() - 1; }
-	 * 
-	 * private Integer getNumberOfLines(List<String> arguments) throws
-	 * FileNotFoundException, InvalidArgumentException { if (isText(arguments)) {
-	 * return calculateNumberOfLines(arguments.toString()); }
-	 * 
-	 * int counter = 0;
-	 * 
-	 * for (String argument : arguments) { counter += calculateNumberOfLines(
-	 * fileSystem.getTextFileContent(currentDirectory.getAbsolutePath(argument))); }
-	 * 
-	 * return counter; }
-	 * 
-	 * private int calculateNumberOfWords(String text) { int numberOfWords = 0;
-	 * 
-	 * String[] lines = splitTextIntoLines(text);
-	 * 
-	 * for (String line : lines) { String[] words = line.split(" ");
-	 * 
-	 * for (String word : words) { if (!word.equals("")) { numberOfWords++; } } }
-	 * 
-	 * return numberOfWords; }
-	 * 
-	 * private int calculateNumberOfLines(String text) { return
-	 * splitTextIntoLines(text).length; }
-	 * 
-	 * private String[] splitTextIntoLines(String text) { return
-	 * text.split(System.lineSeparator()); }
-	 * 
-	 * private void validateOption(String option) throws InvalidArgumentException {
-	 * if (!option.equals("-l")) { throw new
-	 * InvalidArgumentException("Invalid option"); } }
-	 */
+	private Integer getLinesInText(List<String> text) {
+		int counter = 1;
+		
+		for (String word : text) {
+			int index = word.indexOf("\\n", 0);
+
+			while (index != -1) {
+				counter++;
+				index = word.indexOf("\\n", index + 1);
+			}
+		}
+
+		return counter;
+	}
 }
