@@ -3,7 +3,6 @@ package fileSystem.parser;
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
@@ -34,20 +33,14 @@ public class StandardInputParserTest {
 	}
 	
 	@Test
-	public void getCommnad_CommandWithNoOptionsAndArguments_ReturnTheCommandName() {
+	public void getCommnadLine_CommandWithNoOptionsAndArguments_ReturnTheCommandName() {
 		setUp("wc");
 		
 		StandardInputParser parser = new StandardInputParser();
+		List<String> result = parser.getCommandLine();
 		
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
-		
-		String result = parser.getCommand(options, arguments);
-		String expectedResult = "wc";
-		
-		assertEquals(expectedResult, result);
-		assertEquals(0, options.size());
-		assertEquals(0, arguments.size());
+		assertEquals(1, result.size());
+		assertEquals("wc", result.get(0));
 	}
 	
 	@Test
@@ -55,18 +48,11 @@ public class StandardInputParserTest {
 		setUp("ls /home/dir1");
 		
 		StandardInputParser parser = new StandardInputParser();
+		List<String> result = parser.getCommandLine();
 		
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
-		
-		String command = parser.getCommand(options, arguments);
-		String expectedCommnand = "ls";
-		String expectedArgument = "/home/dir1";
-		
-		assertEquals(expectedCommnand, command);
-		assertEquals(0, options.size());
-		assertEquals(1, arguments.size());
-		assertEquals(expectedArgument, arguments.get(0));
+		assertEquals(2, result.size());
+		assertEquals("ls", result.get(0));
+		assertEquals("/home/dir1", result.get(1));
 	}
 	
 	@Test
@@ -74,44 +60,13 @@ public class StandardInputParserTest {
 		setUp("ls -l /home /dir1");
 		
 		StandardInputParser parser = new StandardInputParser();
-		
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
-		
-		assertEquals("ls", parser.getCommand(options, arguments));
-		assertEquals(1, options.size());
-		assertEquals(2, arguments.size());
-		assertEquals("-l", options.get(0));
-		assertEquals("/home", arguments.get(0));
-		assertEquals("/dir1", arguments.get(1));
-	}
-	
-	@Test
-	public void getCommand_CommandWithArgumentsOnly_ReturnCommmandAndSetArguments() {
-		setUp("ls - l /home");
-		
-		StandardInputParser parser = new StandardInputParser();
-		
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
-		
-		assertEquals("ls", parser.getCommand(options, arguments));
-		assertEquals(0, options.size());
-		assertEquals(3, arguments.size());
-	}
-	
-	@Test
-	public void getCommand_CommandWithOptionsOnly_ReturnCommandAndSetOptions() {
-		setUp("wc -l -5l -10l");
-		
-		StandardInputParser parser = new StandardInputParser();
-		
-		List<String> options = new ArrayList<String>();
-		List<String> arguments = new ArrayList<String>();
-		
-		assertEquals("wc", parser.getCommand(options, arguments));
-		assertEquals(3, options.size());
-		assertEquals(0, arguments.size());
+		List<String> result = parser.getCommandLine();
+
+		assertEquals(4, result.size());
+		assertEquals("ls", result.get(0));
+		assertEquals("-l", result.get(1));
+		assertEquals("/home", result.get(2));
+		assertEquals("/dir1", result.get(3));
 	}
 	
 	private void setUp(String command) {

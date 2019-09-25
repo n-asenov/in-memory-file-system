@@ -1,7 +1,9 @@
 package fileSystem.parser;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class StandardInputParser implements Parser {
 	private Scanner scanner;
@@ -16,32 +18,12 @@ public class StandardInputParser implements Parser {
 	}
 
 	@Override
-	public String getCommand(List<String> options, List<String> arguments) {
-		String[] lineSplitted = scanner.nextLine().split(" ");
-
-		String command = null;
-
-		for (String word : lineSplitted) {
-			if (!word.equals("")) {
-				if (command == null) {
-					command = word;
-				} else if (isOption(word)) {
-					options.add(word);
-				} else {
-					arguments.add(word);
-				}
-			}
-		}
-
-		return command;
+	public List<String> getCommandLine() {
+		return Arrays.stream(scanner.nextLine().split(" ")).collect(Collectors.toList());
 	}
 	
 	@Override
 	public void close() {
 		scanner.close();
-	}
-
-	private boolean isOption(String str) {
-		return str.matches("-\\w+|--\\w+");
 	}
 }

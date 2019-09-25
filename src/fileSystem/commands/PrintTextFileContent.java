@@ -20,7 +20,8 @@ public class PrintTextFileContent implements Command {
 	public String execute(List<String> options, List<String> arguments)
 			throws FileNotFoundException, InvalidArgumentException {
 		validateOptions(options);
-
+		validateArguments(arguments);
+		
 		StringBuilder result = new StringBuilder();
 		for (String file : arguments) {
 			result.append(fs.getTextFileContent(currentDirectory.getAbsolutePath(file)));
@@ -35,6 +36,12 @@ public class PrintTextFileContent implements Command {
 	private void validateOptions(List<String> options) throws InvalidArgumentException {
 		if (options.size() != 0) {
 			throw new InvalidArgumentException("Invalid option");
+		}
+	}
+	
+	private void validateArguments(List<String> arguments) throws InvalidArgumentException {
+		if (arguments.isEmpty()) {
+			throw new InvalidArgumentException("Invalid argument");
 		}
 	}
 }

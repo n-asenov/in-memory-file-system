@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
+import fileSystem.fs.InvalidArgumentException;
 
 public class CommandFactory {
 	private HashMap<String, Command> commands;
@@ -22,7 +23,13 @@ public class CommandFactory {
 		commands.put("wc", new WordCount(fileSystem, currentDirectory));
 	}
 
-	public Command make(String command) {
-		return commands.get(command);
+	public Command make(String command) throws InvalidArgumentException {
+		Command result = commands.get(command);
+		
+		if (result == null) {
+			throw new InvalidArgumentException("Invalid command");
+		}
+
+		return result;
 	}
 }

@@ -5,7 +5,7 @@ import java.util.List;
 public interface Parser {
 	abstract boolean hasNextLine();
 	
-	abstract String getCommand(List<String> options, List<String> arguments);
+	abstract List<String> getCommandLine();
 	
 	abstract void close();
 }
