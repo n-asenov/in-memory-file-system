@@ -1,6 +1,6 @@
 package fileSystem.commands;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import fileSystem.Path;
@@ -19,7 +19,7 @@ public class WriteToTextFile implements Command {
 
 	@Override
 	public String execute(List<String> options, List<String> arguments)
-			throws FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException {
+			throws NotEnoughMemoryException, InvalidArgumentException, IOException {
 		boolean overwrite = false;
 
 		for (String option : options) {

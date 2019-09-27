@@ -2,7 +2,7 @@ package fileSystem.commands;
 
 import static org.junit.Assert.*;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,19 +11,19 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fileSystem.Path;
-import fileSystem.fs.FileSystem;
+import fileSystem.fs.VirtualFileSystem;
 import fileSystem.fs.InvalidArgumentException;
 import fileSystem.fs.NotEnoughMemoryException;
 
 public class WriteToTextFileTest {
 	private WriteToTextFile command;
-	private FileSystem fs;
+	private VirtualFileSystem fs;
 	private List<String> options;
 	private List<String> arguments;
 	
 	@Before
 	public void init() {
-		fs = new FileSystem();
+		fs = new VirtualFileSystem();
 		try {
 			fs.createTextFile("/home/f1");
 		} catch (FileAlreadyExistsException | InvalidArgumentException e) {
@@ -37,7 +37,7 @@ public class WriteToTextFileTest {
 
 	@Test(expected = InvalidArgumentException.class)
 	public void execute_CommandWithInvalidOption_ThrowIllegalArgumentException()
-			throws FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException {
+			throws NotEnoughMemoryException, InvalidArgumentException, IOException {
 		options.add("append");
 
 		command.execute(options, arguments);
@@ -45,7 +45,7 @@ public class WriteToTextFileTest {
 
 	@Test(expected = InvalidArgumentException.class)
 	public void execute_CommandWithInvalidNumberOfArguments_ThrowIllegalArgumentException()
-			throws FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException {
+			throws NotEnoughMemoryException, InvalidArgumentException, IOException {
 		arguments.add("/home/f1");
 
 		command.execute(options, arguments);
@@ -53,7 +53,7 @@ public class WriteToTextFileTest {
 
 	@Test (expected = InvalidArgumentException.class)
 	public void execute_CommnadWithWrongSecondArgument_ThrowIllegalArgumentException()
-			throws FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException {
+			throws NotEnoughMemoryException, InvalidArgumentException, IOException {
 		arguments.add("/home/f1");
 		arguments.add("Hello");
 		arguments.add("Hello, World!");
@@ -63,7 +63,7 @@ public class WriteToTextFileTest {
 
 	@Test
 	public void execute_ValidCommandWithNoOption_WriteContentToTextFile()
-			throws FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException {
+			throws NotEnoughMemoryException, InvalidArgumentException, IOException {
 		arguments.add("/home/f1");
 		arguments.add("1");
 		arguments.add("Hello, World!");
@@ -75,7 +75,7 @@ public class WriteToTextFileTest {
 
 	@Test
 	public void execute_ValidCommandWithOverwriteOption_WriteContentToTextFile()
-			throws  FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException {
+			throws  NotEnoughMemoryException, InvalidArgumentException, IOException {
 		options.add("-overwrite");
 		arguments.add("/home/f1");
 		arguments.add("1");
@@ -88,7 +88,7 @@ public class WriteToTextFileTest {
 
 	@Test
 	public void execute_ValidCommandWithRelativePath_WriteContentToTextFile()
-			throws FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException {
+			throws NotEnoughMemoryException, InvalidArgumentException, IOException {
 		arguments.add("f1");
 		arguments.add("1");
 		arguments.add("Hello, World!");

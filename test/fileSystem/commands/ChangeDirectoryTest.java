@@ -3,7 +3,7 @@ package fileSystem.commands;
 import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
-import java.nio.file.FileAlreadyExistsException;
+import java.io.IOException;
 import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
-import fileSystem.fs.FileSystem;
+import fileSystem.fs.VirtualFileSystem;
 import fileSystem.fs.InvalidArgumentException;
 
 public class ChangeDirectoryTest {
@@ -26,7 +26,7 @@ public class ChangeDirectoryTest {
 	@Before
 	public void init() {
 		path = new Path();
-		fileSystem = new FileSystem();
+		fileSystem = new VirtualFileSystem();
 		command = new ChangeDirectory(fileSystem, path);
 		options = new ArrayList<String>();
 		arguments = new ArrayList<String>();
@@ -59,7 +59,7 @@ public class ChangeDirectoryTest {
 
 	@Test (expected = NotDirectoryException.class) 
 	public void execute_ChangeDirectoryToTextFile_ThrowNotDirectoryException()
-			throws FileAlreadyExistsException, InvalidArgumentException, NotDirectoryException, FileNotFoundException {
+			throws InvalidArgumentException, IOException {
 		fileSystem.createTextFile("/home/f1");
 		
 		arguments.add("f1");

@@ -2,10 +2,9 @@ package fileSystem.commands;
 
 import static org.junit.Assert.*;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.InvalidPathException;
-import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,19 +12,19 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fileSystem.Path;
-import fileSystem.fs.FileSystem;
+import fileSystem.fs.VirtualFileSystem;
 import fileSystem.fs.FilterBy;
 import fileSystem.fs.InvalidArgumentException;
 
 public class MakeDirectoryTest {
 	private MakeDirectory command;
-	private FileSystem fs;
+	private VirtualFileSystem fs;
 	private List<String> options;
 	private List<String> arguments;
 
 	@Before
 	public void init() {
-		fs = new FileSystem();
+		fs = new VirtualFileSystem();
 		command = new MakeDirectory(fs, new Path());
 		options = new ArrayList<String>();
 		arguments = new ArrayList<String>();
@@ -33,7 +32,7 @@ public class MakeDirectoryTest {
 
 	@Test(expected = InvalidArgumentException.class)
 	public void execute_MakeDirectoryWithOption_ThrowIllegalArgumentException()
-			throws FileAlreadyExistsException, InvalidArgumentException {
+			throws InvalidArgumentException, IOException {
 		options.add("-l");
 		arguments.add("/home/dir1");
 
@@ -42,7 +41,7 @@ public class MakeDirectoryTest {
 
 	@Test
 	public void execute_NewDirectory_DirectoryAddedToFileSystem() throws InvalidPathException,
-			FileAlreadyExistsException, NotDirectoryException, FileNotFoundException, InvalidArgumentException {
+			InvalidArgumentException, IOException {
 		arguments.add("/home/dir1");
 
 		command.execute(options, arguments);
@@ -52,7 +51,7 @@ public class MakeDirectoryTest {
 
 	@Test
 	public void execute_NewDirectoryWithRelativePath_DirectoryAddedToFileSystem()
-			throws NotDirectoryException, FileNotFoundException, FileAlreadyExistsException, InvalidArgumentException {
+			throws InvalidArgumentException, IOException {
 		arguments.add("dir1");
 
 		command.execute(options, arguments);
@@ -62,7 +61,7 @@ public class MakeDirectoryTest {
 
 	@Test(expected = FileAlreadyExistsException.class)
 	public void execute_MakeExistingDirectory_ThrowFileAlreadyExistsException()
-			throws FileAlreadyExistsException, InvalidArgumentException {
+			throws InvalidArgumentException, IOException {
 		arguments.add("/home");
 
 		command.execute(options, arguments);
@@ -70,7 +69,7 @@ public class MakeDirectoryTest {
 
 	@Test(expected = InvalidArgumentException.class)
 	public void execute_MakeDirectoryWithNonExistentPath_ThrowInvalidPathException()
-			throws FileAlreadyExistsException, InvalidArgumentException {
+			throws InvalidArgumentException, IOException {
 		arguments.add("/home/dir1/dir2");
 
 		command.execute(options, arguments);

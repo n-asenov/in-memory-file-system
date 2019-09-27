@@ -3,7 +3,7 @@ package fileSystem.commands;
 import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
-import java.nio.file.FileAlreadyExistsException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
-import fileSystem.fs.FileSystem;
+import fileSystem.fs.VirtualFileSystem;
 import fileSystem.fs.InvalidArgumentException;
 import fileSystem.fs.NotEnoughMemoryException;
 
@@ -24,21 +24,21 @@ public class RemoveLineContentFromTextFileTest {
 	
 	@Before
 	public void init() {
-		fileSystem = new FileSystem();
+		fileSystem = new VirtualFileSystem();
 		command = new RemoveLineContentFromTextFile(fileSystem, new Path());
 		options = new ArrayList<String>();
 		arguments = new ArrayList<String>();
 	}
 	
 	@Test (expected = InvalidArgumentException.class)
-	public void execute_InvalidOption_ThrowInvalidArgumentException() throws FileNotFoundException, InvalidArgumentException  {
+	public void execute_InvalidOption_ThrowInvalidArgumentException() throws InvalidArgumentException, IOException  {
 		options.add("-invalid");
 		
 		command.execute(options, arguments);
 	}
 	
 	@Test (expected = InvalidArgumentException.class)
-	public void execute_TooMuchArguments_ThrowInvalidArgumentException() throws FileNotFoundException, InvalidArgumentException   {
+	public void execute_TooMuchArguments_ThrowInvalidArgumentException() throws InvalidArgumentException, IOException   {
 		arguments.add("f1");
 		arguments.add("1-5");
 		arguments.add("6-10");
@@ -47,13 +47,13 @@ public class RemoveLineContentFromTextFileTest {
 	}
 	
 	@Test (expected = InvalidArgumentException.class)
-	public void execute_NotEnoughArguments_ThrowInvalidArgumentException() throws InvalidArgumentException, FileNotFoundException {
+	public void execute_NotEnoughArguments_ThrowInvalidArgumentException() throws InvalidArgumentException, IOException {
 		command.execute(options, arguments);
 	}
 	
 	@Test (expected = InvalidArgumentException.class)
 	public void execute_InvalidInterval_ThrowInvalidArgumentException()
-			throws InvalidArgumentException, FileNotFoundException {
+			throws InvalidArgumentException, IOException {
 		arguments.add("f1");
 		arguments.add("1-5-10");
 		
@@ -61,7 +61,7 @@ public class RemoveLineContentFromTextFileTest {
 	}
 	
 	@Test (expected = InvalidArgumentException.class)
-	public void execute_WrongPathToTextFile_ThrowInvalidArgumentExcepiton() throws FileNotFoundException, InvalidArgumentException {
+	public void execute_WrongPathToTextFile_ThrowInvalidArgumentExcepiton() throws InvalidArgumentException, IOException {
 		arguments.add("/home/dir1/f1");
 		arguments.add("1-5");
 		
@@ -69,7 +69,7 @@ public class RemoveLineContentFromTextFileTest {
 	}
 	
 	@Test (expected = FileNotFoundException.class)
-	public void execute_TextFileDoesNotExists_ThrowFileNotFoundException() throws FileNotFoundException, InvalidArgumentException {
+	public void execute_TextFileDoesNotExists_ThrowFileNotFoundException() throws InvalidArgumentException, IOException {
 		arguments.add("/home/f1");
 		arguments.add("1-5");
 		
@@ -77,7 +77,7 @@ public class RemoveLineContentFromTextFileTest {
 	}
 	
 	@Test (expected = FileNotFoundException.class)
-	public void execute_FileIsDirectory_ThrowFileNotFoundException() throws FileNotFoundException, InvalidArgumentException {
+	public void execute_FileIsDirectory_ThrowFileNotFoundException() throws InvalidArgumentException, IOException {
 		arguments.add("/home");
 		arguments.add("1-5");
 		
@@ -85,7 +85,7 @@ public class RemoveLineContentFromTextFileTest {
 	}
 	
 	@Test (expected = InvalidArgumentException.class)
-	public void execute_WrongInterval_ThrowInvalidArgumentException() throws FileNotFoundException, InvalidArgumentException {
+	public void execute_WrongInterval_ThrowInvalidArgumentException() throws InvalidArgumentException, IOException {
 		arguments.add("f1");
 		arguments.add("asdas-asdasd");
 		
@@ -93,7 +93,7 @@ public class RemoveLineContentFromTextFileTest {
 	}
 	
 	@Test 
-	public void execute_TextFile_ClearTextFileContent() throws FileAlreadyExistsException, InvalidArgumentException, FileNotFoundException, NotEnoughMemoryException {
+	public void execute_TextFile_ClearTextFileContent() throws InvalidArgumentException, NotEnoughMemoryException, IOException {
 		String absolutePath = "/home/f1";
 		fileSystem.createTextFile(absolutePath);
 		

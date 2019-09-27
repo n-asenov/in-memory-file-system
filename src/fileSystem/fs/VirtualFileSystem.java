@@ -6,13 +6,13 @@ import java.nio.file.NotDirectoryException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class FileSystem implements AbstractFileSystem {
+public class VirtualFileSystem implements AbstractFileSystem {
 	public static final int CAPACITY = 1000;
 	private int usedMemory;
 	private LinkedList<File> deletedFiles;
 	private Directory root;
 
-	public FileSystem() {
+	public VirtualFileSystem() {
 		root = new Directory("/");
 		try {
 			root.addFile(new Directory("home", root));
@@ -160,7 +160,7 @@ public class FileSystem implements AbstractFileSystem {
 		TextFile textFile = (TextFile) file;
 		return textFile.getNumberOfWords();
 	}
-	
+
 	@Override
 	public Integer getLineCount(String absolutePath) throws FileNotFoundException, InvalidArgumentException {
 		Directory workDirectory = goToWorkDirectory(absolutePath);
@@ -174,7 +174,7 @@ public class FileSystem implements AbstractFileSystem {
 		if (file.isDirectory()) {
 			throw new FileNotFoundException("File is directory");
 		}
-		
+
 		TextFile textFile = (TextFile) file;
 		return textFile.getNumberOfLines();
 	}
@@ -189,7 +189,7 @@ public class FileSystem implements AbstractFileSystem {
 				File next = workDirectory.getFile(pathSpliteedByDirectories[i]);
 
 				if (next == null || !next.isDirectory()) {
-					throw new InvalidArgumentException("Path: " + absolutePath + "doesn't exists");
+					throw new InvalidArgumentException("Path: " + absolutePath + " " + "doesn't exists");
 				}
 
 				workDirectory = (Directory) next;

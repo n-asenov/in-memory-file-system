@@ -2,7 +2,7 @@ package fileSystem.commands;
 
 import static org.junit.Assert.*;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,38 +11,38 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fileSystem.Path;
-import fileSystem.fs.FileSystem;
+import fileSystem.fs.VirtualFileSystem;
 import fileSystem.fs.InvalidArgumentException;
 import fileSystem.fs.NotEnoughMemoryException;
 
 public class WordCountTest {
-	private FileSystem fileSystem;
+	private VirtualFileSystem fileSystem;
 	private WordCount command;
 	private List<String> options;
 	private List<String> arguments;
 	
 	@Before
 	public void init() throws FileAlreadyExistsException, InvalidArgumentException {
-		fileSystem = new FileSystem();
+		fileSystem = new VirtualFileSystem();
 		command = new WordCount(fileSystem, new Path());
 		options = new ArrayList<String>();
 		arguments = new ArrayList<String>();
 	}
 
 	@Test (expected = InvalidArgumentException.class)
-	public void execute_InvalidOption_ThrowInvalidArgumentException() throws FileNotFoundException, InvalidArgumentException {
+	public void execute_InvalidOption_ThrowInvalidArgumentException() throws InvalidArgumentException, IOException {
 		options.add("-invalid");
 		
 		command.execute(options, arguments);
 	}
 	
 	@Test (expected = InvalidArgumentException.class)
-	public void execute_InvalidNumberOfArguments_ThrowInvalidArgumentException() throws FileNotFoundException, InvalidArgumentException {
+	public void execute_InvalidNumberOfArguments_ThrowInvalidArgumentException() throws InvalidArgumentException, IOException {
 		command.execute(options, arguments);
 	}
 	
 	@Test
-	public void execute_TextFile_GetNumberOfWordsInTextFile() throws FileAlreadyExistsException, InvalidArgumentException, FileNotFoundException, NotEnoughMemoryException {
+	public void execute_TextFile_GetNumberOfWordsInTextFile() throws InvalidArgumentException, NotEnoughMemoryException, IOException {
 		String absolutePath = "/home/f1";
 		fileSystem.createTextFile(absolutePath);
 		fileSystem.writeToTextFile(absolutePath, 2, "hello world", false);
@@ -53,7 +53,7 @@ public class WordCountTest {
 	}
 	
 	@Test
-	public void execute_Text_ReturnNumberOfWordsInText() throws FileNotFoundException, InvalidArgumentException {
+	public void execute_Text_ReturnNumberOfWordsInText() throws InvalidArgumentException, IOException {
 		arguments.add("hello");
 		arguments.add("world");
 		
@@ -61,7 +61,7 @@ public class WordCountTest {
 	}
 	
 	@Test
-	public void execute_CommandWithLOptionAndTextFile_ReturnNumberOfLinesInTextFile() throws FileNotFoundException, InvalidArgumentException, NotEnoughMemoryException, FileAlreadyExistsException {
+	public void execute_CommandWithLOptionAndTextFile_ReturnNumberOfLinesInTextFile() throws InvalidArgumentException, NotEnoughMemoryException, IOException {
 		String absolutePath = "/home/f1";
 		fileSystem.createTextFile(absolutePath);
 		fileSystem.writeToTextFile(absolutePath, 5, "hello world", false);
@@ -73,7 +73,7 @@ public class WordCountTest {
 	}
 	
 	@Test
-	public void execute_CommandWithOptionAndText_ReturnNumberOfLinesInText() throws FileNotFoundException, InvalidArgumentException {
+	public void execute_CommandWithOptionAndText_ReturnNumberOfLinesInText() throws InvalidArgumentException, IOException {
 		options.add("-l");
 		arguments.add("First Line\\n");
 		arguments.add("Second Line\\n");

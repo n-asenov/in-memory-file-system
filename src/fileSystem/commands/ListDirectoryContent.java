@@ -1,7 +1,6 @@
 package fileSystem.commands;
 
-import java.io.FileNotFoundException;
-import java.nio.file.NotDirectoryException;
+import java.io.IOException;
 import java.util.List;
 
 import fileSystem.Path;
@@ -20,7 +19,7 @@ public class ListDirectoryContent implements Command {
 
 	@Override
 	public String execute(List<String> options, List<String> arguments)
-			throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
+			throws InvalidArgumentException, IOException {
 		FilterBy flag = validateOptions(options);
 
 		int size = arguments.size();

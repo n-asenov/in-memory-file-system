@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
-import fileSystem.fs.FileSystem;
+import fileSystem.fs.VirtualFileSystem;
 import fileSystem.fs.InvalidArgumentException;
 import fileSystem.fs.NotEnoughMemoryException;
 
@@ -23,7 +23,7 @@ public class PipeTest {
 	
 	@Before
 	public void init() {
-		fileSystem = new FileSystem();
+		fileSystem = new VirtualFileSystem();
 		command = new Pipe(fileSystem, new Path());
 		options = new ArrayList<String>();
 		arguments = new ArrayList<String>();

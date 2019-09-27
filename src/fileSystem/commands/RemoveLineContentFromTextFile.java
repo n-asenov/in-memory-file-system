@@ -1,6 +1,6 @@
 package fileSystem.commands;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import fileSystem.Path;
@@ -18,7 +18,7 @@ public class RemoveLineContentFromTextFile implements Command {
 
 	@Override
 	public String execute(List<String> options, List<String> arguments)
-			throws FileNotFoundException, InvalidArgumentException {
+			throws InvalidArgumentException, IOException {
 		validateOptions(options);
 		validateArguments(arguments);
 

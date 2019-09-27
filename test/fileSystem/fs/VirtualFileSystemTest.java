@@ -10,12 +10,12 @@ import java.nio.file.NotDirectoryException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class FileSystemTest {
-	private FileSystem fs;
+public class VirtualFileSystemTest {
+	private VirtualFileSystem fs;
 
 	@Before
 	public void init() {
-		fs = new FileSystem();
+		fs = new VirtualFileSystem();
 	}
 
 	@Test
@@ -130,7 +130,7 @@ public class FileSystemTest {
 
 		StringBuilder content = new StringBuilder();
 
-		for (int i = 0; i <= FileSystem.CAPACITY; i++) {
+		for (int i = 0; i <= VirtualFileSystem.CAPACITY; i++) {
 			content.append('a');
 		}
 
@@ -172,7 +172,7 @@ public class FileSystemTest {
 
 		StringBuilder content = new StringBuilder();
 
-		for (int i = 1; i < FileSystem.CAPACITY; i++) {
+		for (int i = 1; i < VirtualFileSystem.CAPACITY; i++) {
 			content.append('a');
 		}
 
@@ -180,7 +180,7 @@ public class FileSystemTest {
 		fs.writeToTextFile("/home/f2", 1, content.toString(), false);
 
 		assertEquals(content.toString(), fs.getTextFileContent("/home/f2"));
-		assertEquals(FileSystem.CAPACITY, fs.getUsedMemory());
+		assertEquals(VirtualFileSystem.CAPACITY, fs.getUsedMemory());
 	}
 
 	@Test(expected = FileNotFoundException.class)

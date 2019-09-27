@@ -3,8 +3,7 @@ package fileSystem.commands;
 import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.NotDirectoryException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,7 @@ import org.junit.Test;
 
 import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
-import fileSystem.fs.FileSystem;
+import fileSystem.fs.VirtualFileSystem;
 import fileSystem.fs.FilterBy;
 import fileSystem.fs.InvalidArgumentException;
 
@@ -25,7 +24,7 @@ public class RemoveTextFileTest {
 
 	@Before
 	public void init() {
-		fileSystem = new FileSystem();
+		fileSystem = new VirtualFileSystem();
 		command = new RemoveTextFile(fileSystem, new Path());
 		options = new ArrayList<String>();
 		arguments = new ArrayList<String>();
@@ -33,7 +32,7 @@ public class RemoveTextFileTest {
 
 	@Test(expected = InvalidArgumentException.class)
 	public void execute_InvalidOption_ThrowInvalidArgumentException()
-			throws FileNotFoundException, InvalidArgumentException {
+			throws InvalidArgumentException, IOException {
 		options.add("-invalid");
 
 		command.execute(options, arguments);
@@ -41,7 +40,7 @@ public class RemoveTextFileTest {
 
 	@Test(expected = InvalidArgumentException.class)
 	public void execute_WrongPathToFile_ThrowInvalidArgumentException()
-			throws FileNotFoundException, InvalidArgumentException {
+			throws InvalidArgumentException, IOException {
 		arguments.add("/home/dir1/f1");
 
 		command.execute(options, arguments);
@@ -49,7 +48,7 @@ public class RemoveTextFileTest {
 
 	@Test(expected = FileNotFoundException.class)
 	public void execute_TextFileDoesNotExists_ThrowFileNotFoudException()
-			throws FileNotFoundException, InvalidArgumentException {
+			throws InvalidArgumentException, IOException {
 		arguments.add("/home/f1");
 
 		command.execute(options, arguments);
@@ -57,7 +56,7 @@ public class RemoveTextFileTest {
 
 	@Test(expected = FileNotFoundException.class)
 	public void execute_FileIsDirectory_ThrowFileNotFoundException()
-			throws FileNotFoundException, InvalidArgumentException {
+			throws InvalidArgumentException, IOException {
 		arguments.add("/home");
 
 		command.execute(options, arguments);
@@ -65,7 +64,7 @@ public class RemoveTextFileTest {
 
 	@Test
 	public void execute_TextFile_RemoveTextFileFromDirectory()
-			throws FileAlreadyExistsException, InvalidArgumentException, FileNotFoundException, NotDirectoryException {
+			throws InvalidArgumentException, IOException {
 		fileSystem.createTextFile("/home/f1");
 		arguments.add("/home/f1");
 
@@ -75,7 +74,7 @@ public class RemoveTextFileTest {
 	}
 
 	@Test
-	public void execute_SeveralTextFiles_RemoveAllTextFiles() throws FileAlreadyExistsException, InvalidArgumentException, FileNotFoundException, NotDirectoryException {
+	public void execute_SeveralTextFiles_RemoveAllTextFiles() throws InvalidArgumentException, IOException {
 		int numberOfFiles = 10;
 
 		for (int i = 0; i < numberOfFiles; i++) {
