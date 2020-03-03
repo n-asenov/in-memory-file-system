@@ -8,29 +8,28 @@ import fileSystem.fs.AbstractFileSystem;
 import fileSystem.fs.InvalidArgumentException;
 
 public class RemoveTextFile implements Command {
-	private AbstractFileSystem fileSystem;
-	private Path currentDirectory;
+    private AbstractFileSystem fileSystem;
+    private Path currentDirectory;
 
-	public RemoveTextFile(AbstractFileSystem fileSystem, Path currentDirectory) {
-		this.fileSystem = fileSystem;
-		this.currentDirectory = currentDirectory;
-	}
+    public RemoveTextFile(AbstractFileSystem fileSystem, Path currentDirectory) {
+        this.fileSystem = fileSystem;
+        this.currentDirectory = currentDirectory;
+    }
 
-	@Override
-	public String execute(List<String> options, List<String> arguments)
-			throws InvalidArgumentException, IOException {
-		validateOptions(options);
+    @Override
+    public String execute(List<String> options, List<String> arguments) throws InvalidArgumentException, IOException {
+        validateOptions(options);
 
-		for (String argument : arguments) {
-			fileSystem.removeTextFile(currentDirectory.getAbsolutePath(argument));
-		}
+        for (String argument : arguments) {
+            fileSystem.removeTextFile(currentDirectory.getAbsolutePath(argument));
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private void validateOptions(List<String> options) throws InvalidArgumentException {
-		if (options.size() != 0) {
-			throw new InvalidArgumentException("Invalid option");
-		}
-	}
+    private void validateOptions(List<String> options) throws InvalidArgumentException {
+        if (options.size() != 0) {
+            throw new InvalidArgumentException("Invalid option");
+        }
+    }
 }

@@ -12,60 +12,63 @@ import fileSystem.fs.NotEnoughMemoryException;
 import fileSystem.parser.CommandParser;
 
 public class Pipe implements Command {
-	private CommandFactory factory;
+    private CommandFactory factory;
+    private CommandParser parser;
 
-	public Pipe(AbstractFileSystem fileSystem, Path currentDirectory) {
-		factory = new CommandFactory(fileSystem, currentDirectory);
-	}
+    public Pipe(AbstractFileSystem fileSystem, Path currentDirectory) {
+        factory = new CommandFactory(fileSystem, currentDirectory);
+        parser = new CommandParser();
+    }
 
-	@Override
-	public String execute(List<String> options, List<String> arguments) throws InvalidArgumentException, NotEnoughMemoryException, IOException {
-		validateOptions(options);
-		validateArguments(arguments);
+    @Override
+    public String execute(List<String> options, List<String> arguments)
+            throws InvalidArgumentException, NotEnoughMemoryException, IOException {
+        validateOptions(options);
+        validateArguments(arguments);
 
-		List<String> command = new ArrayList<String>();
-		String result = null;
+        List<String> command = new ArrayList<String>();
+        String result = null;
 
-		for (String argument : arguments) {
-			if (argument.equals("|")) {
-				if (result != null && !result.equals("")) {
-					for (String arg : splitResult(result)) {
-						command.add(arg);
-					}
-				}
+        for (String argument : arguments) {
+            if (argument.equals("|")) {
+                if (result != null && !result.equals("")) {
+                    for (String arg : splitResult(result)) {
+                        command.add(arg);
+                    }
+                }
 
-				result = factory.make(CommandParser.getCommandName(command)).execute(CommandParser.getCommandOptions(command),
-						CommandParser.getCommandArguments(command));
+                result = factory.make(parser.getCommandName(command)).execute(parser.getCommandOptions(command),
+                        parser.getCommandArguments(command));
 
-				command.clear();
-			} else {
-				command.add(argument);
-			}
-		}
+                command.clear();
+            } else {
+                command.add(argument);
+            }
+        }
 
-		if (result != null && !result.equals("")) {
-			for (String arg : splitResult(result)) {
-				command.add(arg);
-			}
-		}
-		
-		return factory.make(CommandParser.getCommandName(command)).execute(CommandParser.getCommandOptions(command),
-				CommandParser.getCommandArguments(command));
-	}
+        if (result != null && !result.equals("")) {
+            for (String arg : splitResult(result)) {
+                command.add(arg);
+            }
+        }
 
-	private void validateArguments(List<String> arguments) throws InvalidArgumentException {
-		if (arguments.get(0).equals("|") || arguments.get(arguments.size() - 1).equals("|")) {
-			throw new InvalidArgumentException("Invalid arguments");
-		}
-	}
+        return factory.make(parser.getCommandName(command)).execute(parser.getCommandOptions(command),
+                parser.getCommandArguments(command));
+    }
 
-	private void validateOptions(List<String> options) throws InvalidArgumentException {
-		if (!options.isEmpty()) {
-			throw new InvalidArgumentException("Invalid option");
-		}
-	}
-	
-	private List<String> splitResult(String result) {
-		return Arrays.asList(result.split(" "));
-	}
+    private void validateArguments(List<String> arguments) throws InvalidArgumentException {
+        if (arguments.get(0).equals("|") || arguments.get(arguments.size() - 1).equals("|")) {
+            throw new InvalidArgumentException("Invalid arguments");
+        }
+    }
+
+    private void validateOptions(List<String> options) throws InvalidArgumentException {
+        if (!options.isEmpty()) {
+            throw new InvalidArgumentException("Invalid option");
+        }
+    }
+
+    private List<String> splitResult(String result) {
+        return Arrays.asList(result.split(" "));
+    }
 }

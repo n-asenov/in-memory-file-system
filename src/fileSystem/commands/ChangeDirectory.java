@@ -9,11 +9,11 @@ import fileSystem.fs.AbstractFileSystem;
 import fileSystem.fs.InvalidArgumentException;
 
 public class ChangeDirectory implements Command {
-	private AbstractFileSystem fs;
+	private AbstractFileSystem fileSystem;
 	private Path currentDirectory;
 
-	public ChangeDirectory(AbstractFileSystem fs, Path currentDirectory) {
-		this.fs = fs;
+	public ChangeDirectory(AbstractFileSystem fileSystem, Path currentDirectory) {
+		this.fileSystem = fileSystem;
 		this.currentDirectory = currentDirectory;
 	}
 
@@ -50,7 +50,7 @@ public class ChangeDirectory implements Command {
 
 	private void validateNewCurrentDirectory(String newCurrentDirectory)
 			throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
-		if (!fs.isDirectory(newCurrentDirectory)) {
+		if (!fileSystem.isDirectory(newCurrentDirectory)) {
 			throw new NotDirectoryException("File is not a directory");
 		}
 	}

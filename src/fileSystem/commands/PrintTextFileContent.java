@@ -8,11 +8,11 @@ import fileSystem.fs.AbstractFileSystem;
 import fileSystem.fs.InvalidArgumentException;
 
 public class PrintTextFileContent implements Command {
-	private AbstractFileSystem fs;
+	private AbstractFileSystem fileSystem;
 	private Path currentDirectory;
 
-	public PrintTextFileContent(AbstractFileSystem fs, Path currentDirectory) {
-		this.fs = fs;
+	public PrintTextFileContent(AbstractFileSystem fileSystem, Path currentDirectory) {
+		this.fileSystem = fileSystem;
 		this.currentDirectory = currentDirectory;
 	}
 
@@ -24,7 +24,7 @@ public class PrintTextFileContent implements Command {
 		
 		StringBuilder result = new StringBuilder();
 		for (String file : arguments) {
-			result.append(fs.getTextFileContent(currentDirectory.getAbsolutePath(file)));
+			result.append(fileSystem.getTextFileContent(currentDirectory.getAbsolutePath(file)));
 			result.append(System.lineSeparator());
 		}
 		

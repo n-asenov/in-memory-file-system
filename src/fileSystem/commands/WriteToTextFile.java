@@ -9,11 +9,11 @@ import fileSystem.fs.InvalidArgumentException;
 import fileSystem.fs.NotEnoughMemoryException;
 
 public class WriteToTextFile implements Command {
-	private AbstractFileSystem fs;
+	private AbstractFileSystem fileSystem;
 	private Path currentDirectory;
 
-	public WriteToTextFile(AbstractFileSystem fs, Path currentDirectory) {
-		this.fs = fs;
+	public WriteToTextFile(AbstractFileSystem fileSystem, Path currentDirectory) {
+		this.fileSystem = fileSystem;
 		this.currentDirectory = currentDirectory;
 	}
 
@@ -33,7 +33,7 @@ public class WriteToTextFile implements Command {
 		int line = getLine(arguments);
 		String lineContent = getLineContent(arguments);
 
-		fs.writeToTextFile(absolutePath, line, lineContent, overwrite);
+		fileSystem.writeToTextFile(absolutePath, line, lineContent, overwrite);
 
 		return null;
 	}

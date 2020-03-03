@@ -15,28 +15,28 @@ import fileSystem.output.Output;
 import fileSystem.parser.Parser;
 
 public class Terminal {
-	private Parser parser;
-	private Output output;
-	private Pipe command;
+    private Parser parser;
+    private Output output;
+    private Pipe command;
 
-	public Terminal(AbstractFileSystem fs, Parser parser, Output output) {
-		this.parser = parser;
-		this.output = output;
-		command = new Pipe(fs, new Path());
-	}
+    public Terminal(final AbstractFileSystem fileSystem, final Parser parser, final Output output) {
+        this.parser = parser;
+        this.output = output;
+        command = new Pipe(fileSystem, new Path());
+    }
 
-	public void run() {
-		while (true) {
-			if (parser.hasNextLine()) {
-				try {
-					output.print(command.execute(new ArrayList<String>(), parser.getCommandLine()));
-				} catch (NotDirectoryException | FileAlreadyExistsException | FileNotFoundException
-						| NotEnoughMemoryException | InvalidArgumentException e) {
-					output.print(e.getMessage());
-				} catch (IOException e) {
-					output.print(e.getMessage());
-				}
-			}
-		}
-	}
+    public void run() {
+        while (true) {
+            if (parser.hasNextLine()) {
+                try {
+                    output.print(command.execute(new ArrayList<String>(), parser.getCommandLine()));
+                } catch (NotDirectoryException | FileAlreadyExistsException | FileNotFoundException
+                        | NotEnoughMemoryException | InvalidArgumentException e) {
+                    output.print(e.getMessage());
+                } catch (IOException e) {
+                    output.print(e.getMessage());
+                }
+            }
+        }
+    }
 }

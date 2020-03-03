@@ -1,13 +1,14 @@
 package fileSystem.commands;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import fileSystem.Path;
 import fileSystem.fs.AbstractFileSystem;
 import fileSystem.fs.InvalidArgumentException;
 
 public class CommandFactory {
-	private HashMap<String, Command> commands;
+	private Map<String, Command> commands;
 
 	public CommandFactory(AbstractFileSystem fileSystem, Path currentDirectory) {
 		commands = new HashMap<String, Command>();

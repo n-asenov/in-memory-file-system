@@ -8,11 +8,11 @@ import fileSystem.fs.AbstractFileSystem;
 import fileSystem.fs.InvalidArgumentException;
 
 public class CreateTextFile implements Command {
-	private AbstractFileSystem fs;
+	private AbstractFileSystem fileSystem;
 	private Path currentDirectory;
 
-	public CreateTextFile(AbstractFileSystem fs, Path currentDirectory) {
-		this.fs = fs;
+	public CreateTextFile(AbstractFileSystem fileSystem, Path currentDirectory) {
+		this.fileSystem = fileSystem;
 		this.currentDirectory = currentDirectory;
 	}
 
@@ -22,7 +22,7 @@ public class CreateTextFile implements Command {
 		validateOptions(options);
 		
 		for (String argument : arguments) {
-			fs.createTextFile(currentDirectory.getAbsolutePath(argument));
+			fileSystem.createTextFile(currentDirectory.getAbsolutePath(argument));
 		}
 		
 		return null;

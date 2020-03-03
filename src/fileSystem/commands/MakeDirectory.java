@@ -8,11 +8,11 @@ import fileSystem.fs.AbstractFileSystem;
 import fileSystem.fs.InvalidArgumentException;
 
 public class MakeDirectory implements Command {
-	private AbstractFileSystem fs;
+	private AbstractFileSystem fileSystem;
 	private Path currentDirectory;
 
-	public MakeDirectory(AbstractFileSystem fs, Path currentDirectory) {
-		this.fs = fs;
+	public MakeDirectory(AbstractFileSystem fileSystem, Path currentDirectory) {
+		this.fileSystem = fileSystem;
 		this.currentDirectory = currentDirectory;
 	}
 
@@ -22,7 +22,7 @@ public class MakeDirectory implements Command {
 		validateOptions(options);
 
 		for (String argument : arguments) {
-			fs.makeDirectory(currentDirectory.getAbsolutePath(argument));
+			fileSystem.makeDirectory(currentDirectory.getAbsolutePath(argument));
 		}
 
 		return null;
