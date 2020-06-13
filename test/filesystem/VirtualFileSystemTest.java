@@ -135,7 +135,7 @@ public class VirtualFileSystemTest {
 
 	StringBuilder content = new StringBuilder();
 
-	for (int i = 0; i <= VirtualFileSystem.CAPACITY; i++) {
+	for (int i = 0; i <= VirtualFileSystem.MEMORY_CAPACITY; i++) {
 	    content.append('a');
 	}
 
@@ -177,7 +177,7 @@ public class VirtualFileSystemTest {
 
 	StringBuilder content = new StringBuilder();
 
-	for (int i = 1; i < VirtualFileSystem.CAPACITY; i++) {
+	for (int i = 1; i < VirtualFileSystem.MEMORY_CAPACITY; i++) {
 	    content.append('a');
 	}
 
@@ -185,7 +185,7 @@ public class VirtualFileSystemTest {
 	fs.writeToTextFile("/home/f2", 1, content.toString(), false);
 
 	assertEquals(content.toString(), fs.getTextFileContent("/home/f2"));
-	assertEquals(VirtualFileSystem.CAPACITY, fs.getUsedMemory());
+	assertEquals(VirtualFileSystem.MEMORY_CAPACITY, fs.getUsedMemory());
     }
 
     @Test(expected = FileNotFoundException.class)

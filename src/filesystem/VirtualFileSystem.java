@@ -3,19 +3,20 @@ package filesystem;
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NotDirectoryException;
+import java.util.ArrayDeque;
 import java.util.Comparator;
-import java.util.LinkedList;
+import java.util.Deque;
 import java.util.List;
 
 import filesystem.exceptions.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
 
 public class VirtualFileSystem implements AbstractFileSystem {
-    public static final int CAPACITY = 1000;
+    public static final int MEMORY_CAPACITY = 1000;
 
-    private int usedMemory;
-    private LinkedList<File> deletedFiles;
     private Directory root;
+    private Deque<File> deletedFiles;
+    private int usedMemory;
 
     public VirtualFileSystem() {
 	root = new Directory("/");
@@ -25,7 +26,7 @@ public class VirtualFileSystem implements AbstractFileSystem {
 	    throw new IllegalArgumentException("Should not reach here");
 	}
 	usedMemory = 0;
-	deletedFiles = new LinkedList<File>();
+	deletedFiles = new ArrayDeque<File>();
     }
 
     public int getUsedMemory() {
@@ -85,8 +86,7 @@ public class VirtualFileSystem implements AbstractFileSystem {
 	if (!freeEnoughSpace(textFile, line, content, overwrite)) {
 	    throw new NotEnoughMemoryException("Not enough memory");
 	}
-	
-	
+
 	if (overwrite) {
 	    textFile.overwrite(line, content);
 	} else {
@@ -122,7 +122,7 @@ public class VirtualFileSystem implements AbstractFileSystem {
 	// Default sort
 	return (f1, f2) -> f1.getName().compareTo(f2.getName());
     }
-    
+
     @Override
     public boolean isDirectory(String absolutePath) throws FileNotFoundException, InvalidArgumentException {
 	Directory workDirectory = goToWorkDirectory(absolutePath);
@@ -240,12 +240,12 @@ public class VirtualFileSystem implements AbstractFileSystem {
 	    sizeToAdd -= file.getLineSize(line);
 	}
 
-	while (!deletedFiles.isEmpty() && usedMemory + sizeToAdd > CAPACITY) {
+	while (!deletedFiles.isEmpty() && usedMemory + sizeToAdd > MEMORY_CAPACITY) {
 	    File deletedFile = deletedFiles.removeFirst();
 	    usedMemory -= deletedFile.getSize();
 	}
 
-	if (usedMemory + sizeToAdd > CAPACITY) {
+	if (usedMemory + sizeToAdd > MEMORY_CAPACITY) {
 	    return false;
 	}
 
