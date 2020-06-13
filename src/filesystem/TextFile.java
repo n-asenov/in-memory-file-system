@@ -2,6 +2,8 @@ package filesystem;
 
 import java.util.TreeMap;
 
+import filesystem.exceptions.InvalidArgumentException;
+
 public class TextFile extends File {
     private TreeMap<Integer, String> content;
     private int size;

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import filesystem.AbstractFileSystem;
-import filesystem.InvalidArgumentException;
+import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class MakeDirectory implements Command {

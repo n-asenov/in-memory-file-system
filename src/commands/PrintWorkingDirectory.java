@@ -2,7 +2,7 @@ package commands;
 
 import java.util.List;
 
-import filesystem.InvalidArgumentException;
+import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class PrintWorkingDirectory implements Command {

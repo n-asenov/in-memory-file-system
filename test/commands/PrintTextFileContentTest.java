@@ -12,8 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import commands.PrintTextFileContent;
-import filesystem.InvalidArgumentException;
 import filesystem.VirtualFileSystem;
+import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class PrintTextFileContentTest {

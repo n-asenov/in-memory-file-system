@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 import commands.*;
 import filesystem.AbstractFileSystem;
-import filesystem.InvalidArgumentException;
-import filesystem.NotEnoughMemoryException;
+import filesystem.exceptions.InvalidArgumentException;
+import filesystem.exceptions.NotEnoughMemoryException;
 import output.Output;
 import parser.Parser;
 import path.Path;

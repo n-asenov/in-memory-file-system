@@ -13,8 +13,8 @@ import org.junit.Test;
 import commands.RemoveTextFile;
 import filesystem.AbstractFileSystem;
 import filesystem.FilterBy;
-import filesystem.InvalidArgumentException;
 import filesystem.VirtualFileSystem;
+import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class RemoveTextFileTest {

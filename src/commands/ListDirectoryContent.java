@@ -5,7 +5,7 @@ import java.util.List;
 
 import filesystem.AbstractFileSystem;
 import filesystem.FilterBy;
-import filesystem.InvalidArgumentException;
+import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class ListDirectoryContent implements Command {

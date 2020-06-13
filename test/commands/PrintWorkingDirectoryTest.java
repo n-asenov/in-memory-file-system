@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import commands.PrintWorkingDirectory;
-import filesystem.InvalidArgumentException;
+import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class PrintWorkingDirectoryTest {

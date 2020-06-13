@@ -6,6 +6,9 @@ import java.nio.file.NotDirectoryException;
 import java.util.LinkedList;
 import java.util.List;
 
+import filesystem.exceptions.InvalidArgumentException;
+import filesystem.exceptions.NotEnoughMemoryException;
+
 public class VirtualFileSystem implements AbstractFileSystem {
     public static final int CAPACITY = 1000;
 

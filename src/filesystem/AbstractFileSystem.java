@@ -4,6 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import filesystem.exceptions.InvalidArgumentException;
+import filesystem.exceptions.NotEnoughMemoryException;
+
 public interface AbstractFileSystem {
     void makeDirectory(String absolutePath) throws InvalidArgumentException, IOException;
 

@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 import filesystem.AbstractFileSystem;
-import filesystem.InvalidArgumentException;
-import filesystem.NotEnoughMemoryException;
+import filesystem.exceptions.InvalidArgumentException;
+import filesystem.exceptions.NotEnoughMemoryException;
 import path.Path;
 
 public class WriteToTextFile implements Command {

@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import filesystem.InvalidArgumentException;
 import filesystem.TextFile;
+import filesystem.exceptions.InvalidArgumentException;
 
 public class TextFileTest {
     private TextFile file;

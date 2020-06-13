@@ -13,8 +13,8 @@ import org.junit.Test;
 import filesystem.Directory;
 import filesystem.File;
 import filesystem.FilterBy;
-import filesystem.InvalidArgumentException;
 import filesystem.TextFile;
+import filesystem.exceptions.InvalidArgumentException;
 
 public class DirectoryTest {
     private Directory directory;

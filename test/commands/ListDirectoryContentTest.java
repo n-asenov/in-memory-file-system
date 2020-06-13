@@ -11,8 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import commands.ListDirectoryContent;
-import filesystem.InvalidArgumentException;
 import filesystem.VirtualFileSystem;
+import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class ListDirectoryContentTest {

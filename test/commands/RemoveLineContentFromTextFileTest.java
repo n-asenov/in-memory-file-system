@@ -12,9 +12,9 @@ import org.junit.Test;
 
 import commands.RemoveLineContentFromTextFile;
 import filesystem.AbstractFileSystem;
-import filesystem.InvalidArgumentException;
-import filesystem.NotEnoughMemoryException;
 import filesystem.VirtualFileSystem;
+import filesystem.exceptions.InvalidArgumentException;
+import filesystem.exceptions.NotEnoughMemoryException;
 import path.Path;
 
 public class RemoveLineContentFromTextFileTest {

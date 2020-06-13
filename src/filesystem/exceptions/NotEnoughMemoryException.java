@@ -1,4 +1,4 @@
-package filesystem;
+package filesystem.exceptions;
 
 public class NotEnoughMemoryException extends Exception {
     private static final long serialVersionUID = 7535404394698873255L;

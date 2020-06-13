@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import filesystem.AbstractFileSystem;
-import filesystem.InvalidArgumentException;
+import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class CommandFactory {

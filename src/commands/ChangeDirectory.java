@@ -5,7 +5,7 @@ import java.nio.file.NotDirectoryException;
 import java.util.List;
 
 import filesystem.AbstractFileSystem;
-import filesystem.InvalidArgumentException;
+import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class ChangeDirectory implements Command {
