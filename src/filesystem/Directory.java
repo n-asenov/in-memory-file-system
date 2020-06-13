@@ -5,22 +5,22 @@ import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class Directory extends File {
     private Map<String, File> content;
 
     public Directory(String name) {
 	super(name);
-	content = new TreeMap<String, File>();
+	content = new HashMap<>();
 	setUpContent(this);
     }
 
     public Directory(String name, Directory parent) {
 	super(name);
-	content = new TreeMap<String, File>();
+	content = new HashMap<>();
 	setUpContent(parent);
     }
 
