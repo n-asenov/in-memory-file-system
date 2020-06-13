@@ -9,68 +9,68 @@ import filesystem.NotEnoughMemoryException;
 import path.Path;
 
 public class WriteToTextFile implements Command {
-	private AbstractFileSystem fileSystem;
-	private Path currentDirectory;
+    private AbstractFileSystem fileSystem;
+    private Path currentDirectory;
 
-	public WriteToTextFile(AbstractFileSystem fileSystem, Path currentDirectory) {
-		this.fileSystem = fileSystem;
-		this.currentDirectory = currentDirectory;
+    public WriteToTextFile(AbstractFileSystem fileSystem, Path currentDirectory) {
+	this.fileSystem = fileSystem;
+	this.currentDirectory = currentDirectory;
+    }
+
+    @Override
+    public String execute(List<String> options, List<String> arguments)
+	    throws NotEnoughMemoryException, InvalidArgumentException, IOException {
+	boolean overwrite = false;
+
+	for (String option : options) {
+	    validateOption(option);
+	    overwrite = true;
 	}
 
-	@Override
-	public String execute(List<String> options, List<String> arguments)
-			throws NotEnoughMemoryException, InvalidArgumentException, IOException {
-		boolean overwrite = false;
+	validateArguments(arguments);
 
-		for (String option : options) {
-			validateOption(option);
-			overwrite = true;
-		}
+	String absolutePath = currentDirectory.getAbsolutePath(arguments.get(0));
+	int line = getLine(arguments);
+	String lineContent = getLineContent(arguments);
 
-		validateArguments(arguments);
+	fileSystem.writeToTextFile(absolutePath, line, lineContent, overwrite);
 
-		String absolutePath = currentDirectory.getAbsolutePath(arguments.get(0));
-		int line = getLine(arguments);
-		String lineContent = getLineContent(arguments);
+	return null;
+    }
 
-		fileSystem.writeToTextFile(absolutePath, line, lineContent, overwrite);
+    private void validateOption(String option) throws InvalidArgumentException {
+	if (!option.equals("-overwrite")) {
+	    throw new InvalidArgumentException("Invalid option");
+	}
+    }
 
-		return null;
+    private void validateArguments(List<String> arguments) throws InvalidArgumentException {
+	if (arguments.size() < 3) {
+	    throw new InvalidArgumentException("Commmand expects more arguments");
+	}
+    }
+
+    private int getLine(List<String> arguments) throws InvalidArgumentException {
+	int line = 0;
+
+	try {
+	    line = Integer.parseInt(arguments.get(1));
+	} catch (NumberFormatException e) {
+	    throw new InvalidArgumentException("Second argument must be a integer");
 	}
 
-	private void validateOption(String option) throws InvalidArgumentException {
-		if (!option.equals("-overwrite")) {
-			throw new InvalidArgumentException("Invalid option");
-		}
+	return line;
+    }
+
+    private String getLineContent(List<String> arguments) {
+	StringBuilder lineContent = new StringBuilder();
+	int size = arguments.size() - 1;
+
+	for (int i = 2; i < size; i++) {
+	    lineContent.append(arguments.get(i)).append(" ");
 	}
+	lineContent.append(arguments.get(size));
 
-	private void validateArguments(List<String> arguments) throws InvalidArgumentException {
-		if (arguments.size() < 3) {
-			throw new InvalidArgumentException("Commmand expects more arguments");
-		}
-	}
-
-	private int getLine(List<String> arguments) throws InvalidArgumentException {
-		int line = 0;
-
-		try {
-			line = Integer.parseInt(arguments.get(1));
-		} catch (NumberFormatException e) {
-			throw new InvalidArgumentException("Second argument must be a integer");
-		}
-
-		return line;
-	}
-
-	private String getLineContent(List<String> arguments) {
-		StringBuilder lineContent = new StringBuilder();
-		int size = arguments.size() - 1;
-
-		for (int i = 2; i < size; i++) {
-			lineContent.append(arguments.get(i)).append(" ");
-		}
-		lineContent.append(arguments.get(size));
-
-		return lineContent.toString();
-	}
+	return lineContent.toString();
+    }
 }

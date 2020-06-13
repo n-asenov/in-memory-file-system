@@ -12,10 +12,9 @@ public interface AbstractFileSystem {
     String getTextFileContent(String absolutePath) throws InvalidArgumentException, IOException;
 
     void writeToTextFile(String absolutePath, int line, String content, boolean overwrite)
-            throws InvalidArgumentException, IOException, NotEnoughMemoryException;
+	    throws InvalidArgumentException, IOException, NotEnoughMemoryException;
 
-    List<String> getDirectoryContent(String absolutePath, FilterBy option)
-            throws InvalidArgumentException, IOException;
+    List<String> getDirectoryContent(String absolutePath, FilterBy option) throws InvalidArgumentException, IOException;
 
     boolean isDirectory(String absolutePath) throws InvalidArgumentException, FileNotFoundException;
 
@@ -26,5 +25,5 @@ public interface AbstractFileSystem {
     void removeTextFile(String absolutePath) throws InvalidArgumentException, IOException;
 
     void removeContentFromLinesInTextFile(String absolutePath, int start, int end)
-            throws InvalidArgumentException, IOException;
+	    throws InvalidArgumentException, IOException;
 }

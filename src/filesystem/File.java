@@ -1,23 +1,23 @@
 package filesystem;
 
 public abstract class File {
-	private String name;
+    private String name;
 
-	protected File(String name) {
-		this.name = name;
-	}
+    protected File(String name) {
+	this.name = name;
+    }
 
-	abstract int getSize();
+    abstract int getSize();
 
-	abstract boolean isDirectory();
+    abstract boolean isDirectory();
 
-	abstract boolean isTextFile();
+    abstract boolean isTextFile();
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+	return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+	this.name = name;
+    }
 }

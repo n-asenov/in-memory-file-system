@@ -18,73 +18,68 @@ import filesystem.VirtualFileSystem;
 import path.Path;
 
 public class RemoveTextFileTest {
-	private RemoveTextFile command;
-	private AbstractFileSystem fileSystem;
-	private List<String> options;
-	private List<String> arguments;
+    private RemoveTextFile command;
+    private AbstractFileSystem fileSystem;
+    private List<String> options;
+    private List<String> arguments;
 
-	@Before
-	public void init() {
-		fileSystem = new VirtualFileSystem();
-		command = new RemoveTextFile(fileSystem, new Path());
-		options = new ArrayList<String>();
-		arguments = new ArrayList<String>();
+    @Before
+    public void init() {
+	fileSystem = new VirtualFileSystem();
+	command = new RemoveTextFile(fileSystem, new Path());
+	options = new ArrayList<String>();
+	arguments = new ArrayList<String>();
+    }
+
+    @Test(expected = InvalidArgumentException.class)
+    public void execute_InvalidOption_ThrowInvalidArgumentException() throws InvalidArgumentException, IOException {
+	options.add("-invalid");
+
+	command.execute(options, arguments);
+    }
+
+    @Test(expected = InvalidArgumentException.class)
+    public void execute_WrongPathToFile_ThrowInvalidArgumentException() throws InvalidArgumentException, IOException {
+	arguments.add("/home/dir1/f1");
+
+	command.execute(options, arguments);
+    }
+
+    @Test(expected = FileNotFoundException.class)
+    public void execute_TextFileDoesNotExists_ThrowFileNotFoudException() throws InvalidArgumentException, IOException {
+	arguments.add("/home/f1");
+
+	command.execute(options, arguments);
+    }
+
+    @Test(expected = FileNotFoundException.class)
+    public void execute_FileIsDirectory_ThrowFileNotFoundException() throws InvalidArgumentException, IOException {
+	arguments.add("/home");
+
+	command.execute(options, arguments);
+    }
+
+    @Test
+    public void execute_TextFile_RemoveTextFileFromDirectory() throws InvalidArgumentException, IOException {
+	fileSystem.createTextFile("/home/f1");
+	arguments.add("/home/f1");
+
+	String[] expectedResult = {};
+	assertNull(command.execute(options, arguments));
+	assertArrayEquals(expectedResult, fileSystem.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
+    }
+
+    @Test
+    public void execute_SeveralTextFiles_RemoveAllTextFiles() throws InvalidArgumentException, IOException {
+	int numberOfFiles = 10;
+
+	for (int i = 0; i < numberOfFiles; i++) {
+	    String fileName = "/home/f" + i;
+	    fileSystem.createTextFile(fileName);
+	    arguments.add(fileName);
 	}
-
-	@Test(expected = InvalidArgumentException.class)
-	public void execute_InvalidOption_ThrowInvalidArgumentException()
-			throws InvalidArgumentException, IOException {
-		options.add("-invalid");
-
-		command.execute(options, arguments);
-	}
-
-	@Test(expected = InvalidArgumentException.class)
-	public void execute_WrongPathToFile_ThrowInvalidArgumentException()
-			throws InvalidArgumentException, IOException {
-		arguments.add("/home/dir1/f1");
-
-		command.execute(options, arguments);
-	}
-
-	@Test(expected = FileNotFoundException.class)
-	public void execute_TextFileDoesNotExists_ThrowFileNotFoudException()
-			throws InvalidArgumentException, IOException {
-		arguments.add("/home/f1");
-
-		command.execute(options, arguments);
-	}
-
-	@Test(expected = FileNotFoundException.class)
-	public void execute_FileIsDirectory_ThrowFileNotFoundException()
-			throws InvalidArgumentException, IOException {
-		arguments.add("/home");
-
-		command.execute(options, arguments);
-	}
-
-	@Test
-	public void execute_TextFile_RemoveTextFileFromDirectory()
-			throws InvalidArgumentException, IOException {
-		fileSystem.createTextFile("/home/f1");
-		arguments.add("/home/f1");
-
-		String[] expectedResult = {};
-		assertNull(command.execute(options, arguments));
-		assertArrayEquals(expectedResult, fileSystem.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
-	}
-
-	@Test
-	public void execute_SeveralTextFiles_RemoveAllTextFiles() throws InvalidArgumentException, IOException {
-		int numberOfFiles = 10;
-
-		for (int i = 0; i < numberOfFiles; i++) {
-			String fileName = "/home/f" + i;
-			fileSystem.createTextFile(fileName);
-			arguments.add(fileName);
-		}
-		String[] expectedResult = {};
-		assertNull(command.execute(options, arguments));
-		assertArrayEquals(expectedResult, fileSystem.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
-	}
+	String[] expectedResult = {};
+	assertNull(command.execute(options, arguments));
+	assertArrayEquals(expectedResult, fileSystem.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
+    }
 }

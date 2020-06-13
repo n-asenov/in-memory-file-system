@@ -8,29 +8,28 @@ import filesystem.InvalidArgumentException;
 import path.Path;
 
 public class MakeDirectory implements Command {
-	private AbstractFileSystem fileSystem;
-	private Path currentDirectory;
+    private AbstractFileSystem fileSystem;
+    private Path currentDirectory;
 
-	public MakeDirectory(AbstractFileSystem fileSystem, Path currentDirectory) {
-		this.fileSystem = fileSystem;
-		this.currentDirectory = currentDirectory;
+    public MakeDirectory(AbstractFileSystem fileSystem, Path currentDirectory) {
+	this.fileSystem = fileSystem;
+	this.currentDirectory = currentDirectory;
+    }
+
+    @Override
+    public String execute(List<String> options, List<String> arguments) throws InvalidArgumentException, IOException {
+	validateOptions(options);
+
+	for (String argument : arguments) {
+	    fileSystem.makeDirectory(currentDirectory.getAbsolutePath(argument));
 	}
 
-	@Override
-	public String execute(List<String> options, List<String> arguments)
-			throws InvalidArgumentException, IOException {
-		validateOptions(options);
+	return null;
+    }
 
-		for (String argument : arguments) {
-			fileSystem.makeDirectory(currentDirectory.getAbsolutePath(argument));
-		}
-
-		return null;
+    private void validateOptions(List<String> options) throws InvalidArgumentException {
+	if (options.size() != 0) {
+	    throw new InvalidArgumentException("Invalid option");
 	}
-
-	private void validateOptions(List<String> options) throws InvalidArgumentException {
-		if (options.size() != 0) {
-			throw new InvalidArgumentException("Invalid option");
-		}
-	}
+    }
 }

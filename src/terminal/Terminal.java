@@ -20,23 +20,23 @@ public class Terminal {
     private Pipe command;
 
     public Terminal(final AbstractFileSystem fileSystem, final Parser parser, final Output output) {
-        this.parser = parser;
-        this.output = output;
-        command = new Pipe(fileSystem, new Path());
+	this.parser = parser;
+	this.output = output;
+	command = new Pipe(fileSystem, new Path());
     }
 
     public void run() {
-        while (true) {
-            if (parser.hasNextLine()) {
-                try {
-                    output.print(command.execute(new ArrayList<String>(), parser.getCommandLine()));
-                } catch (NotDirectoryException | FileAlreadyExistsException | FileNotFoundException
-                        | NotEnoughMemoryException | InvalidArgumentException e) {
-                    output.print(e.getMessage());
-                } catch (IOException e) {
-                    output.print(e.getMessage());
-                }
-            }
-        }
+	while (true) {
+	    if (parser.hasNextLine()) {
+		try {
+		    output.print(command.execute(new ArrayList<String>(), parser.getCommandLine()));
+		} catch (NotDirectoryException | FileAlreadyExistsException | FileNotFoundException
+			| NotEnoughMemoryException | InvalidArgumentException e) {
+		    output.print(e.getMessage());
+		} catch (IOException e) {
+		    output.print(e.getMessage());
+		}
+	    }
+	}
     }
 }

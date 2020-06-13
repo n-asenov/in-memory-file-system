@@ -51,11 +51,11 @@ public class Path {
 
 	return buildAbsolutePath(trimmedAbsolutePath);
     }
-    
+
     private boolean isSpecialDirectory(String directory) {
 	return directory.equals(".") || directory.equals("..");
     }
-    
+
     private boolean isParentDirectory(String directory) {
 	return directory.equals("..");
     }
@@ -63,7 +63,7 @@ public class Path {
     private boolean hasParentDirectory(Deque<String> trimmedAbsolutePath) {
 	return !trimmedAbsolutePath.peekLast().equals("");
     }
-    
+
     private String buildAbsolutePath(Deque<String> tokens) {
 	StringBuilder absolutePath = new StringBuilder();
 

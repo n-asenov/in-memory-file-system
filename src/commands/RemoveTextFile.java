@@ -12,24 +12,24 @@ public class RemoveTextFile implements Command {
     private Path currentDirectory;
 
     public RemoveTextFile(AbstractFileSystem fileSystem, Path currentDirectory) {
-        this.fileSystem = fileSystem;
-        this.currentDirectory = currentDirectory;
+	this.fileSystem = fileSystem;
+	this.currentDirectory = currentDirectory;
     }
 
     @Override
     public String execute(List<String> options, List<String> arguments) throws InvalidArgumentException, IOException {
-        validateOptions(options);
+	validateOptions(options);
 
-        for (String argument : arguments) {
-            fileSystem.removeTextFile(currentDirectory.getAbsolutePath(argument));
-        }
+	for (String argument : arguments) {
+	    fileSystem.removeTextFile(currentDirectory.getAbsolutePath(argument));
+	}
 
-        return null;
+	return null;
     }
 
     private void validateOptions(List<String> options) throws InvalidArgumentException {
-        if (options.size() != 0) {
-            throw new InvalidArgumentException("Invalid option");
-        }
+	if (options.size() != 0) {
+	    throw new InvalidArgumentException("Invalid option");
+	}
     }
 }

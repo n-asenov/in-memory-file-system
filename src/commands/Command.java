@@ -7,6 +7,6 @@ import filesystem.InvalidArgumentException;
 import filesystem.NotEnoughMemoryException;
 
 public interface Command {
-	public String execute(List<String> options, List<String> arguments)
-			throws InvalidArgumentException, IOException, NotEnoughMemoryException;
+    public String execute(List<String> options, List<String> arguments)
+	    throws InvalidArgumentException, IOException, NotEnoughMemoryException;
 }
