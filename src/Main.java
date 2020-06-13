@@ -1,14 +1,15 @@
-
-
 import filesystem.VirtualFileSystem;
 import output.ConsoleOutput;
+import parser.Parser;
 import parser.StandardInputParser;
 import terminal.Terminal;
 
 public class Main {
     public static void main(String[] args) {
-        Terminal terminal = new Terminal(new VirtualFileSystem(), new StandardInputParser(), new ConsoleOutput());
+	Parser inputParser = new StandardInputParser();
+	Terminal terminal = new Terminal(new VirtualFileSystem(), inputParser, new ConsoleOutput());
 
-        terminal.run();
+	terminal.run();
+	inputParser.close();
     }
 }
