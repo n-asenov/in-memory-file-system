@@ -19,11 +19,6 @@ public class TextFile extends File {
 	return size;
     }
 
-    @Override
-    boolean isTextFile() {
-	return true;
-    }
-
     public String getContent() {
 	StringBuilder fileContent = new StringBuilder();
 

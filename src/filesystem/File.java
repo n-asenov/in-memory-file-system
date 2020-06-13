@@ -10,8 +10,6 @@ public abstract class File {
     public String getName() {
 	return name;
     }
-    
-    abstract int getSize();
 
-    abstract boolean isTextFile();
+    abstract int getSize();
 }

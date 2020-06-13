@@ -37,11 +37,6 @@ public class Directory extends File {
 	return size;
     }
 
-    @Override
-    boolean isTextFile() {
-	return false;
-    }
-
     public void addFile(File file) throws FileAlreadyExistsException {
 	String fileName = file.getName();
 

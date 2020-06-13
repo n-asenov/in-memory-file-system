@@ -99,7 +99,7 @@ public class VirtualFileSystem implements AbstractFileSystem {
 	    throw new FileNotFoundException("Directory doesn't exists");
 	}
 
-	if (file.isTextFile()) {
+	if (file instanceof TextFile) {
 	    throw new NotDirectoryException(file.getName());
 	}
 
