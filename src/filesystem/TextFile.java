@@ -52,8 +52,8 @@ public class TextFile extends File {
 	return words;
     }
 
-    public Integer getNumberOfLines() {
-	if (content.size() == 0) {
+    public int getNumberOfLines() {
+	if (content.isEmpty()) {
 	    return 0;
 	}
 
