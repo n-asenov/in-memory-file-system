@@ -4,21 +4,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CommandParser {
-    public String getCommandName(final List<String> command) {
+    private static final int COMMAND_NAME_INDEX = 1;
+    private static final String OPTION_REGEX = "-\\w+|--\\w+";
+
+    public String getCommandName(List<String> command) {
 	if (command.isEmpty()) {
-	    return null;
+	    return "";
 	}
 
 	return command.get(0);
     }
 
-    public List<String> getCommandOptions(final List<String> command) {
-	return command.stream().skip(1).filter(argument -> argument.matches("-\\w+|--\\w+"))
+    public List<String> getCommandOptions(List<String> command) {
+	return command.stream()
+		.skip(COMMAND_NAME_INDEX)
+		.filter(argument -> argument.matches(OPTION_REGEX))
 		.collect(Collectors.toList());
     }
 
-    public List<String> getCommandArguments(final List<String> command) {
-	return command.stream().skip(1).filter(argument -> !argument.matches("-\\w+|--\\w+"))
+    public List<String> getCommandArguments(List<String> command) {
+	return command.stream()
+		.skip(COMMAND_NAME_INDEX)
+		.filter(argument -> !argument.matches(OPTION_REGEX))
 		.collect(Collectors.toList());
     }
 }
