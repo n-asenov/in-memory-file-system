@@ -55,7 +55,7 @@ public class VirtualFileSystem implements AbstractFileSystem {
 	    throw new FileNotFoundException("Text file doesn't exists");
 	}
 
-	if (file.isDirectory()) {
+	if (file instanceof Directory) {
 	    throw new FileNotFoundException("File is directory");
 	}
 
@@ -75,7 +75,7 @@ public class VirtualFileSystem implements AbstractFileSystem {
 	    throw new FileNotFoundException("Text file doesn't exists");
 	}
 
-	if (file.isDirectory()) {
+	if (file instanceof Directory) {
 	    throw new FileNotFoundException("File is directory");
 	}
 
@@ -118,7 +118,7 @@ public class VirtualFileSystem implements AbstractFileSystem {
 	    throw new FileNotFoundException("Directory doesn't exist");
 	}
 
-	return file.isDirectory();
+	return file instanceof Directory;
     }
 
     @Override
@@ -139,7 +139,7 @@ public class VirtualFileSystem implements AbstractFileSystem {
 	    throw new FileNotFoundException("Text file doesn't exists");
 	}
 
-	if (file.isDirectory()) {
+	if (file instanceof Directory) {
 	    throw new FileNotFoundException("File is directory");
 	}
 
@@ -157,7 +157,7 @@ public class VirtualFileSystem implements AbstractFileSystem {
 	    throw new FileNotFoundException("Text file doesn't exists");
 	}
 
-	if (file.isDirectory()) {
+	if (file instanceof Directory) {
 	    throw new FileNotFoundException("File is directory");
 	}
 
@@ -175,7 +175,7 @@ public class VirtualFileSystem implements AbstractFileSystem {
 	    throw new FileNotFoundException("Text file doesn't exists");
 	}
 
-	if (file.isDirectory()) {
+	if (file instanceof Directory) {
 	    throw new FileNotFoundException("File is directory");
 	}
 
@@ -192,7 +192,7 @@ public class VirtualFileSystem implements AbstractFileSystem {
 	    for (int i = 1; i < pathSpliteedByDirectories.length - 1; i++) {
 		File next = workDirectory.getFile(pathSpliteedByDirectories[i]);
 
-		if (next == null || !next.isDirectory()) {
+		if (next == null || !(next instanceof Directory)) {
 		    throw new InvalidArgumentException("Path: " + absolutePath + " " + "doesn't exists");
 		}
 

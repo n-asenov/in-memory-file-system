@@ -7,17 +7,11 @@ public abstract class File {
 	this.name = name;
     }
 
-    abstract int getSize();
-
-    abstract boolean isDirectory();
-
-    abstract boolean isTextFile();
-
     public String getName() {
 	return name;
     }
+    
+    abstract int getSize();
 
-    public void setName(String name) {
-	this.name = name;
-    }
+    abstract boolean isTextFile();
 }

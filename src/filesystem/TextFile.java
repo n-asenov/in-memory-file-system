@@ -20,11 +20,6 @@ public class TextFile extends File {
     }
 
     @Override
-    boolean isDirectory() {
-	return false;
-    }
-
-    @Override
     boolean isTextFile() {
 	return true;
     }

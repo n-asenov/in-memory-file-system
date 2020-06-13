@@ -38,11 +38,6 @@ public class Directory extends File {
     }
 
     @Override
-    boolean isDirectory() {
-	return true;
-    }
-
-    @Override
     boolean isTextFile() {
 	return false;
     }
@@ -68,7 +63,7 @@ public class Directory extends File {
 	    throw new FileNotFoundException("Text file doesn't exists");
 	}
 
-	if (file.isDirectory()) {
+	if (file instanceof Directory) {
 	    throw new FileNotFoundException("File is directory");
 	}
 
