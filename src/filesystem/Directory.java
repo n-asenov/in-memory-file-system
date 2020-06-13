@@ -23,14 +23,19 @@ public class Directory extends File {
 	content = new HashMap<>();
 	setUpContent(parent);
     }
+    
+    private void setUpContent(Directory parent) {
+	content.put(".", this);
+	content.put("..", parent);
+    }
 
     @Override
-    int getSize() {
+    public int getSize() {
 	int size = 0;
 
-	for (String name : content.keySet()) {
-	    if (!name.equals(".") && !name.equals("..")) {
-		size += content.get(name).getSize();
+	for (String fileName : content.keySet()) {
+	    if (!fileName.equals(".") && !fileName.equals("..")) {
+		size += content.get(fileName).getSize();
 	    }
 	}
 
@@ -94,8 +99,5 @@ public class Directory extends File {
 	return (f1, f2) -> f1.getName().compareTo(f2.getName());
     }
 
-    private void setUpContent(Directory parent) {
-	content.put(".", this);
-	content.put("..", parent);
-    }
+    
 }
