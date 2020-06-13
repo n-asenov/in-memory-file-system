@@ -1,59 +1,76 @@
 package path;
 
 import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class Path {
+    private static final String PATH_SEPARATOR = "/";
+
     private String homeDirectory;
     private String currentDirectory;
 
     public Path() {
-        homeDirectory = "/home/";
-        currentDirectory = "/home/";
+	homeDirectory = "/home/";
+	currentDirectory = "/home/";
     }
 
     public String getCurrentDirectory() {
-        return currentDirectory;
+	return currentDirectory;
     }
 
     public void setCurrentDirectory(String currentDirectory) {
-        if (currentDirectory == null) {
-            this.currentDirectory = homeDirectory;
-        } else {
-            this.currentDirectory = currentDirectory;
-        }
+	if (currentDirectory == null) {
+	    this.currentDirectory = homeDirectory;
+	} else {
+	    this.currentDirectory = currentDirectory;
+	}
     }
 
     public String getAbsolutePath(String relativePath) {
-        if (relativePath.indexOf('/') == 0) {
-            if (relativePath.length() == 1) {
-                return relativePath;
-            }
+	if (relativePath.indexOf(PATH_SEPARATOR) == 0) {
+	    if (relativePath.length() == 1) {
+		return relativePath;
+	    }
 
-            return trimAbsolutePath(relativePath);
-        }
+	    return trimAbsolutePath(relativePath);
+	}
 
-        return trimAbsolutePath(currentDirectory + relativePath);
+	return trimAbsolutePath(currentDirectory + relativePath);
     }
 
     private String trimAbsolutePath(String absolutePath) {
-        ArrayDeque<String> deque = new ArrayDeque<String>();
+	Deque<String> trimmedAbsolutePath = new ArrayDeque<>();
 
-        for (String fileName : absolutePath.split("/")) {
-            if (fileName.equals("..")) {
-                if (!deque.peekLast().equals("")) {
-                    deque.removeLast();
-                }
-            } else if (!fileName.equals(".")) {
-                deque.addLast(fileName);
-            }
-        }
+	for (String directory : absolutePath.split(PATH_SEPARATOR)) {
+	    if (!isSpecialDirectory(directory)) {
+		trimmedAbsolutePath.addLast(directory);
+	    } else if (isParentDirectory(directory) && hasParentDirectory(trimmedAbsolutePath)) {
+		trimmedAbsolutePath.removeLast();
+	    }
+	}
 
-        StringBuilder path = new StringBuilder();
+	return buildAbsolutePath(trimmedAbsolutePath);
+    }
+    
+    private boolean isSpecialDirectory(String directory) {
+	return directory.equals(".") || directory.equals("..");
+    }
+    
+    private boolean isParentDirectory(String directory) {
+	return directory.equals("..");
+    }
 
-        while (!deque.isEmpty()) {
-            path.append(deque.removeFirst()).append("/");
-        }
+    private boolean hasParentDirectory(Deque<String> trimmedAbsolutePath) {
+	return !trimmedAbsolutePath.peekLast().equals("");
+    }
+    
+    private String buildAbsolutePath(Deque<String> tokens) {
+	StringBuilder absolutePath = new StringBuilder();
 
-        return path.toString();
+	while (!tokens.isEmpty()) {
+	    absolutePath.append(tokens.removeFirst()).append(PATH_SEPARATOR);
+	}
+
+	return absolutePath.toString();
     }
 }
