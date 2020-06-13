@@ -6,4 +6,8 @@ public class NotEnoughMemoryException extends Exception {
     public NotEnoughMemoryException(String message) {
 	super(message);
     }
+    
+    public NotEnoughMemoryException(String message, Throwable cause) {
+	super(message, cause);
+    }
 }
