@@ -1,56 +1,60 @@
 package filesystem;
 
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 import filesystem.exceptions.InvalidArgumentException;
 
 public class TextFile extends File {
-    private TreeMap<Integer, String> content;
+    private SortedMap<Integer, String> content;
     private int size;
 
     public TextFile(String name) {
 	super(name);
-	content = new TreeMap<Integer, String>();
+	content = new TreeMap<>();
 	size = 0;
     }
 
     @Override
-    int getSize() {
+    public int getSize() {
 	return size;
     }
 
     public String getContent() {
 	StringBuilder fileContent = new StringBuilder();
+	
+	if (!content.isEmpty()) {
+	    int lastLineIndex = content.lastKey();
 
-	if (content.size() != 0) {
-	    for (int i = 1; i < content.lastKey(); i++) {
-		String lineContent = content.get(i);
-		if (lineContent == null) {
-		    fileContent.append(System.lineSeparator());
-		} else {
+	    for (int lineIndex = 1; lineIndex < lastLineIndex; lineIndex++) {
+		String lineContent = content.get(lineIndex);
+
+		if (lineContent != null) {
 		    fileContent.append(lineContent);
-		    fileContent.append(System.lineSeparator());
 		}
+
+		fileContent.append(System.lineSeparator());
 	    }
-	    fileContent.append(content.get(content.lastKey()));
+
+	    fileContent.append(content.get(lastLineIndex));
 	}
 
 	return fileContent.toString();
     }
 
     public Integer getNumberOfWords() {
-	int counter = 0;
+	int words = 0;
 
 	if (content.size() != 0) {
 	    for (int i = 1; i <= content.lastKey(); i++) {
 		String line = content.get(i);
 		if (line != null) {
-		    counter += line.split(" ").length;
+		    words += line.split(" ").length;
 		}
 	    }
 	}
 
-	return counter;
+	return words;
     }
 
     public Integer getNumberOfLines() {
