@@ -60,8 +60,8 @@ public class TextFile extends File {
 	return content.lastKey();
     }
 
-    public boolean isEmptyLine(int line) {
-	return content.get(line) == null;
+    public boolean isEmptyLine(int lineIndex) {
+	return content.get(lineIndex) == null;
     }
 
     public int getLineSize(int line) {
