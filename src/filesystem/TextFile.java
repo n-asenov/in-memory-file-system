@@ -22,7 +22,7 @@ public class TextFile extends File {
 
     public String getContent() {
 	StringBuilder fileContent = new StringBuilder();
-	
+
 	if (!content.isEmpty()) {
 	    int lastLineIndex = content.lastKey();
 
@@ -44,11 +44,11 @@ public class TextFile extends File {
 
     public int getNumberOfWords() {
 	int words = 0;
-	
+
 	for (String line : content.values()) {
 	    words += line.split(" ").length;
 	}
-	
+
 	return words;
     }
 
@@ -74,22 +74,22 @@ public class TextFile extends File {
 	return lineContent.length();
     }
 
-    public void removeContentFromLines(int start, int end) throws InvalidArgumentException {
-	if (end < start) {
-	    throw new InvalidArgumentException("Second line number must be bigger than first");
+    public void removeContentFromLines(int startIndex, int endIndex) throws InvalidArgumentException {
+	if (endIndex < startIndex) {
+	    throw new InvalidArgumentException("End line must be bigger than start line");
 	}
 
-	for (int i = start; i <= end; i++) {
-	    removeLineContent(i);
+	for (int lineIndex = startIndex; lineIndex <= endIndex; lineIndex++) {
+	    removeLineContent(lineIndex);
 	}
     }
 
-    private void removeLineContent(int line) throws InvalidArgumentException {
-	if (line <= 0) {
+    private void removeLineContent(int lineIndex) throws InvalidArgumentException {
+	if (lineIndex <= 0) {
 	    throw new InvalidArgumentException("Line number must be positive");
 	}
 
-	String deletedContent = content.remove(line);
+	String deletedContent = content.remove(lineIndex);
 
 	if (deletedContent != null) {
 	    size -= deletedContent.length() + 1;
