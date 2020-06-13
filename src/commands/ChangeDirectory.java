@@ -23,7 +23,7 @@ public class ChangeDirectory implements Command {
 	validateOptions(options);
 	validateArguments(arguments);
 
-	String newCurrentDirectory = null;
+	String newCurrentDirectory = "";
 
 	if (arguments.size() != 0) {
 	    newCurrentDirectory = currentDirectory.getAbsolutePath(arguments.get(0));

@@ -19,7 +19,7 @@ public class Path {
     }
 
     public void setCurrentDirectory(String currentDirectory) {
-	if (currentDirectory == null) {
+	if (currentDirectory.equals("")) {
 	    this.currentDirectory = homeDirectory;
 	} else {
 	    this.currentDirectory = currentDirectory;
