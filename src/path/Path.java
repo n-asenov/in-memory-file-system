@@ -27,15 +27,23 @@ public class Path {
     }
 
     public String getAbsolutePath(String relativePath) {
-	if (relativePath.indexOf(PATH_SEPARATOR) == 0) {
-	    if (relativePath.length() == 1) {
-		return relativePath;
-	    }
+	if (isRelativePath(relativePath)) {
+	    return trimAbsolutePath(currentDirectory + relativePath);
+	}
 
+	if (!isRootPath(relativePath)) {
 	    return trimAbsolutePath(relativePath);
 	}
 
-	return trimAbsolutePath(currentDirectory + relativePath);
+	return relativePath;
+    }
+
+    private boolean isRelativePath(String path) {
+	return path.indexOf(PATH_SEPARATOR) != 0;
+    }
+
+    private boolean isRootPath(String path) {
+	return path.equals("/");
     }
 
     private String trimAbsolutePath(String absolutePath) {
