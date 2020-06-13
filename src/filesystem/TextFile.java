@@ -64,8 +64,8 @@ public class TextFile extends File {
 	return content.get(lineIndex) == null;
     }
 
-    public int getLineSize(int line) {
-	String lineContent = content.get(line);
+    public int getLineSize(int lineIndex) {
+	String lineContent = content.get(lineIndex);
 
 	if (lineContent == null) {
 	    return 0;
