@@ -42,18 +42,13 @@ public class TextFile extends File {
 	return fileContent.toString();
     }
 
-    public Integer getNumberOfWords() {
+    public int getNumberOfWords() {
 	int words = 0;
-
-	if (content.size() != 0) {
-	    for (int i = 1; i <= content.lastKey(); i++) {
-		String line = content.get(i);
-		if (line != null) {
-		    words += line.split(" ").length;
-		}
-	    }
+	
+	for (String line : content.values()) {
+	    words += line.split(" ").length;
 	}
-
+	
 	return words;
     }
 

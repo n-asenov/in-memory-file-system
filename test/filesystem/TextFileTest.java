@@ -175,13 +175,13 @@ public class TextFileTest {
 
     @Test
     public void getNumberOfWords_EmptyFile_Return0() {
-	assertEquals((Integer) 0, file.getNumberOfWords());
+	assertTrue(0 == file.getNumberOfWords());
     }
 
     @Test
     public void getNumberOfWords_FileWithOneLine_ReturnNumberOfWords() throws InvalidArgumentException {
 	file.write(1, "Hello World", false);
-	assertEquals((Integer) 2, file.getNumberOfWords());
+	assertTrue(2 == file.getNumberOfWords());
     }
 
     @Test
@@ -190,18 +190,18 @@ public class TextFileTest {
 	file.write(3, "hello", false);
 	file.write(5, "hello world", false);
 
-	assertEquals((Integer) 5, file.getNumberOfWords());
+	assertTrue(5 == file.getNumberOfWords());
     }
 
     @Test
     public void getNumberOfLines_EmptyTextFile_Return0() {
-	assertEquals((Integer) 0, file.getNumberOfLines());
+	assertTrue(0 == file.getNumberOfLines());
     }
 
     @Test
     public void getNumberOfLines_NonEmptyFile_ReturnNumberOfLinesInTextFile() throws InvalidArgumentException {
 	int lastLine = 5;
 	file.write(lastLine, "hello world", false);
-	assertEquals((Integer) lastLine, file.getNumberOfLines());
+	assertTrue(lastLine == file.getNumberOfLines());
     }
 }
