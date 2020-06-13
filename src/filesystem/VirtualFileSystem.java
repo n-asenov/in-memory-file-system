@@ -84,8 +84,13 @@ public class VirtualFileSystem implements AbstractFileSystem {
 	if (!freeEnoughSpace(textFile, line, content, overwrite)) {
 	    throw new NotEnoughMemoryException("Not enough memory");
 	}
-
-	textFile.write(line, content, overwrite);
+	
+	
+	if (overwrite) {
+	    textFile.overwrite(line, content);
+	} else {
+	    textFile.append(line, content);
+	}
     }
 
     @Override

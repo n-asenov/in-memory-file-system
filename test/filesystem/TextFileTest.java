@@ -16,27 +16,22 @@ public class TextFileTest {
 	file = new TextFile("test");
     }
 
-    @Test(expected = InvalidArgumentException.class)
-    public void write_WriteContentOnInvalidLine_ThrowIllegalArgumentException() throws InvalidArgumentException {
-	file.write(-20, "Hello, World", false);
-    }
-
     @Test
-    public void write_WriteContentOnNewLine_NewContentWrittenOnTheLine() throws InvalidArgumentException {
+    public void overwrite_WriteContentOnNewLine_NewContentWrittenOnTheLine() {
 	String lineContent = "New line";
 
-	file.write(1, lineContent, false);
+	file.overwrite(1, lineContent);
 
 	assertEquals(lineContent, file.getContent());
 	assertEquals(lineContent.length() + 1, file.getSize());
     }
 
     @Test
-    public void write_AppendContent_ContentAppendedToExistingContent() throws InvalidArgumentException {
+    public void append_AppendContent_ContentAppendedToExistingContent() {
 	int lineNumber = 1;
 	String lineContent = "Existing content";
 
-	file.write(lineNumber, lineContent, false);
+	file.append(lineNumber, lineContent);
 
 	String expectedContent = lineContent;
 	int expectedSize = lineContent.length() + 1;
@@ -45,54 +40,54 @@ public class TextFileTest {
 	expectedContent += lineContent;
 	expectedSize += lineContent.length();
 
-	file.write(lineNumber, lineContent, false);
+	file.append(lineNumber, lineContent);
 
 	assertEquals(expectedContent, file.getContent());
 	assertEquals(expectedSize, file.getSize());
     }
 
     @Test
-    public void write_OverwriteLine_OnlyTheNewContentIsInTheLine() throws InvalidArgumentException {
+    public void overwrite_OverwriteLine_OnlyTheNewContentIsInTheLine() {
 	int lineNumber = 1;
 	String lineContent = "Current content";
 
-	file.write(lineNumber, lineContent, false);
+	file.overwrite(lineNumber, lineContent);
 
 	lineContent = "New content";
 
-	file.write(lineNumber, lineContent, true);
+	file.overwrite(lineNumber, lineContent);
 
 	assertEquals(lineContent, file.getContent());
 	assertEquals(lineContent.length() + 1, file.getSize());
     }
 
     @Test
-    public void write_OverwriteEmptyLine_NewContentWrittenToTheLine() throws InvalidArgumentException {
+    public void overwrite_OverwriteEmptyLine_NewContentWrittenToTheLine() {
 	String newContent = "Hello world";
 
-	file.write(1, newContent, true);
+	file.overwrite(1, newContent);
 
 	assertEquals(newContent, file.getContent());
 	assertEquals(newContent.length() + 1, file.getSize());
     }
 
     @Test
-    public void getContent_SingleLineContent_ContentReturnedAsString() throws InvalidArgumentException {
-	file.write(1, "Hello", false);
+    public void getContent_SingleLineContent_ContentReturnedAsString() {
+	file.overwrite(1, "Hello");
 
 	assertEquals("Hello", file.getContent());
     }
 
     @Test
-    public void getContent_SeveralConsecutiveLines_ContentReturnedAsString() throws InvalidArgumentException {
+    public void getContent_SeveralConsecutiveLines_ContentReturnedAsString() {
 	StringBuilder expectedResult = new StringBuilder();
 	String newLine = System.lineSeparator();
 
-	file.write(1, "Hello", false);
+	file.overwrite(1, "Hello");
 	expectedResult.append("Hello" + newLine);
-	file.write(2, "Hello, World", false);
+	file.overwrite(2, "Hello, World");
 	expectedResult.append("Hello, World" + newLine);
-	file.write(3, "Hello Again", false);
+	file.overwrite(3, "Hello Again");
 	expectedResult.append("Hello Again");
 
 	assertEquals(expectedResult.toString(), file.getContent());
@@ -103,10 +98,10 @@ public class TextFileTest {
 	StringBuilder expectedResult = new StringBuilder();
 	String newLine = System.lineSeparator();
 
-	file.write(1, "Hello", false);
+	file.overwrite(1, "Hello");
 	expectedResult.append("Hello" + newLine);
-	expectedResult.append(newLine); // empty line between line 1 and 3
-	file.write(3, "Again", false);
+	expectedResult.append(newLine);
+	file.overwrite(3, "Again");
 	expectedResult.append("Again");
 
 	assertEquals(expectedResult.toString(), file.getContent());
@@ -120,14 +115,14 @@ public class TextFileTest {
 
 	expectedResult.append(newLine);
 	expectedResult.append(newLine);
-	file.write(3, "Hello", false);
+	file.overwrite(3, "Hello");
 	expectedResult.append("Hello" + newLine);
 	expectedResult.append(newLine);
-	file.write(5, "Hello Again", false);
+	file.overwrite(5, "Hello Again");
 	expectedResult.append("Hello Again" + newLine);
 	expectedResult.append(newLine);
 	expectedResult.append(newLine);
-	file.write(8, "World", false);
+	file.overwrite(8, "World");
 	expectedResult.append("World");
 
 	assertEquals(expectedResult.toString(), file.getContent());
@@ -146,7 +141,7 @@ public class TextFileTest {
 	int end = 5;
 
 	for (int i = start; i < end; i++) {
-	    file.write(i, "Hello", false);
+	    file.overwrite(i, "Hello");
 	}
 
 	file.removeContentFromLines(end, start);
@@ -164,7 +159,7 @@ public class TextFileTest {
 	int end = 5;
 
 	for (int i = start; i < end; i++) {
-	    file.write(i, "Hello", false);
+	    file.overwrite(i, "Hello");
 	}
 
 	file.removeContentFromLines(start, end);
@@ -180,15 +175,15 @@ public class TextFileTest {
 
     @Test
     public void getNumberOfWords_FileWithOneLine_ReturnNumberOfWords() throws InvalidArgumentException {
-	file.write(1, "Hello World", false);
+	file.overwrite(1, "Hello World");
 	assertTrue(2 == file.getNumberOfWords());
     }
 
     @Test
     public void getNumberOfWords_FileWithSeveralLines_ReturnNumberOfWords() throws InvalidArgumentException {
-	file.write(1, "hello world", false);
-	file.write(3, "hello", false);
-	file.write(5, "hello world", false);
+	file.overwrite(1, "hello world");
+	file.overwrite(3, "hello");
+	file.overwrite(5, "hello world");
 
 	assertTrue(5 == file.getNumberOfWords());
     }
@@ -201,7 +196,7 @@ public class TextFileTest {
     @Test
     public void getNumberOfLines_NonEmptyFile_ReturnNumberOfLinesInTextFile() throws InvalidArgumentException {
 	int lastLine = 5;
-	file.write(lastLine, "hello world", false);
+	file.overwrite(lastLine, "hello world");
 	assertTrue(lastLine == file.getNumberOfLines());
     }
 }

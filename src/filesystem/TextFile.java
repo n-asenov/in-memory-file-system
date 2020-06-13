@@ -92,38 +92,13 @@ public class TextFile extends File {
 	String deletedContent = content.remove(lineIndex);
 
 	if (deletedContent != null) {
-	    size -= deletedContent.length() + 1;
+	    int lineSize = deletedContent.length() + 1;
+	    size -= lineSize;
 	}
     }
 
-    public void write(int lineNumber, String lineContent, boolean overwrite) throws InvalidArgumentException {
-	if (lineNumber <= 0) {
-	    throw new InvalidArgumentException("Line number must be a positive integer");
-	}
-
-	if (!overwrite) {
-	    append(lineNumber, lineContent);
-	} else {
-	    overwrite(lineNumber, lineContent);
-	}
-    }
-
-    private void append(int lineNumber, String lineContent) {
-	String currentContent = content.get(lineNumber);
-
-	if (currentContent == null) {
-	    content.put(lineNumber, lineContent);
-	    size++;
-	} else {
-	    String newContent = currentContent + lineContent;
-	    content.put(lineNumber, newContent);
-	}
-
-	size += lineContent.length();
-    }
-
-    private void overwrite(int lineNumber, String lineContent) {
-	String currentContent = content.get(lineNumber);
+    public void overwrite(int lineIndex, String lineContent) {
+	String currentContent = content.get(lineIndex);
 
 	if (currentContent != null) {
 	    size -= currentContent.length();
@@ -131,7 +106,20 @@ public class TextFile extends File {
 	    size++;
 	}
 
-	content.put(lineNumber, lineContent);
+	content.put(lineIndex, lineContent);
 	size += lineContent.length();
+    }
+
+    public void append(int lineIndex, String lineContent) {
+	String currentContent = content.get(lineIndex);
+	String newContent;
+	
+	if (currentContent == null) {
+	    newContent = lineContent;
+	} else {
+	    newContent = currentContent + lineContent;
+	}
+
+	overwrite(lineIndex, newContent);
     }
 }

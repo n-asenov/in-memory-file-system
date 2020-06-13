@@ -97,9 +97,9 @@ public class DirectoryTest {
     public void getContent_getContentBySizeDescending_ReturnContentSortedBySizeDescending()
 	    throws FileAlreadyExistsException, InvalidArgumentException {
 	TextFile f1 = new TextFile("f1");
-	f1.write(1, "hello", false);
+	f1.overwrite(1, "hello");
 	TextFile f2 = new TextFile("f2");
-	f2.write(2, "Hello, World!", false);
+	f2.overwrite(2, "Hello, World!");
 	Directory dir = new Directory("dir1");
 
 	directory.addFile(f1);
