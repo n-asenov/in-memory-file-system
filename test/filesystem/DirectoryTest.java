@@ -1,22 +1,22 @@
 package filesystem;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import filesystem.Directory;
-import filesystem.File;
-import filesystem.FilterBy;
-import filesystem.TextFile;
 import filesystem.exceptions.InvalidArgumentException;
 
 public class DirectoryTest {
+    private static final Comparator<File> DEFAULT = (f1, f2) -> f1.getName().compareTo(f2.getName());
+    private static final Comparator<File> SIZE_DESCENDING = (f1, f2) -> Integer.compare(f2.getSize(), f1.getSize());
     private Directory directory;
 
     @Before
@@ -31,7 +31,7 @@ public class DirectoryTest {
 	List<String> expectedResult = new ArrayList<String>();
 	expectedResult.add("f1");
 
-	assertArrayEquals(expectedResult.toArray(), directory.getContent(FilterBy.DEFAULT).toArray());
+	assertArrayEquals(expectedResult.toArray(), directory.getContent(DEFAULT).toArray());
     }
 
     @Test
@@ -45,7 +45,7 @@ public class DirectoryTest {
 	    expectedResult.add(fileName);
 	}
 
-	assertArrayEquals(expectedResult.toArray(), directory.getContent(FilterBy.DEFAULT).toArray());
+	assertArrayEquals(expectedResult.toArray(), directory.getContent(DEFAULT).toArray());
     }
 
     @Test(expected = FileAlreadyExistsException.class)
@@ -68,7 +68,7 @@ public class DirectoryTest {
 
 	directory.addFile(newSubDirectory);
 
-	assertArrayEquals(expectedResult.toArray(), directory.getContent(FilterBy.DEFAULT).toArray());
+	assertArrayEquals(expectedResult.toArray(), directory.getContent(DEFAULT).toArray());
     }
 
     @Test(expected = FileAlreadyExistsException.class)
@@ -90,7 +90,7 @@ public class DirectoryTest {
 	    directory.addFile(dir);
 	}
 
-	assertArrayEquals(expectedResult.toArray(), directory.getContent(FilterBy.DEFAULT).toArray());
+	assertArrayEquals(expectedResult.toArray(), directory.getContent(DEFAULT).toArray());
     }
 
     @Test
@@ -111,7 +111,7 @@ public class DirectoryTest {
 	expectedResult.add(f1.getName());
 	expectedResult.add(dir.getName());
 
-	assertArrayEquals(expectedResult.toArray(), directory.getContent(FilterBy.SIZE_DESCENDING).toArray());
+	assertArrayEquals(expectedResult.toArray(), directory.getContent(SIZE_DESCENDING).toArray());
     }
 
     @Test(expected = FileNotFoundException.class)

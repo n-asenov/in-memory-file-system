@@ -2,12 +2,13 @@ package filesystem;
 
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public class Directory extends File {
     private Map<String, File> content;
@@ -23,7 +24,7 @@ public class Directory extends File {
 	content = new HashMap<>();
 	setUpContent(parent);
     }
-    
+
     private void setUpContent(Directory parent) {
 	content.put(".", this);
 	content.put("..", parent);
@@ -56,8 +57,8 @@ public class Directory extends File {
 	return content.get(name);
     }
 
-    public File removeTextFile(String name) throws FileNotFoundException {
-	File file = content.get(name);
+    public File removeTextFile(String textFileName) throws FileNotFoundException {
+	File file = content.get(textFileName);
 
 	if (file == null) {
 	    throw new FileNotFoundException("Text file doesn't exists");
@@ -67,37 +68,20 @@ public class Directory extends File {
 	    throw new FileNotFoundException("File is directory");
 	}
 
-	return content.remove(name);
+	return content.remove(textFileName);
     }
 
-    public List<String> getContent(FilterBy option) {
-	List<File> list = new ArrayList<File>();
+    public List<String> getContent(Comparator<File> comparator) {
+	Set<File> sortedContent = new TreeSet<>(comparator);
 
 	for (String fileName : content.keySet()) {
 	    if (!fileName.equals(".") && !fileName.equals("..")) {
-		list.add(content.get(fileName));
+		sortedContent.add(content.get(fileName));
 	    }
 	}
 
-	Collections.sort(list, getComparator(option));
-
-	List<String> result = new ArrayList<String>();
-
-	for (int i = 0; i < list.size(); i++) {
-	    result.add(list.get(i).getName());
-	}
-
-	return result;
+	return sortedContent.stream()
+		.map(file -> file.getName())
+		.collect(Collectors.toList());
     }
-
-    private Comparator<File> getComparator(FilterBy option) {
-	if (option == FilterBy.SIZE_DESCENDING) {
-	    return (f1, f2) -> Integer.compare(f2.getSize(), f1.getSize());
-	}
-
-	// Default sort
-	return (f1, f2) -> f1.getName().compareTo(f2.getName());
-    }
-
-    
 }

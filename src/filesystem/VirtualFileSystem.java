@@ -3,6 +3,7 @@ package filesystem;
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NotDirectoryException;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -110,9 +111,18 @@ public class VirtualFileSystem implements AbstractFileSystem {
 
 	Directory directory = (Directory) file;
 
-	return directory.getContent(option);
+	return directory.getContent(getComparator(option));
     }
 
+    private Comparator<File> getComparator(FilterBy option) {
+	if (option == FilterBy.SIZE_DESCENDING) {
+	    return (f1, f2) -> Integer.compare(f2.getSize(), f1.getSize());
+	}
+
+	// Default sort
+	return (f1, f2) -> f1.getName().compareTo(f2.getName());
+    }
+    
     @Override
     public boolean isDirectory(String absolutePath) throws FileNotFoundException, InvalidArgumentException {
 	Directory workDirectory = goToWorkDirectory(absolutePath);
