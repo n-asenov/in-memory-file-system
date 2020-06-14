@@ -34,7 +34,7 @@ public class RemoveLineContentFromTextFileTest {
     public void execute_InvalidOption_ThrowInvalidArgumentException() throws InvalidArgumentException, IOException {
 	options.add("-invalid");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -43,13 +43,13 @@ public class RemoveLineContentFromTextFileTest {
 	arguments.add("1-5");
 	arguments.add("6-10");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = InvalidArgumentException.class)
     public void execute_NotEnoughArguments_ThrowInvalidArgumentException()
 	    throws InvalidArgumentException, IOException {
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -57,7 +57,7 @@ public class RemoveLineContentFromTextFileTest {
 	arguments.add("f1");
 	arguments.add("1-5-10");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -66,7 +66,7 @@ public class RemoveLineContentFromTextFileTest {
 	arguments.add("/home/dir1/f1");
 	arguments.add("1-5");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = FileNotFoundException.class)
@@ -75,7 +75,7 @@ public class RemoveLineContentFromTextFileTest {
 	arguments.add("/home/f1");
 	arguments.add("1-5");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = FileNotFoundException.class)
@@ -83,7 +83,7 @@ public class RemoveLineContentFromTextFileTest {
 	arguments.add("/home");
 	arguments.add("1-5");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -91,7 +91,7 @@ public class RemoveLineContentFromTextFileTest {
 	arguments.add("f1");
 	arguments.add("asdas-asdasd");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test
@@ -108,7 +108,7 @@ public class RemoveLineContentFromTextFileTest {
 	arguments.add(absolutePath);
 	arguments.add("1-" + lines);
 
-	assertNull(command.execute(options, arguments));
+	assertNull(command.execute(arguments, options));
 	assertEquals("", fileSystem.getTextFileContent(absolutePath));
     }
 }

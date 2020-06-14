@@ -41,14 +41,14 @@ public class ListDirectoryContentTest {
 	    throws InvalidArgumentException, IOException {
 	options.add("al");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test
     public void execute_listEmptyDirectory_ReturnEmptyString() throws InvalidArgumentException, IOException {
 	arguments.add("/home/dir1/dir2");
 
-	assertEquals("", command.execute(options, arguments));
+	assertEquals("", command.execute(arguments, options));
     }
 
     @Test
@@ -56,7 +56,7 @@ public class ListDirectoryContentTest {
 	arguments.add("/");
 	arguments.add("/home");
 
-	assertEquals("home " + System.lineSeparator() + "dir1 ", command.execute(options, arguments));
+	assertEquals("home " + System.lineSeparator() + "dir1 ", command.execute(arguments, options));
     }
 
     @Test
@@ -65,7 +65,7 @@ public class ListDirectoryContentTest {
 	options.add("-sortedDesc");
 	arguments.add("/");
 
-	assertEquals("home ", command.execute(options, arguments));
+	assertEquals("home ", command.execute(arguments, options));
     }
 
     @Test
@@ -73,12 +73,12 @@ public class ListDirectoryContentTest {
 	    throws InvalidArgumentException, IOException {
 	arguments.add("dir1");
 
-	assertEquals("dir2 dir3 ", command.execute(options, arguments));
+	assertEquals("dir2 dir3 ", command.execute(arguments, options));
     }
 
     @Test
     public void execute_listDirectoryWithNoArguments_ReturnContentOfCurrentDirectory()
 	    throws InvalidArgumentException, IOException {
-	assertEquals("dir1 ", command.execute(options, arguments));
+	assertEquals("dir1 ", command.execute(arguments, options));
     }
 }

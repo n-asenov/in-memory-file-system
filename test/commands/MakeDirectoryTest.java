@@ -37,7 +37,7 @@ public class MakeDirectoryTest {
 	options.add("-l");
 	arguments.add("/home/dir1");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class MakeDirectoryTest {
 	    throws InvalidPathException, InvalidArgumentException, IOException {
 	arguments.add("/home/dir1");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
 	String[] expectedResult = { "dir1" };
 	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
     }
@@ -55,7 +55,7 @@ public class MakeDirectoryTest {
 	    throws InvalidArgumentException, IOException {
 	arguments.add("dir1");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
 	String[] expectedResult = { "dir1" };
 	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
     }
@@ -65,7 +65,7 @@ public class MakeDirectoryTest {
 	    throws InvalidArgumentException, IOException {
 	arguments.add("/home");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -73,6 +73,6 @@ public class MakeDirectoryTest {
 	    throws InvalidArgumentException, IOException {
 	arguments.add("/home/dir1/dir2");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 }

@@ -41,7 +41,7 @@ public class WriteToTextFileTest {
 	    throws NotEnoughMemoryException, InvalidArgumentException, IOException {
 	options.add("append");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -49,7 +49,7 @@ public class WriteToTextFileTest {
 	    throws NotEnoughMemoryException, InvalidArgumentException, IOException {
 	arguments.add("/home/f1");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -59,7 +59,7 @@ public class WriteToTextFileTest {
 	arguments.add("Hello");
 	arguments.add("Hello, World!");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class WriteToTextFileTest {
 	arguments.add("1");
 	arguments.add("Hello, World!");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
 
 	assertEquals("Hello, World!", fs.getTextFileContent("/home/f1"));
     }
@@ -82,7 +82,7 @@ public class WriteToTextFileTest {
 	arguments.add("1");
 	arguments.add("Hello, World!");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
 
 	assertEquals("Hello, World!", fs.getTextFileContent("/home/f1"));
     }
@@ -94,7 +94,7 @@ public class WriteToTextFileTest {
 	arguments.add("1");
 	arguments.add("Hello, World!");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
 
 	assertEquals("Hello, World!", fs.getTextFileContent("/home/f1"));
     }

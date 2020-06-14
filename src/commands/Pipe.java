@@ -21,7 +21,7 @@ public class Pipe implements Command {
     }
 
     @Override
-    public String execute(List<String> options, List<String> arguments)
+    public String execute(List<String> arguments, List<String> options)
 	    throws InvalidArgumentException, NotEnoughMemoryException, IOException {
 	validateOptions(options);
 	validateArguments(arguments);
@@ -37,8 +37,8 @@ public class Pipe implements Command {
 		    }
 		}
 
-		result = factory.make(parser.getCommandName(command)).execute(parser.getCommandOptions(command),
-			parser.getCommandArguments(command));
+		result = factory.make(parser.getCommandName(command)).execute(parser.getCommandArguments(command),
+			parser.getCommandOptions(command));
 
 		command.clear();
 	    } else {
@@ -52,8 +52,8 @@ public class Pipe implements Command {
 	    }
 	}
 
-	return factory.make(parser.getCommandName(command)).execute(parser.getCommandOptions(command),
-		parser.getCommandArguments(command));
+	return factory.make(parser.getCommandName(command)).execute(parser.getCommandArguments(command),
+		parser.getCommandOptions(command));
     }
 
     private void validateArguments(List<String> arguments) throws InvalidArgumentException {

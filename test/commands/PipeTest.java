@@ -33,7 +33,7 @@ public class PipeTest {
 	    throws InvalidArgumentException, NotEnoughMemoryException, IOException {
 	options.add("-l");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -41,7 +41,7 @@ public class PipeTest {
 	    throws InvalidArgumentException, NotEnoughMemoryException, IOException {
 	arguments.add("|");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test
@@ -50,7 +50,7 @@ public class PipeTest {
 	arguments.add("ls");
 	arguments.add("/");
 
-	assertEquals("home ", command.execute(options, arguments));
+	assertEquals("home ", command.execute(arguments, options));
     }
 
     @Test
@@ -64,6 +64,6 @@ public class PipeTest {
 	arguments.add("|");
 	arguments.add("wc");
 
-	assertEquals("3", command.execute(options, arguments));
+	assertEquals("3", command.execute(arguments, options));
     }
 }

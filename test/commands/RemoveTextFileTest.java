@@ -34,28 +34,28 @@ public class RemoveTextFileTest {
     public void execute_InvalidOption_ThrowInvalidArgumentException() throws InvalidArgumentException, IOException {
 	options.add("-invalid");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = InvalidArgumentException.class)
     public void execute_WrongPathToFile_ThrowInvalidArgumentException() throws InvalidArgumentException, IOException {
 	arguments.add("/home/dir1/f1");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = FileNotFoundException.class)
     public void execute_TextFileDoesNotExists_ThrowFileNotFoudException() throws InvalidArgumentException, IOException {
 	arguments.add("/home/f1");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = FileNotFoundException.class)
     public void execute_FileIsDirectory_ThrowFileNotFoundException() throws InvalidArgumentException, IOException {
 	arguments.add("/home");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class RemoveTextFileTest {
 	arguments.add("/home/f1");
 
 	String[] expectedResult = {};
-	assertNull(command.execute(options, arguments));
+	assertNull(command.execute(arguments, options));
 	assertArrayEquals(expectedResult, fileSystem.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
     }
 
@@ -78,7 +78,7 @@ public class RemoveTextFileTest {
 	    arguments.add(fileName);
 	}
 	String[] expectedResult = {};
-	assertNull(command.execute(options, arguments));
+	assertNull(command.execute(arguments, options));
 	assertArrayEquals(expectedResult, fileSystem.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
     }
 }

@@ -18,7 +18,7 @@ public class WriteToTextFile implements Command {
     }
 
     @Override
-    public String execute(List<String> options, List<String> arguments)
+    public String execute(List<String> arguments, List<String> options)
 	    throws NotEnoughMemoryException, InvalidArgumentException, IOException {
 	boolean overwrite = false;
 

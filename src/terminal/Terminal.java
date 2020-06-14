@@ -29,7 +29,7 @@ public class Terminal {
 	while (true) {
 	    if (parser.hasNextLine()) {
 		try {
-		    output.print(command.execute(new ArrayList<String>(), parser.getCommandLine()));
+		    output.print(command.execute(parser.getCommandLine(), new ArrayList<String>()));
 		} catch (NotDirectoryException | FileAlreadyExistsException | FileNotFoundException
 			| NotEnoughMemoryException | InvalidArgumentException e) {
 		    output.print(e.getMessage());

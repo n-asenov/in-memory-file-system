@@ -18,7 +18,7 @@ public class ListDirectoryContent implements Command {
     }
 
     @Override
-    public String execute(List<String> options, List<String> arguments) throws InvalidArgumentException, IOException {
+    public String execute(List<String> arguments, List<String> options) throws InvalidArgumentException, IOException {
 	FilterBy flag = validateOptions(options);
 
 	int size = arguments.size();

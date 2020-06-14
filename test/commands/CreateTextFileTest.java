@@ -36,7 +36,7 @@ public class CreateTextFileTest {
 	options.add("-l");
 	arguments.add("/home/f1");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = FileAlreadyExistsException.class)
@@ -44,7 +44,7 @@ public class CreateTextFileTest {
 	    throws InvalidArgumentException, IOException {
 	arguments.add("/home");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -52,7 +52,7 @@ public class CreateTextFileTest {
 	    throws InvalidArgumentException, IOException {
 	arguments.add("/home/dir1/f1");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class CreateTextFileTest {
 	    throws InvalidPathException, InvalidArgumentException, IOException {
 	arguments.add("/home/f1");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
 	String[] expectedResult = { "f1" };
 	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
     }
@@ -70,7 +70,7 @@ public class CreateTextFileTest {
 	    throws InvalidPathException, InvalidArgumentException, IOException {
 	arguments.add("f1");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
 	String[] expectedResult = { "f1" };
 	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
     }
@@ -83,7 +83,7 @@ public class CreateTextFileTest {
 	arguments.add("f3");
 	arguments.add("/f1");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
 	String[] expectedResult = { "f1", "f2", "f3" };
 	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
 	String[] expectedResult2 = { "f1", "home" };

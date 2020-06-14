@@ -36,7 +36,7 @@ public class ChangeDirectoryTest {
 	    throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 	options.add("-a");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -45,7 +45,7 @@ public class ChangeDirectoryTest {
 	arguments.add("/home");
 	arguments.add("/dir1");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = FileNotFoundException.class)
@@ -53,7 +53,7 @@ public class ChangeDirectoryTest {
 	    throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 	arguments.add("/home/dir1");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = NotDirectoryException.class)
@@ -63,7 +63,7 @@ public class ChangeDirectoryTest {
 
 	arguments.add("f1");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test
@@ -71,7 +71,7 @@ public class ChangeDirectoryTest {
 	    throws FileNotFoundException, NotDirectoryException, InvalidArgumentException {
 	arguments.add("..");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
 
 	assertEquals("/", path.getCurrentDirectory());
     }
@@ -81,7 +81,7 @@ public class ChangeDirectoryTest {
 	    throws FileNotFoundException, NotDirectoryException, InvalidArgumentException {
 	arguments.add(".");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
 
 	assertEquals("/home/", path.getCurrentDirectory());
     }
@@ -91,7 +91,7 @@ public class ChangeDirectoryTest {
 	    throws FileNotFoundException, NotDirectoryException, InvalidArgumentException {
 	path.setCurrentDirectory("/");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
 
 	assertEquals("/home/", path.getCurrentDirectory());
     }

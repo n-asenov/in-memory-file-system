@@ -34,13 +34,13 @@ public class WordCountTest {
     public void execute_InvalidOption_ThrowInvalidArgumentException() throws InvalidArgumentException, IOException {
 	options.add("-invalid");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = InvalidArgumentException.class)
     public void execute_InvalidNumberOfArguments_ThrowInvalidArgumentException()
 	    throws InvalidArgumentException, IOException {
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class WordCountTest {
 
 	arguments.add(absolutePath);
 
-	assertEquals("2", command.execute(options, arguments));
+	assertEquals("2", command.execute(arguments, options));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class WordCountTest {
 	arguments.add("hello");
 	arguments.add("world");
 
-	assertEquals("2", command.execute(options, arguments));
+	assertEquals("2", command.execute(arguments, options));
     }
 
     @Test
@@ -73,7 +73,7 @@ public class WordCountTest {
 	options.add("-l");
 	arguments.add(absolutePath);
 
-	assertEquals("5", command.execute(options, arguments));
+	assertEquals("5", command.execute(arguments, options));
     }
 
     @Test
@@ -84,6 +84,6 @@ public class WordCountTest {
 	arguments.add("Second Line\\n");
 	arguments.add("Third");
 
-	assertEquals("3", command.execute(options, arguments));
+	assertEquals("3", command.execute(arguments, options));
     }
 }

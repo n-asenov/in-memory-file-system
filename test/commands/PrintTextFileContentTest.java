@@ -39,7 +39,7 @@ public class PrintTextFileContentTest {
     public void execute_CommandWithOption_ThrowIllegalArgumentException() throws InvalidArgumentException, IOException {
 	options.add("-option");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -47,34 +47,34 @@ public class PrintTextFileContentTest {
 	    throws InvalidArgumentException, IOException {
 	arguments.add("/home/dir1/f1");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = FileNotFoundException.class)
     public void execute_FileDoesNotExsist_ThrowFileNotFoundException() throws InvalidArgumentException, IOException {
 	arguments.add("/home/f2");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test(expected = FileNotFoundException.class)
     public void execute_FileIsDirectory_ThrowFileNotFoundException() throws InvalidArgumentException, IOException {
 	arguments.add("/home");
 
-	command.execute(options, arguments);
+	command.execute(arguments, options);
     }
 
     @Test
     public void execute_EmptyTextFile_OutputEmptyString() throws InvalidArgumentException, IOException {
 	arguments.add("/home/f1");
 
-	assertEquals("", command.execute(options, arguments));
+	assertEquals("", command.execute(arguments, options));
     }
 
     @Test
     public void execute_EmptyTextFileWithRelativePath_ReturnEmptyString() throws InvalidArgumentException, IOException {
 	arguments.add("f1");
 
-	assertEquals("", command.execute(options, arguments));
+	assertEquals("", command.execute(arguments, options));
     }
 }

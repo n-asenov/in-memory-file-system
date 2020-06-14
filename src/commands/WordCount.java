@@ -17,7 +17,7 @@ public class WordCount implements Command {
     }
 
     @Override
-    public String execute(List<String> options, List<String> arguments) throws InvalidArgumentException, IOException {
+    public String execute(List<String> arguments, List<String> options) throws InvalidArgumentException, IOException {
 	boolean getLines = validateOptions(options);
 	validateArguments(arguments);
 

@@ -13,7 +13,7 @@ public class PrintWorkingDirectory implements Command {
     }
 
     @Override
-    public String execute(List<String> options, List<String> arguments) throws InvalidArgumentException {
+    public String execute(List<String> arguments, List<String> options) throws InvalidArgumentException {
 	validateOptions(options);
 	validateArguments(arguments);
 

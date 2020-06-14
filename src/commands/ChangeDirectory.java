@@ -18,7 +18,7 @@ public class ChangeDirectory implements Command {
     }
 
     @Override
-    public String execute(List<String> options, List<String> arguments)
+    public String execute(List<String> arguments, List<String> options)
 	    throws FileNotFoundException, NotDirectoryException, InvalidArgumentException {
 	validateOptions(options);
 	validateArguments(arguments);
