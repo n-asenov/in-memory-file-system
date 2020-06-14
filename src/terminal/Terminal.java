@@ -1,9 +1,7 @@
 package terminal;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
 
 import commands.Pipe;
@@ -30,10 +28,8 @@ public class Terminal {
 	    if (parser.hasNextLine()) {
 		try {
 		    output.print(command.execute(parser.getCommandLine(), new ArrayList<String>()));
-		} catch (NotDirectoryException | FileAlreadyExistsException | FileNotFoundException
-			| NotEnoughMemoryException | InvalidArgumentException e) {
-		    output.print(e.getMessage());
-		} catch (IOException e) {
+		} catch (FileAlreadyExistsException | FileNotFoundException | NotEnoughMemoryException
+			| InvalidArgumentException e) {
 		    output.print(e.getMessage());
 		}
 	    }

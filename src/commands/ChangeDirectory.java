@@ -1,7 +1,6 @@
 package commands;
 
 import java.io.FileNotFoundException;
-import java.nio.file.NotDirectoryException;
 import java.util.List;
 
 import filesystem.DirectoryValidator;
@@ -19,7 +18,7 @@ public class ChangeDirectory implements Command {
 
     @Override
     public String execute(List<String> arguments, List<String> options)
-	    throws FileNotFoundException, NotDirectoryException, InvalidArgumentException {
+	    throws FileNotFoundException, InvalidArgumentException {
 	validateOptions(options);
 	validateArguments(arguments);
 
@@ -48,9 +47,9 @@ public class ChangeDirectory implements Command {
     }
 
     private void validateNewCurrentDirectory(String newCurrentDirectory)
-	    throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
+	    throws FileNotFoundException, InvalidArgumentException {
 	if (!fileSystem.isDirectory(newCurrentDirectory)) {
-	    throw new NotDirectoryException("File is not a directory");
+	    throw new FileNotFoundException("File is not a directory");
 	}
     }
 }

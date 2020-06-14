@@ -1,6 +1,6 @@
 package commands;
 
-import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.List;
 
 import filesystem.DirectoryController;
@@ -17,7 +17,8 @@ public class MakeDirectory implements Command {
     }
 
     @Override
-    public String execute(List<String> arguments, List<String> options) throws InvalidArgumentException, IOException {
+    public String execute(List<String> arguments, List<String> options)
+	    throws InvalidArgumentException, FileAlreadyExistsException {
 	validateOptions(options);
 
 	for (String argument : arguments) {

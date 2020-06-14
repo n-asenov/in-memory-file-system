@@ -1,6 +1,7 @@
 package commands;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +23,7 @@ public class Pipe implements Command {
 
     @Override
     public String execute(List<String> arguments, List<String> options)
-	    throws InvalidArgumentException, NotEnoughMemoryException, IOException {
+	    throws InvalidArgumentException, NotEnoughMemoryException, FileAlreadyExistsException, FileNotFoundException {
 	validateOptions(options);
 	validateArguments(arguments);
 

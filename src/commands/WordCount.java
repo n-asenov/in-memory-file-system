@@ -1,6 +1,6 @@
 package commands;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import filesystem.TextFileStatistics;
@@ -17,7 +17,7 @@ public class WordCount implements Command {
     }
 
     @Override
-    public String execute(List<String> arguments, List<String> options) throws InvalidArgumentException, IOException {
+    public String execute(List<String> arguments, List<String> options) throws InvalidArgumentException, FileNotFoundException {
 	boolean getLines = validateOptions(options);
 	validateArguments(arguments);
 

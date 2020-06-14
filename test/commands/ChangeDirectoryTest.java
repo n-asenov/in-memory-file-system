@@ -56,7 +56,7 @@ public class ChangeDirectoryTest {
 	command.execute(arguments, options);
     }
 
-    @Test(expected = NotDirectoryException.class)
+    @Test(expected = FileNotFoundException.class)
     public void execute_ChangeDirectoryToTextFile_ThrowNotDirectoryException()
 	    throws InvalidArgumentException, IOException {
 	fileSystem.createTextFile("/home/f1");
