@@ -3,77 +3,89 @@ package commands;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import filesystem.VirtualFileSystem;
+import filesystem.TextFileContentController;
 import filesystem.exceptions.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
 import path.Path;
 
 public class WriteToTextFile implements Command {
-    private VirtualFileSystem fileSystem;
+    private TextFileContentController fileSystem;
     private Path currentDirectory;
-
-    public WriteToTextFile(VirtualFileSystem fileSystem, Path currentDirectory) {
+    private boolean overwrite;
+    
+    public WriteToTextFile(TextFileContentController fileSystem, Path currentDirectory) {
 	this.fileSystem = fileSystem;
 	this.currentDirectory = currentDirectory;
+	this.overwrite = false;
     }
 
     @Override
     public String execute(List<String> arguments, List<String> options)
-	    throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
-	boolean overwrite = false;
-
-	for (String option : options) {
-	    validateOption(option);
-	    overwrite = true;
-	}
-
+	    throws InvalidArgumentException, FileNotFoundException, NotEnoughMemoryException {
 	validateArguments(arguments);
+	validateOptions(options);
 
 	String absolutePath = currentDirectory.getAbsolutePath(arguments.get(0));
-	int line = getLine(arguments);
+	int lineNumber = getLineNumber(arguments);
 	String lineContent = getLineContent(arguments);
 
 	if (overwrite) {
-	    fileSystem.writeToTextFile(absolutePath, line, lineContent);
+	    fileSystem.writeToTextFile(absolutePath, lineNumber, lineContent);
 	} else {
-	    fileSystem.appendToTextFile(absolutePath, line, lineContent);
+	    fileSystem.appendToTextFile(absolutePath, lineNumber, lineContent);
 	}
 
-	return null;
-    }
-
-    private void validateOption(String option) throws InvalidArgumentException {
-	if (!option.equals("-overwrite")) {
-	    throw new InvalidArgumentException("Invalid option");
-	}
+	overwrite = false;
+	return "";
     }
 
     private void validateArguments(List<String> arguments) throws InvalidArgumentException {
-	if (arguments.size() < 3) {
+	final int minimumArgumentSize = 3;
+	if (arguments.size() < minimumArgumentSize) {
 	    throw new InvalidArgumentException("Commmand expects more arguments");
 	}
     }
 
-    private int getLine(List<String> arguments) throws InvalidArgumentException {
-	int line = 0;
-
-	try {
-	    line = Integer.parseInt(arguments.get(1));
-	} catch (NumberFormatException e) {
-	    throw new InvalidArgumentException("Second argument must be a integer");
+    private void validateOptions(List<String> options) throws InvalidArgumentException {
+	for (String option : options) {
+	    if (option.equals("-overwrite")) {
+		overwrite = true;
+	    } else {
+		throw new InvalidArgumentException("Invalid option");
+	    }
 	}
+    }
 
-	return line;
+    private int getLineNumber(List<String> arguments) throws InvalidArgumentException {
+	final int lineNumberIndex = 1;
+	int lineNumber = 0;
+	
+	try {
+	    lineNumber = Integer.parseInt(arguments.get(lineNumberIndex));
+	} catch (NumberFormatException e) {
+	    throw new InvalidArgumentException("Second argument must be a positive integer", e);
+	}
+		
+	validateLineNumber(lineNumber);
+
+	return lineNumber;
+    }
+    
+    private void validateLineNumber(int lineNumber) throws InvalidArgumentException {
+	if (lineNumber <= 0) {
+	    throw new InvalidArgumentException("Second argument must be a positive integer");
+	}
     }
 
     private String getLineContent(List<String> arguments) {
 	StringBuilder lineContent = new StringBuilder();
-	int size = arguments.size() - 1;
+	final int lineContentStartIndex = 2;
+	final int lineContentEndIndex = arguments.size() - 1;
 
-	for (int i = 2; i < size; i++) {
-	    lineContent.append(arguments.get(i)).append(" ");
+	for (int index = lineContentStartIndex; index < lineContentEndIndex; index++) {
+	    lineContent.append(arguments.get(index)).append(" ");
 	}
-	lineContent.append(arguments.get(size));
+	lineContent.append(arguments.get(lineContentEndIndex));
 
 	return lineContent.toString();
     }
