@@ -1,6 +1,6 @@
 package commands;
 
-import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.List;
 
 import filesystem.TextFileController;
@@ -17,18 +17,19 @@ public class CreateTextFile implements Command {
     }
 
     @Override
-    public String execute(List<String> options, List<String> arguments) throws InvalidArgumentException, IOException {
+    public String execute(List<String> options, List<String> arguments)
+	    throws InvalidArgumentException, FileAlreadyExistsException {
 	validateOptions(options);
 
 	for (String argument : arguments) {
 	    fileSystem.createTextFile(currentDirectory.getAbsolutePath(argument));
 	}
 
-	return null;
+	return "";
     }
 
     private void validateOptions(List<String> options) throws InvalidArgumentException {
-	if (options.size() != 0) {
+	if (!options.isEmpty()) {
 	    throw new InvalidArgumentException("Invalid option");
 	}
     }
