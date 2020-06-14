@@ -26,11 +26,11 @@ public class MakeDirectory implements Command {
 	    fileSystem.makeDirectory(currentDirectory.getAbsolutePath(argument));
 	}
 
-	return null;
+	return "";
     }
 
     private void validateOptions(Set<String> options) throws InvalidArgumentException {
-	if (options.size() != 0) {
+	if (!options.isEmpty()) {
 	    throw new InvalidArgumentException("Invalid option");
 	}
     }
