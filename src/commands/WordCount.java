@@ -25,7 +25,7 @@ public class WordCount implements Command {
 
 	if (getLines) {
 	    if (result.equals(1)) {
-		return fileSystem.getLineCount(currentDirectory.getAbsolutePath(arguments.get(0))).toString();
+		return String.valueOf(fileSystem.getLineCount(currentDirectory.getAbsolutePath(arguments.get(0))));
 	    }
 
 	    return getLinesInText(arguments).toString();

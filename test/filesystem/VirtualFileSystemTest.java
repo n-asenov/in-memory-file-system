@@ -253,19 +253,19 @@ public class VirtualFileSystemTest {
     @Test(expected = InvalidArgumentException.class)
     public void removeContentFromLinesInTextFile_InvalidPathToTextFile_ThrowInvalidPathExcepiton()
 	    throws InvalidPathException, FileNotFoundException, InvalidArgumentException {
-	fs.removeContentFromLinesInTextFile("/home/dir1/f1", 1, 2);
+	fs.removeContentFromTextFile("/home/dir1/f1", 1, 2);
     }
 
     @Test(expected = FileNotFoundException.class)
     public void removeContentFromLinesInTextFile_FileDoesNotExists_ThrowFileNotFoundException()
 	    throws FileNotFoundException, InvalidArgumentException {
-	fs.removeContentFromLinesInTextFile("f1", 1, 2);
+	fs.removeContentFromTextFile("f1", 1, 2);
     }
 
     @Test(expected = FileNotFoundException.class)
     public void removeContentFromLinesInTextFile_FileIsDirectory_ThrowFileNotFoundException()
 	    throws FileNotFoundException, InvalidArgumentException {
-	fs.removeContentFromLinesInTextFile("/home", 1, 2);
+	fs.removeContentFromTextFile("/home", 1, 2);
     }
 
     @Test
@@ -278,7 +278,7 @@ public class VirtualFileSystemTest {
 	for (int i = start; i <= end; i++) {
 	    fs.writeToTextFile("/home/f1", i, "hello");
 	}
-	fs.removeContentFromLinesInTextFile("/home/f1", start, end);
+	fs.removeContentFromTextFile("/home/f1", start, end);
 	assertEquals("", fs.getTextFileContent("/home/f1"));
     }
 
@@ -303,7 +303,7 @@ public class VirtualFileSystemTest {
     public void getWordCount_EmptyTextFile_ReturnNumberOfWordsInTextFile()
 	    throws FileAlreadyExistsException, InvalidArgumentException, FileNotFoundException {
 	fs.createTextFile("/home/f1");
-	assertEquals((Integer) 0, fs.getWordCount("/home/f1"));
+	assertEquals(0, fs.getWordCount("/home/f1"));
     }
 
     @Test
@@ -312,7 +312,7 @@ public class VirtualFileSystemTest {
 	String absolutePath = "/home/f1";
 	fs.createTextFile(absolutePath);
 	fs.writeToTextFile(absolutePath, 1, "Hello World");
-	assertEquals((Integer) 2, fs.getWordCount(absolutePath));
+	assertEquals(2, fs.getWordCount(absolutePath));
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -339,6 +339,6 @@ public class VirtualFileSystemTest {
 	String absolutePath = "/home/f1";
 	fs.createTextFile(absolutePath);
 	fs.writeToTextFile(absolutePath, 5, "hello world");
-	assertEquals((Integer) 5, fs.getLineCount(absolutePath));
+	assertEquals(5, fs.getLineCount(absolutePath));
     }
 }

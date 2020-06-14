@@ -35,7 +35,7 @@ public class RemoveContentFromTextFile implements Command {
 	final int textFilePathIndex = 0;
 	String textFileAbsolutePath = currentDirectory.getAbsolutePath(arguments.get(textFilePathIndex));
 
-	fileSystem.removeContentFromLinesInTextFile(textFileAbsolutePath, parsedInterval[START_INDEX], parsedInterval[END_INDEX]);
+	fileSystem.removeContentFromTextFile(textFileAbsolutePath, parsedInterval[START_INDEX], parsedInterval[END_INDEX]);
 	return "";
     }
 

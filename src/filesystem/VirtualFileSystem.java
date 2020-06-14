@@ -2,7 +2,6 @@ package filesystem;
 
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.NotDirectoryException;
 import java.util.ArrayDeque;
 import java.util.Comparator;
 import java.util.Deque;
@@ -37,44 +36,62 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
 
     @Override
     public void createTextFile(String absolutePath) throws InvalidArgumentException, FileAlreadyExistsException {
-	Directory workDirectory = goToWorkDirectory(absolutePath);
+	Directory workDirectory = findWorkDirectory(absolutePath);
+	File textFile = new TextFile(getLastFileName(absolutePath));
+	workDirectory.addFile(textFile);
+    }
 
-	workDirectory.addFile(new TextFile(getCurrentFile(absolutePath)));
+    private Directory findWorkDirectory(String absolutePath) throws InvalidArgumentException {
+	Directory currentDirectory = root;
+	String[] directories = absolutePath.split(PATH_SEPARATOR);
+
+	for (int index = 1; index < directories.length - 1; index++) {
+	    File nextDirectory = currentDirectory.getFile(directories[index]);
+
+	    if (nextDirectory == null || !(nextDirectory instanceof Directory)) {
+		throw new InvalidArgumentException("Path: " + absolutePath + " " + "doesn't exists");
+	    }
+
+	    currentDirectory = (Directory) nextDirectory;
+	}
+
+	return currentDirectory;
+    }
+
+    private String getLastFileName(String absolutePath) {
+	String[] filePath = absolutePath.split(PATH_SEPARATOR);
+
+	if (filePath.length == 0) {
+	    String currentDirectory = ".";
+	    return currentDirectory;
+	}
+
+	return filePath[filePath.length - 1];
     }
 
     @Override
-    public void removeTextFile(String absolutePath) throws FileNotFoundException, InvalidArgumentException {
-	Directory workDirectory = goToWorkDirectory(absolutePath);
-
-	deletedFiles.addLast(workDirectory.removeTextFile(getCurrentFile(absolutePath)));
+    public void removeTextFile(String absolutePath) throws InvalidArgumentException, FileNotFoundException {
+	Directory workDirectory = findWorkDirectory(absolutePath);
+	String textFileName = getLastFileName(absolutePath);
+	File deletedTextFile = workDirectory.removeTextFile(textFileName);
+	deletedFiles.addLast(deletedTextFile);
     }
 
     @Override
     public void writeToTextFile(String absolutePath, int line, String content)
-	    throws FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException {
-	TextFile textFile = getTextFile(absolutePath);
+	    throws InvalidArgumentException, FileNotFoundException, NotEnoughMemoryException {
+	TextFile textFile = findTextFile(absolutePath);
 
 	usedMemory -= textFile.getLineSize(line);
 
-	freeEnoughSpace(textFile, line, content);
+	allocateMemory(textFile, line, content);
 
 	textFile.overwrite(line, content);
     }
 
-    @Override
-    public void appendToTextFile(String absolutePath, int line, String content)
-	    throws FileNotFoundException, InvalidArgumentException, NotEnoughMemoryException {
-	TextFile textFile = getTextFile(absolutePath);
-
-	freeEnoughSpace(textFile, line, content);
-
-	textFile.append(line, content);
-    }
-    
-    private TextFile getTextFile(String absolutePath) throws InvalidArgumentException, FileNotFoundException {
-	Directory workDirectory = goToWorkDirectory(absolutePath);
-
-	File file = workDirectory.getFile(getCurrentFile(absolutePath));
+    private TextFile findTextFile(String absolutePath) throws InvalidArgumentException, FileNotFoundException {
+	Directory workDirectory = findWorkDirectory(absolutePath);
+	File file = workDirectory.getFile(getLastFileName(absolutePath));
 
 	if (file == null) {
 	    throw new FileNotFoundException("Text file doesn't exists");
@@ -86,124 +103,103 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
 
 	return (TextFile) file;
     }
-    
-    private void freeEnoughSpace(TextFile file, int line, String newContent) throws NotEnoughMemoryException {
-	int sizeToAdd = newContent.length();
 
-	if (file.isEmptyLine(line)) {
-	    sizeToAdd += 1;
+    private void allocateMemory(TextFile textFile, int line, String newContent) throws NotEnoughMemoryException {
+	int memoryToAdd = newContent.length();
+
+	if (textFile.isEmptyLine(line)) {
+	    memoryToAdd += 1;
 	}
 
-	while (!deletedFiles.isEmpty() && usedMemory + sizeToAdd > MEMORY_CAPACITY) {
+	while (usedMemory + memoryToAdd > MEMORY_CAPACITY && !deletedFiles.isEmpty()) {
 	    File deletedFile = deletedFiles.removeFirst();
 	    usedMemory -= deletedFile.getSize();
 	}
 
-	if (usedMemory + sizeToAdd > MEMORY_CAPACITY) {
-	    throw new NotEnoughMemoryException("Not enough memory");
+	if (usedMemory + memoryToAdd > MEMORY_CAPACITY) {
+	    throw new NotEnoughMemoryException("Not enough memory to add content to text file");
 	}
 
-	usedMemory += sizeToAdd;
+	usedMemory += memoryToAdd;
     }
 
     @Override
-    public void removeContentFromLinesInTextFile(String absolutePath, int start, int end)
-	    throws FileNotFoundException, InvalidArgumentException {
-	TextFile textFile = getTextFile(absolutePath);
+    public void appendToTextFile(String absolutePath, int line, String content)
+	    throws InvalidArgumentException, FileNotFoundException, NotEnoughMemoryException {
+	TextFile textFile = findTextFile(absolutePath);
 
-	textFile.removeContentFromLines(start, end);
+	allocateMemory(textFile, line, content);
+
+	textFile.append(line, content);
     }
 
     @Override
-    public String getTextFileContent(String absolutePath) throws FileNotFoundException, InvalidArgumentException {
-	TextFile textFile = getTextFile(absolutePath);
+    public void removeContentFromTextFile(String absolutePath, int startLine, int endLine)
+	    throws InvalidArgumentException, FileNotFoundException {
+	TextFile textFile = findTextFile(absolutePath);
+
+	textFile.removeContentFromLines(startLine, endLine);
+    }
+
+    @Override
+    public String getTextFileContent(String absolutePath) throws InvalidArgumentException, FileNotFoundException {
+	TextFile textFile = findTextFile(absolutePath);
 
 	return textFile.getContent();
     }
 
     @Override
-    public Integer getWordCount(String absolutePath) throws FileNotFoundException, InvalidArgumentException {
-	TextFile textFile = getTextFile(absolutePath);
+    public int getWordCount(String absolutePath) throws InvalidArgumentException, FileNotFoundException {
+	TextFile textFile = findTextFile(absolutePath);
 
 	return textFile.getNumberOfWords();
     }
 
     @Override
-    public Integer getLineCount(String absolutePath) throws FileNotFoundException, InvalidArgumentException {
-	TextFile textFile = getTextFile(absolutePath);
+    public int getLineCount(String absolutePath) throws InvalidArgumentException, FileNotFoundException {
+	TextFile textFile = findTextFile(absolutePath);
 
 	return textFile.getNumberOfLines();
     }
 
     @Override
-    public void makeDirectory(String absolutePath) throws FileAlreadyExistsException, InvalidArgumentException {
-	Directory workDirectory = goToWorkDirectory(absolutePath);
-
-	workDirectory.addFile(new Directory(getCurrentFile(absolutePath), workDirectory));
+    public void makeDirectory(String absolutePath) throws InvalidArgumentException, FileAlreadyExistsException {
+	Directory workDirectory = findWorkDirectory(absolutePath);
+	String newDirectoryName = getLastFileName(absolutePath);
+	Directory newDirectory = new Directory(newDirectoryName, workDirectory);
+	workDirectory.addFile(newDirectory);
     }
 
     @Override
     public List<String> getDirectoryContent(String absolutePath, Comparator<File> comparator)
-	    throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
-	File file = getDirectory(absolutePath);
+	    throws FileNotFoundException, InvalidArgumentException {
+	File file = getLastFile(absolutePath);
 
 	if (file instanceof TextFile) {
-	    throw new NotDirectoryException(file.getName());
+	    throw new FileNotFoundException("File is not a directory");
 	}
 
 	Directory directory = (Directory) file;
 
 	return directory.getContent(comparator);
     }
-
-    @Override
-    public boolean isDirectory(String absolutePath) throws FileNotFoundException, InvalidArgumentException {
-	File file = getDirectory(absolutePath);
-
-	return file instanceof Directory;
-    }
     
-    private File getDirectory(String absolutePath) throws FileNotFoundException, InvalidArgumentException {
-	Directory workDirectory = goToWorkDirectory(absolutePath);
+    private File getLastFile(String absolutePath) throws InvalidArgumentException, FileNotFoundException {
+	Directory workDirectory = findWorkDirectory(absolutePath);
 
-	File file = workDirectory.getFile(getCurrentFile(absolutePath));
+	File file = workDirectory.getFile(getLastFileName(absolutePath));
 
 	if (file == null) {
 	    throw new FileNotFoundException("Directory doesn't exist");
 	}
-	
+
 	return file;
     }
+    
+    @Override
+    public boolean isDirectory(String absolutePath) throws InvalidArgumentException, FileNotFoundException {
+	File file = getLastFile(absolutePath);
 
-    private Directory goToWorkDirectory(String absolutePath) throws InvalidArgumentException {
-	Directory workDirectory = root;
-
-	String[] pathSpliteedByDirectories = absolutePath.split(PATH_SEPARATOR);
-
-	if (pathSpliteedByDirectories.length != 0) {
-	    for (int i = 1; i < pathSpliteedByDirectories.length - 1; i++) {
-		File next = workDirectory.getFile(pathSpliteedByDirectories[i]);
-
-		if (next == null || !(next instanceof Directory)) {
-		    throw new InvalidArgumentException("Path: " + absolutePath + " " + "doesn't exists");
-		}
-
-		workDirectory = (Directory) next;
-	    }
-	}
-
-	return workDirectory;
+	return file instanceof Directory;
     }
-
-    private String getCurrentFile(String absolutePath) {
-	String[] filePath = absolutePath.split(PATH_SEPARATOR);
-
-	if (filePath.length == 0) {
-	    String currentDirectory = ".";
-	    return currentDirectory;
-	}
-
-	return filePath[filePath.length - 1];
-    }
-
 }

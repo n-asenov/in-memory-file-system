@@ -6,8 +6,8 @@ import filesystem.exceptions.InvalidArgumentException;
 
 public interface TextFileStatistics {
     
-    Integer getWordCount(String absolutePath) throws InvalidArgumentException, FileNotFoundException;
+    int getWordCount(String absolutePath) throws InvalidArgumentException, FileNotFoundException;
 
-    Integer getLineCount(String absolutePath) throws InvalidArgumentException, FileNotFoundException;
+    int getLineCount(String absolutePath) throws InvalidArgumentException, FileNotFoundException;
 
 }

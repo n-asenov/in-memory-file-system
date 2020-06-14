@@ -13,7 +13,7 @@ public interface TextFileContentController {
     void appendToTextFile(String absolutePath, int line, String content)
 	    throws FileNotFoundException, InvalidArgumentException, NotEnoughMemoryException;
 
-    void removeContentFromLinesInTextFile(String absolutePath, int start, int end)
+    void removeContentFromTextFile(String absolutePath, int start, int end)
 	    throws InvalidArgumentException, FileNotFoundException;
 
     String getTextFileContent(String absolutePath) throws InvalidArgumentException, FileNotFoundException;
