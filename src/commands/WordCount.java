@@ -3,15 +3,15 @@ package commands;
 import java.io.IOException;
 import java.util.List;
 
-import filesystem.VirtualFileSystem;
+import filesystem.TextFileStatistics;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class WordCount implements Command {
-    private VirtualFileSystem fileSystem;
+    private TextFileStatistics fileSystem;
     private Path currentDirectory;
 
-    public WordCount(VirtualFileSystem fileSystem, Path currentDirectory) {
+    public WordCount(TextFileStatistics fileSystem, Path currentDirectory) {
 	this.fileSystem = fileSystem;
 	this.currentDirectory = currentDirectory;
     }
