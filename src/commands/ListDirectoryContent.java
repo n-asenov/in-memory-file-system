@@ -6,11 +6,13 @@ import java.util.List;
 
 import filesystem.DirectoryContentController;
 import filesystem.File;
-import filesystem.FilterBy;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class ListDirectoryContent implements Command {
+    private static final Comparator<File> DEFAULT = (f1, f2) -> f1.getName().compareTo(f2.getName());
+    private static final Comparator<File> SIZE_DESCENDING = (f1, f2) -> Integer.compare(f2.getSize(), f1.getSize());
+    
     private DirectoryContentController fileSystem;
     private Path currentDirectory;
 
@@ -21,8 +23,7 @@ public class ListDirectoryContent implements Command {
 
     @Override
     public String execute(List<String> arguments, List<String> options) throws InvalidArgumentException, IOException {
-	FilterBy flag = validateOptions(options);
-	Comparator<File> comparator = getComparator(flag);
+	Comparator<File> comparator = getComparator(options);
 	int size = arguments.size();
 
 	if (size == 0) {
@@ -41,17 +42,18 @@ public class ListDirectoryContent implements Command {
 	return result.toString();
     }
 
-    private FilterBy validateOptions(List<String> options) throws InvalidArgumentException {
-	FilterBy flag = FilterBy.DEFAULT;
+    private Comparator<File> getComparator(List<String> options) throws InvalidArgumentException {
+	Comparator<File> comparator = DEFAULT;
 
 	for (String option : options) {
 	    if (!option.equals("-sortedDesc")) {
 		throw new InvalidArgumentException("Invalid option");
 	    }
-	    flag = FilterBy.SIZE_DESCENDING;
+	    
+	    comparator = SIZE_DESCENDING;
 	}
 
-	return flag;
+	return comparator;
     }
 
     private String appendDirectoryContent(List<String> content) {
@@ -63,14 +65,5 @@ public class ListDirectoryContent implements Command {
 	}
 
 	return result.toString();
-    }
-    
-    private Comparator<File> getComparator(FilterBy option) {
-	if (option == FilterBy.SIZE_DESCENDING) {
-	    return (f1, f2) -> Integer.compare(f2.getSize(), f1.getSize());
-	}
-
-	// Default sort
-	return (f1, f2) -> f1.getName().compareTo(f2.getName());
     }
 }
