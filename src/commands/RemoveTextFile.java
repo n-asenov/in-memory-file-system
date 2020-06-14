@@ -1,34 +1,34 @@
 package commands;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.List;
 
-import filesystem.VirtualFileSystem;
+import filesystem.TextFileController;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class RemoveTextFile implements Command {
-    private VirtualFileSystem fileSystem;
+    private TextFileController fileSystem;
     private Path currentDirectory;
 
-    public RemoveTextFile(VirtualFileSystem fileSystem, Path currentDirectory) {
+    public RemoveTextFile(TextFileController fileSystem, Path currentDirectory) {
 	this.fileSystem = fileSystem;
 	this.currentDirectory = currentDirectory;
     }
 
     @Override
-    public String execute(List<String> arguments, List<String> options) throws InvalidArgumentException, IOException {
+    public String execute(List<String> arguments, List<String> options) throws InvalidArgumentException, FileNotFoundException {
 	validateOptions(options);
 
 	for (String argument : arguments) {
 	    fileSystem.removeTextFile(currentDirectory.getAbsolutePath(argument));
 	}
 
-	return null;
+	return "";
     }
 
     private void validateOptions(List<String> options) throws InvalidArgumentException {
-	if (options.size() != 0) {
+	if (!options.isEmpty()) {
 	    throw new InvalidArgumentException("Invalid option");
 	}
     }

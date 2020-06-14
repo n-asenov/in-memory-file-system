@@ -1,7 +1,6 @@
 package commands;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertNull;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -64,7 +63,8 @@ public class RemoveTextFileTest {
 	arguments.add("/home/f1");
 
 	String[] expectedResult = {};
-	assertNull(command.execute(arguments, options));
+	command.execute(arguments, options);
+	
 	assertArrayEquals(expectedResult, fileSystem.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
     }
 
@@ -78,7 +78,8 @@ public class RemoveTextFileTest {
 	    arguments.add(fileName);
 	}
 	String[] expectedResult = {};
-	assertNull(command.execute(arguments, options));
+	command.execute(arguments, options);
+	
 	assertArrayEquals(expectedResult, fileSystem.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
     }
 }
