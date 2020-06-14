@@ -1,9 +1,11 @@
 package commands;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 
 import filesystem.DirectoryContentController;
+import filesystem.File;
 import filesystem.FilterBy;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
@@ -20,21 +22,21 @@ public class ListDirectoryContent implements Command {
     @Override
     public String execute(List<String> arguments, List<String> options) throws InvalidArgumentException, IOException {
 	FilterBy flag = validateOptions(options);
-
+	Comparator<File> comparator = getComparator(flag);
 	int size = arguments.size();
 
 	if (size == 0) {
-	    return appendDirectoryContent(fileSystem.getDirectoryContent(currentDirectory.getCurrentDirectory(), flag));
+	    return appendDirectoryContent(fileSystem.getDirectoryContent(currentDirectory.getCurrentDirectory(), comparator));
 	}
 
 	StringBuilder result = new StringBuilder();
 	for (int i = 0; i < size - 1; i++) {
 	    result.append(appendDirectoryContent(
-		    fileSystem.getDirectoryContent(currentDirectory.getAbsolutePath(arguments.get(i)), flag)));
+		    fileSystem.getDirectoryContent(currentDirectory.getAbsolutePath(arguments.get(i)), comparator)));
 	    result.append(System.lineSeparator());
 	}
 	result.append(appendDirectoryContent(
-		fileSystem.getDirectoryContent(currentDirectory.getAbsolutePath(arguments.get(size - 1)), flag)));
+		fileSystem.getDirectoryContent(currentDirectory.getAbsolutePath(arguments.get(size - 1)), comparator)));
 
 	return result.toString();
     }
@@ -61,5 +63,14 @@ public class ListDirectoryContent implements Command {
 	}
 
 	return result.toString();
+    }
+    
+    private Comparator<File> getComparator(FilterBy option) {
+	if (option == FilterBy.SIZE_DESCENDING) {
+	    return (f1, f2) -> Integer.compare(f2.getSize(), f1.getSize());
+	}
+
+	// Default sort
+	return (f1, f2) -> f1.getName().compareTo(f2.getName());
     }
 }

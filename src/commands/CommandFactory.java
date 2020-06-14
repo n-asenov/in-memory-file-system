@@ -3,7 +3,6 @@ package commands;
 import java.util.HashMap;
 import java.util.Map;
 
-import filesystem.DirectoryValidator;
 import filesystem.VirtualFileSystem;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;

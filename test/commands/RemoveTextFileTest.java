@@ -5,17 +5,20 @@ import static org.junit.Assert.assertArrayEquals;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import filesystem.FilterBy;
+import filesystem.File;
 import filesystem.VirtualFileSystem;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class RemoveTextFileTest {
+    private static final Comparator<File> DEFAULT = (f1, f2) -> f1.getName().compareTo(f2.getName());
+    
     private RemoveTextFile command;
     private VirtualFileSystem fileSystem;
     private List<String> options;
@@ -65,7 +68,7 @@ public class RemoveTextFileTest {
 	String[] expectedResult = {};
 	command.execute(arguments, options);
 	
-	assertArrayEquals(expectedResult, fileSystem.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
+	assertArrayEquals(expectedResult, fileSystem.getDirectoryContent("/home", DEFAULT).toArray());
     }
 
     @Test
@@ -80,6 +83,6 @@ public class RemoveTextFileTest {
 	String[] expectedResult = {};
 	command.execute(arguments, options);
 	
-	assertArrayEquals(expectedResult, fileSystem.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
+	assertArrayEquals(expectedResult, fileSystem.getDirectoryContent("/home", DEFAULT).toArray());
     }
 }

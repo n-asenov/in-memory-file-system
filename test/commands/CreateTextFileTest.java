@@ -1,23 +1,25 @@
 package commands;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import commands.CreateTextFile;
-import filesystem.FilterBy;
+import filesystem.File;
 import filesystem.VirtualFileSystem;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class CreateTextFileTest {
+    private static final Comparator<File> DEFAULT = (f1, f2) -> f1.getName().compareTo(f2.getName());
+    
     private CreateTextFile command;
     private VirtualFileSystem fs;
     private List<String> options;
@@ -62,7 +64,7 @@ public class CreateTextFileTest {
 
 	command.execute(arguments, options);
 	String[] expectedResult = { "f1" };
-	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
+	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", DEFAULT).toArray());
     }
 
     @Test
@@ -72,7 +74,7 @@ public class CreateTextFileTest {
 
 	command.execute(arguments, options);
 	String[] expectedResult = { "f1" };
-	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
+	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", DEFAULT).toArray());
     }
 
     @Test
@@ -85,8 +87,8 @@ public class CreateTextFileTest {
 
 	command.execute(arguments, options);
 	String[] expectedResult = { "f1", "f2", "f3" };
-	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
+	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", DEFAULT).toArray());
 	String[] expectedResult2 = { "f1", "home" };
-	assertArrayEquals(expectedResult2, fs.getDirectoryContent("/", FilterBy.DEFAULT).toArray());
+	assertArrayEquals(expectedResult2, fs.getDirectoryContent("/", DEFAULT).toArray());
     }
 }

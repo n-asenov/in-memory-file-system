@@ -1,23 +1,25 @@
 package commands;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import commands.MakeDirectory;
-import filesystem.FilterBy;
+import filesystem.File;
 import filesystem.VirtualFileSystem;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class MakeDirectoryTest {
+    private static final Comparator<File> DEFAULT = (f1, f2) -> f1.getName().compareTo(f2.getName());
+    
     private MakeDirectory command;
     private VirtualFileSystem fs;
     private List<String> options;
@@ -47,7 +49,7 @@ public class MakeDirectoryTest {
 
 	command.execute(arguments, options);
 	String[] expectedResult = { "dir1" };
-	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
+	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", DEFAULT).toArray());
     }
 
     @Test
@@ -57,7 +59,7 @@ public class MakeDirectoryTest {
 
 	command.execute(arguments, options);
 	String[] expectedResult = { "dir1" };
-	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
+	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", DEFAULT).toArray());
     }
 
     @Test(expected = FileAlreadyExistsException.class)

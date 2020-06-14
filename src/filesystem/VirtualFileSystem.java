@@ -28,7 +28,7 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
 	    throw new IllegalArgumentException("Should not reach here");
 	}
 	usedMemory = 0;
-	deletedFiles = new ArrayDeque<File>();
+	deletedFiles = new ArrayDeque<>();
     }
 
     public int getUsedMemory() {
@@ -143,7 +143,7 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
     }
 
     @Override
-    public List<String> getDirectoryContent(String absolutePath, FilterBy option)
+    public List<String> getDirectoryContent(String absolutePath, Comparator<File> comparator)
 	    throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 	File file = getDirectory(absolutePath);
 
@@ -153,16 +153,7 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
 
 	Directory directory = (Directory) file;
 
-	return directory.getContent(getComparator(option));
-    }
-
-    private Comparator<File> getComparator(FilterBy option) {
-	if (option == FilterBy.SIZE_DESCENDING) {
-	    return (f1, f2) -> Integer.compare(f2.getSize(), f1.getSize());
-	}
-
-	// Default sort
-	return (f1, f2) -> f1.getName().compareTo(f2.getName());
+	return directory.getContent(comparator);
     }
 
     @Override

@@ -1,21 +1,25 @@
 package filesystem;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.NotDirectoryException;
+import java.util.Comparator;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import filesystem.FilterBy;
-import filesystem.VirtualFileSystem;
 import filesystem.exceptions.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
 
 public class VirtualFileSystemTest {
+    private static final Comparator<File> DEFAULT = (f1, f2) -> f1.getName().compareTo(f2.getName());
+    
     private VirtualFileSystem fs;
 
     @Before
@@ -28,7 +32,7 @@ public class VirtualFileSystemTest {
 	    throws FileAlreadyExistsException, NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 	fs.makeDirectory("/home/newDir");
 	String[] expectedResult = { "newDir" };
-	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
+	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", DEFAULT).toArray());
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -48,7 +52,7 @@ public class VirtualFileSystemTest {
 	    throws FileAlreadyExistsException, NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 	fs.createTextFile("/home/f1");
 	String[] expectedResult = { "f1" };
-	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
+	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", DEFAULT).toArray());
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -191,27 +195,27 @@ public class VirtualFileSystemTest {
     @Test(expected = FileNotFoundException.class)
     public void getDirectoryContent_NonExistingDirectory_ThrowFileNotFoundException()
 	    throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
-	fs.getDirectoryContent("/home/dir1", FilterBy.DEFAULT);
+	fs.getDirectoryContent("/home/dir1", DEFAULT);
     }
 
     @Test(expected = InvalidArgumentException.class)
     public void getDirectoryContent_PathDoesNotExists_ThrowInvalidPathException()
 	    throws InvalidPathException, NotDirectoryException, FileNotFoundException, InvalidArgumentException {
-	fs.getDirectoryContent("/home/dir1/dir2/", FilterBy.DEFAULT);
+	fs.getDirectoryContent("/home/dir1/dir2/", DEFAULT);
     }
 
     @Test
     public void getDirectoryContent_EmptyDirectory_ReturnEmptyString()
 	    throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 	String[] expectedResult = {};
-	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", FilterBy.DEFAULT).toArray());
+	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", DEFAULT).toArray());
     }
 
     @Test
     public void getDirectoryContent_RootDirectory_ReturnRootContent()
 	    throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
 	String[] expectedResult = { "home" };
-	assertArrayEquals(expectedResult, fs.getDirectoryContent("/", FilterBy.DEFAULT).toArray());
+	assertArrayEquals(expectedResult, fs.getDirectoryContent("/", DEFAULT).toArray());
     }
 
     @Test

@@ -11,5 +11,5 @@ public abstract class File {
 	return name;
     }
 
-    abstract int getSize();
+    public abstract int getSize();
 }
