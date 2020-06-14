@@ -10,14 +10,14 @@ import filesystem.exceptions.NotEnoughMemoryException;
 import path.Path;
 
 public class WriteToTextFile implements Command {
+    private static final String OVERWRITE_OPTION = "-overwrite";
+    
     private TextFileContentController fileSystem;
     private Path currentDirectory;
-    private boolean overwrite;
     
     public WriteToTextFile(TextFileContentController fileSystem, Path currentDirectory) {
 	this.fileSystem = fileSystem;
 	this.currentDirectory = currentDirectory;
-	this.overwrite = false;
     }
 
     @Override
@@ -30,13 +30,12 @@ public class WriteToTextFile implements Command {
 	int lineNumber = getLineNumber(arguments);
 	String lineContent = getLineContent(arguments);
 
-	if (overwrite) {
+	if (options.contains(OVERWRITE_OPTION)) {
 	    fileSystem.writeToTextFile(absolutePath, lineNumber, lineContent);
 	} else {
 	    fileSystem.appendToTextFile(absolutePath, lineNumber, lineContent);
 	}
 
-	overwrite = false;
 	return "";
     }
 
@@ -49,9 +48,7 @@ public class WriteToTextFile implements Command {
 
     private void validateOptions(Set<String> options) throws InvalidArgumentException {
 	for (String option : options) {
-	    if (option.equals("-overwrite")) {
-		overwrite = true;
-	    } else {
+	    if (!option.equals(OVERWRITE_OPTION)) {
 		throw new InvalidArgumentException("Invalid option");
 	    }
 	}
@@ -71,7 +68,7 @@ public class WriteToTextFile implements Command {
 
 	return lineNumber;
     }
-    
+
     private void validateLineNumber(int lineNumber) throws InvalidArgumentException {
 	if (lineNumber <= 0) {
 	    throw new InvalidArgumentException("Second argument must be a positive integer");
