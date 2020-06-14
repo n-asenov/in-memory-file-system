@@ -6,9 +6,12 @@ import filesystem.exceptions.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
 
 public interface TextFileContentController {
-    
-    void writeToTextFile(String absolutePath, int line, String content, boolean overwrite)
+
+    void writeToTextFile(String absolutePath, int line, String content)
 	    throws InvalidArgumentException, FileNotFoundException, NotEnoughMemoryException;
+
+    void appendToTextFile(String absolutePath, int line, String content)
+	    throws FileNotFoundException, InvalidArgumentException, NotEnoughMemoryException;
 
     void removeContentFromLinesInTextFile(String absolutePath, int start, int end)
 	    throws InvalidArgumentException, FileNotFoundException;

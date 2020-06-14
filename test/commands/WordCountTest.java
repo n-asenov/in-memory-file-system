@@ -48,7 +48,7 @@ public class WordCountTest {
 	    throws InvalidArgumentException, NotEnoughMemoryException, IOException {
 	String absolutePath = "/home/f1";
 	fileSystem.createTextFile(absolutePath);
-	fileSystem.writeToTextFile(absolutePath, 2, "hello world", false);
+	fileSystem.writeToTextFile(absolutePath, 2, "hello world");
 
 	arguments.add(absolutePath);
 
@@ -68,7 +68,7 @@ public class WordCountTest {
 	    throws InvalidArgumentException, NotEnoughMemoryException, IOException {
 	String absolutePath = "/home/f1";
 	fileSystem.createTextFile(absolutePath);
-	fileSystem.writeToTextFile(absolutePath, 5, "hello world", false);
+	fileSystem.writeToTextFile(absolutePath, 5, "hello world");
 
 	options.add("-l");
 	arguments.add(absolutePath);

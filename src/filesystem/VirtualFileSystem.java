@@ -14,7 +14,8 @@ import filesystem.exceptions.NotEnoughMemoryException;
 public class VirtualFileSystem implements TextFileController, TextFileContentController, TextFileStatistics,
 	DirectoryController, DirectoryContentController, DirectoryValidator {
     public static final int MEMORY_CAPACITY = 1000;
-
+    public static final String PATH_SEPARATOR = "/";
+    
     private Directory root;
     private Deque<File> deletedFiles;
     private int usedMemory;
@@ -49,7 +50,7 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
     }
 
     @Override
-    public void writeToTextFile(String absolutePath, int line, String content, boolean overwrite)
+    public void writeToTextFile(String absolutePath, int line, String content)
 	    throws FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException {
 	Directory workDirectory = goToWorkDirectory(absolutePath);
 
@@ -65,15 +66,35 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
 
 	TextFile textFile = (TextFile) file;
 
-	if (!freeEnoughSpace(textFile, line, content, overwrite)) {
+	if (!freeEnoughSpace(textFile, line, content, true)) {
 	    throw new NotEnoughMemoryException("Not enough memory");
 	}
 
-	if (overwrite) {
-	    textFile.overwrite(line, content);
-	} else {
-	    textFile.append(line, content);
+	textFile.overwrite(line, content);
+    }
+
+    @Override
+    public void appendToTextFile(String absolutePath, int line, String content)
+	    throws FileNotFoundException, InvalidArgumentException, NotEnoughMemoryException {
+	Directory workDirectory = goToWorkDirectory(absolutePath);
+
+	File file = workDirectory.getFile(getCurrentFile(absolutePath));
+
+	if (file == null) {
+	    throw new FileNotFoundException("Text file doesn't exists");
 	}
+
+	if (file instanceof Directory) {
+	    throw new FileNotFoundException("File is directory");
+	}
+
+	TextFile textFile = (TextFile) file;
+
+	if (!freeEnoughSpace(textFile, line, content, false)) {
+	    throw new NotEnoughMemoryException("Not enough memory");
+	}
+
+	textFile.append(line, content);
     }
 
     @Override
@@ -202,7 +223,7 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
     private Directory goToWorkDirectory(String absolutePath) throws InvalidArgumentException {
 	Directory workDirectory = root;
 
-	String[] pathSpliteedByDirectories = absolutePath.split("/");
+	String[] pathSpliteedByDirectories = absolutePath.split(PATH_SEPARATOR);
 
 	if (pathSpliteedByDirectories.length != 0) {
 	    for (int i = 1; i < pathSpliteedByDirectories.length - 1; i++) {
@@ -220,13 +241,14 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
     }
 
     private String getCurrentFile(String absolutePath) {
-	String[] path = absolutePath.split("/");
+	String[] filePath = absolutePath.split(PATH_SEPARATOR);
 
-	if (path.length == 0) {
-	    return ".";
+	if (filePath.length == 0) {
+	    String currentDirectory = ".";
+	    return currentDirectory;
 	}
 
-	return path[path.length - 1];
+	return filePath[filePath.length - 1];
     }
 
     private boolean freeEnoughSpace(TextFile file, int line, String newContent, boolean overwrite)
@@ -253,4 +275,5 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
 	usedMemory += sizeToAdd;
 	return true;
     }
+
 }

@@ -101,7 +101,7 @@ public class RemoveContentFromTextFileTest {
 
 	int lines = 10;
 	for (int i = 1; i <= lines; i++) {
-	    fileSystem.writeToTextFile(absolutePath, i, "hello", false);
+	    fileSystem.writeToTextFile(absolutePath, i, "hello");
 	}
 
 	arguments.add(absolutePath);

@@ -97,13 +97,13 @@ public class VirtualFileSystemTest {
     @Test(expected = FileNotFoundException.class)
     public void writeToTextFile_WriteToNonExistingFile_ThrowFileNotFoundException()
 	    throws FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException {
-	fs.writeToTextFile("/home/f1", 1, "Test", false);
+	fs.writeToTextFile("/home/f1", 1, "Test");
     }
 
     @Test(expected = InvalidArgumentException.class)
     public void writeToTextFile_PathToFileDoesNotExists_ThrowInvalidPathException()
 	    throws FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException {
-	fs.writeToTextFile("/home/dir1/f1", 1, "Test", false);
+	fs.writeToTextFile("/home/dir1/f1", 1, "Test");
     }
 
     @Test
@@ -113,7 +113,7 @@ public class VirtualFileSystemTest {
 
 	fs.createTextFile(absolutePath);
 
-	fs.writeToTextFile(absolutePath, 1, "Test", false);
+	fs.writeToTextFile(absolutePath, 1, "Test");
 
 	assertEquals("Test", fs.getTextFileContent(absolutePath));
 	assertEquals(5, fs.getUsedMemory());
@@ -122,7 +122,7 @@ public class VirtualFileSystemTest {
     @Test(expected = FileNotFoundException.class)
     public void writeToTextFile_FileIsDirectory_ThrowFileNotFoundException()
 	    throws FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException {
-	fs.writeToTextFile("/home", 1, "hello", false);
+	fs.writeToTextFile("/home", 1, "hello");
     }
 
     @Test(expected = NotEnoughMemoryException.class)
@@ -139,7 +139,7 @@ public class VirtualFileSystemTest {
 	    content.append('a');
 	}
 
-	fs.writeToTextFile(absolutePath, 1, content.toString(), false);
+	fs.writeToTextFile(absolutePath, 1, content.toString());
     }
 
     @Test
@@ -148,10 +148,10 @@ public class VirtualFileSystemTest {
 	String absolutePath = "/home/f1";
 
 	fs.createTextFile(absolutePath);
-	fs.writeToTextFile(absolutePath, 1, "Hello", false);
+	fs.writeToTextFile(absolutePath, 1, "Hello");
 	assertEquals(6, fs.getUsedMemory());
 
-	fs.writeToTextFile(absolutePath, 1, "A", true);
+	fs.writeToTextFile(absolutePath, 1, "A");
 	assertEquals(2, fs.getUsedMemory());
     }
 
@@ -161,9 +161,9 @@ public class VirtualFileSystemTest {
 	String absolutePath = "/home/f1";
 
 	fs.createTextFile(absolutePath);
-	fs.writeToTextFile(absolutePath, 1, "hello", false);
+	fs.writeToTextFile(absolutePath, 1, "hello");
 	assertEquals(6, fs.getUsedMemory());
-	fs.writeToTextFile(absolutePath, 1, " world", false);
+	fs.appendToTextFile(absolutePath, 1, " world");
 	assertEquals(12, fs.getUsedMemory());
     }
 
@@ -172,7 +172,7 @@ public class VirtualFileSystemTest {
 	    throws FileAlreadyExistsException, FileNotFoundException, NotEnoughMemoryException,
 	    InvalidArgumentException {
 	fs.createTextFile("/home/f1");
-	fs.writeToTextFile("/home/f1", 1, "Hello", false);
+	fs.writeToTextFile("/home/f1", 1, "Hello");
 	fs.removeTextFile("/home/f1");
 
 	StringBuilder content = new StringBuilder();
@@ -182,7 +182,7 @@ public class VirtualFileSystemTest {
 	}
 
 	fs.createTextFile("/home/f2");
-	fs.writeToTextFile("/home/f2", 1, content.toString(), false);
+	fs.writeToTextFile("/home/f2", 1, content.toString());
 
 	assertEquals(content.toString(), fs.getTextFileContent("/home/f2"));
 	assertEquals(VirtualFileSystem.MEMORY_CAPACITY, fs.getUsedMemory());
@@ -272,7 +272,7 @@ public class VirtualFileSystemTest {
 	int start = 1;
 	int end = 5;
 	for (int i = start; i <= end; i++) {
-	    fs.writeToTextFile("/home/f1", i, "hello", false);
+	    fs.writeToTextFile("/home/f1", i, "hello");
 	}
 	fs.removeContentFromLinesInTextFile("/home/f1", start, end);
 	assertEquals("", fs.getTextFileContent("/home/f1"));
@@ -307,7 +307,7 @@ public class VirtualFileSystemTest {
 	    InvalidArgumentException, FileNotFoundException, NotEnoughMemoryException {
 	String absolutePath = "/home/f1";
 	fs.createTextFile(absolutePath);
-	fs.writeToTextFile(absolutePath, 1, "Hello World", false);
+	fs.writeToTextFile(absolutePath, 1, "Hello World");
 	assertEquals((Integer) 2, fs.getWordCount(absolutePath));
     }
 
@@ -334,7 +334,7 @@ public class VirtualFileSystemTest {
 	    NotEnoughMemoryException, InvalidArgumentException, FileAlreadyExistsException {
 	String absolutePath = "/home/f1";
 	fs.createTextFile(absolutePath);
-	fs.writeToTextFile(absolutePath, 5, "hello world", false);
+	fs.writeToTextFile(absolutePath, 5, "hello world");
 	assertEquals((Integer) 5, fs.getLineCount(absolutePath));
     }
 }

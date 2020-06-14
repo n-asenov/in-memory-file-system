@@ -33,7 +33,12 @@ public class WriteToTextFile implements Command {
 	int line = getLine(arguments);
 	String lineContent = getLineContent(arguments);
 
-	fileSystem.writeToTextFile(absolutePath, line, lineContent, overwrite);
+	if (overwrite) {
+	    fileSystem.writeToTextFile(absolutePath, line, lineContent);
+	} else {
+	    fileSystem.appendToTextFile(absolutePath, line, lineContent);
+	}
+	
 
 	return null;
     }
