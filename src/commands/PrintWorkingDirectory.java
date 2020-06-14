@@ -15,21 +15,21 @@ public class PrintWorkingDirectory implements Command {
 
     @Override
     public String execute(List<String> arguments, Set<String> options) throws InvalidArgumentException {
-	validateOptions(options);
 	validateArguments(arguments);
+	validateOptions(options);
 
 	return currentDirectory.getCurrentDirectory();
     }
-
-    private void validateOptions(Set<String> options) throws InvalidArgumentException {
-	if (options.size() != 0) {
-	    throw new InvalidArgumentException("Invalid option");
+    
+    private void validateArguments(List<String> arguments) throws InvalidArgumentException {
+	if (!arguments.isEmpty()) {
+	    throw new InvalidArgumentException("Invalid argument");
 	}
     }
 
-    private void validateArguments(List<String> arguments) throws InvalidArgumentException {
-	if (arguments.size() != 0) {
-	    throw new InvalidArgumentException("Invalid argument");
+    private void validateOptions(Set<String> options) throws InvalidArgumentException {
+	if (!options.isEmpty()) {
+	    throw new InvalidArgumentException("Invalid option");
 	}
     }
 }
