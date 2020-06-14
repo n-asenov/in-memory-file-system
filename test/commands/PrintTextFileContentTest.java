@@ -11,13 +11,13 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import commands.PrintTextFileContent;
+import commands.GetTextFileContent;
 import filesystem.VirtualFileSystem;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class PrintTextFileContentTest {
-    private PrintTextFileContent command;
+    private GetTextFileContent command;
     private VirtualFileSystem fs;
     private List<String> options;
     private List<String> arguments;
@@ -30,7 +30,7 @@ public class PrintTextFileContentTest {
 	} catch (FileAlreadyExistsException | InvalidArgumentException e) {
 	    throw new IllegalArgumentException();
 	}
-	command = new PrintTextFileContent(fs, new Path());
+	command = new GetTextFileContent(fs, new Path());
 	options = new ArrayList<String>();
 	arguments = new ArrayList<String>();
     }

@@ -17,7 +17,7 @@ public class CommandFactory {
 	commands.put("create_file", new CreateTextFile(fileSystem, currentDirectory));
 	commands.put("ls", new ListDirectoryContent(fileSystem, currentDirectory));
 	commands.put("mkdir", new MakeDirectory(fileSystem, currentDirectory));
-	commands.put("cat", new PrintTextFileContent(fileSystem, currentDirectory));
+	commands.put("cat", new GetTextFileContent(fileSystem, currentDirectory));
 	commands.put("write", new WriteToTextFile(fileSystem, currentDirectory));
 	commands.put("rm", new RemoveTextFile(fileSystem, currentDirectory));
 	commands.put("remove", new RemoveContentFromTextFile(fileSystem, currentDirectory));
