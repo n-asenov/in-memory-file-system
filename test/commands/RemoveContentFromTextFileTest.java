@@ -1,7 +1,6 @@
 package commands;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,8 +15,8 @@ import filesystem.exceptions.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
 import path.Path;
 
-public class RemoveLineContentFromTextFileTest {
-    private RemoveLineContentFromTextFile command;
+public class RemoveContentFromTextFileTest {
+    private RemoveContentFromTextFile command;
     private VirtualFileSystem fileSystem;
     private List<String> options;
     private List<String> arguments;
@@ -25,7 +24,7 @@ public class RemoveLineContentFromTextFileTest {
     @Before
     public void init() {
 	fileSystem = new VirtualFileSystem();
-	command = new RemoveLineContentFromTextFile(fileSystem, new Path());
+	command = new RemoveContentFromTextFile(fileSystem, new Path());
 	options = new ArrayList<String>();
 	arguments = new ArrayList<String>();
     }
@@ -108,7 +107,7 @@ public class RemoveLineContentFromTextFileTest {
 	arguments.add(absolutePath);
 	arguments.add("1-" + lines);
 
-	assertNull(command.execute(arguments, options));
+	command.execute(arguments, options);
 	assertEquals("", fileSystem.getTextFileContent(absolutePath));
     }
 }

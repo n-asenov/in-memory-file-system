@@ -20,7 +20,7 @@ public class CommandFactory {
 	commands.put("cat", new PrintTextFileContent(fileSystem, currentDirectory));
 	commands.put("write", new WriteToTextFile(fileSystem, currentDirectory));
 	commands.put("rm", new RemoveTextFile(fileSystem, currentDirectory));
-	commands.put("remove", new RemoveLineContentFromTextFile(fileSystem, currentDirectory));
+	commands.put("remove", new RemoveContentFromTextFile(fileSystem, currentDirectory));
 	commands.put("pwd", new PrintWorkingDirectory(currentDirectory));
 	commands.put("wc", new WordCount(fileSystem, currentDirectory));
     }
