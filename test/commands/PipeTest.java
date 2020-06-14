@@ -1,6 +1,6 @@
 package commands;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,15 +9,13 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import commands.Pipe;
-import filesystem.AbstractFileSystem;
 import filesystem.VirtualFileSystem;
 import filesystem.exceptions.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
 import path.Path;
 
 public class PipeTest {
-    private AbstractFileSystem fileSystem;
+    private VirtualFileSystem fileSystem;
     private Pipe command;
     private List<String> options;
     private List<String> arguments;

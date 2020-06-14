@@ -3,15 +3,15 @@ package commands;
 import java.io.IOException;
 import java.util.List;
 
-import filesystem.AbstractFileSystem;
+import filesystem.TextFileController;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class CreateTextFile implements Command {
-    private AbstractFileSystem fileSystem;
+    private TextFileController fileSystem;
     private Path currentDirectory;
 
-    public CreateTextFile(AbstractFileSystem fileSystem, Path currentDirectory) {
+    public CreateTextFile(TextFileController fileSystem, Path currentDirectory) {
 	this.fileSystem = fileSystem;
 	this.currentDirectory = currentDirectory;
     }

@@ -3,16 +3,16 @@ package commands;
 import java.io.IOException;
 import java.util.List;
 
-import filesystem.AbstractFileSystem;
+import filesystem.DirectoryContentController;
 import filesystem.FilterBy;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class ListDirectoryContent implements Command {
-    private AbstractFileSystem fileSystem;
+    private DirectoryContentController fileSystem;
     private Path currentDirectory;
 
-    public ListDirectoryContent(AbstractFileSystem fileSystem, Path currentDirectory) {
+    public ListDirectoryContent(DirectoryContentController fileSystem, Path currentDirectory) {
 	this.fileSystem = fileSystem;
 	this.currentDirectory = currentDirectory;
     }

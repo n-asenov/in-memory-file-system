@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import filesystem.AbstractFileSystem;
+import filesystem.VirtualFileSystem;
 import filesystem.exceptions.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
 import parser.CommandParser;
@@ -15,7 +15,7 @@ public class Pipe implements Command {
     private CommandFactory factory;
     private CommandParser parser;
 
-    public Pipe(AbstractFileSystem fileSystem, Path currentDirectory) {
+    public Pipe(VirtualFileSystem fileSystem, Path currentDirectory) {
 	factory = new CommandFactory(fileSystem, currentDirectory);
 	parser = new CommandParser();
     }

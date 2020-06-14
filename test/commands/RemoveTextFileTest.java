@@ -1,6 +1,7 @@
 package commands;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,8 +11,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import commands.RemoveTextFile;
-import filesystem.AbstractFileSystem;
 import filesystem.FilterBy;
 import filesystem.VirtualFileSystem;
 import filesystem.exceptions.InvalidArgumentException;
@@ -19,7 +18,7 @@ import path.Path;
 
 public class RemoveTextFileTest {
     private RemoveTextFile command;
-    private AbstractFileSystem fileSystem;
+    private VirtualFileSystem fileSystem;
     private List<String> options;
     private List<String> arguments;
 

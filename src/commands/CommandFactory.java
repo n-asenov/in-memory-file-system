@@ -3,14 +3,15 @@ package commands;
 import java.util.HashMap;
 import java.util.Map;
 
-import filesystem.AbstractFileSystem;
+import filesystem.DirectoryValidator;
+import filesystem.VirtualFileSystem;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class CommandFactory {
     private Map<String, Command> commands;
 
-    public CommandFactory(AbstractFileSystem fileSystem, Path currentDirectory) {
+    public CommandFactory(VirtualFileSystem fileSystem, Path currentDirectory) {
 	commands = new HashMap<String, Command>();
 	commands.put("cd", new ChangeDirectory(fileSystem, currentDirectory));
 	commands.put("create_file", new CreateTextFile(fileSystem, currentDirectory));

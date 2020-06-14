@@ -4,15 +4,15 @@ import java.io.FileNotFoundException;
 import java.nio.file.NotDirectoryException;
 import java.util.List;
 
-import filesystem.AbstractFileSystem;
+import filesystem.DirectoryValidator;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class ChangeDirectory implements Command {
-    private AbstractFileSystem fileSystem;
+    private DirectoryValidator fileSystem;
     private Path currentDirectory;
 
-    public ChangeDirectory(AbstractFileSystem fileSystem, Path currentDirectory) {
+    public ChangeDirectory(DirectoryValidator fileSystem, Path currentDirectory) {
 	this.fileSystem = fileSystem;
 	this.currentDirectory = currentDirectory;
     }

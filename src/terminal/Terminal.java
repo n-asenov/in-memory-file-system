@@ -6,8 +6,8 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
 
-import commands.*;
-import filesystem.AbstractFileSystem;
+import commands.Pipe;
+import filesystem.VirtualFileSystem;
 import filesystem.exceptions.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
 import output.Output;
@@ -19,7 +19,7 @@ public class Terminal {
     private Output output;
     private Pipe command;
 
-    public Terminal(final AbstractFileSystem fileSystem, final Parser parser, final Output output) {
+    public Terminal(final VirtualFileSystem fileSystem, final Parser parser, final Output output) {
 	this.parser = parser;
 	this.output = output;
 	command = new Pipe(fileSystem, new Path());

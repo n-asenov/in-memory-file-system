@@ -3,15 +3,15 @@ package commands;
 import java.io.IOException;
 import java.util.List;
 
-import filesystem.AbstractFileSystem;
+import filesystem.DirectoryController;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class MakeDirectory implements Command {
-    private AbstractFileSystem fileSystem;
+    private DirectoryController fileSystem;
     private Path currentDirectory;
 
-    public MakeDirectory(AbstractFileSystem fileSystem, Path currentDirectory) {
+    public MakeDirectory(DirectoryController fileSystem, Path currentDirectory) {
 	this.fileSystem = fileSystem;
 	this.currentDirectory = currentDirectory;
     }

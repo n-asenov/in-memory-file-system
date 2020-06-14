@@ -1,6 +1,6 @@
 package commands;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -11,14 +11,12 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import commands.ChangeDirectory;
-import filesystem.AbstractFileSystem;
 import filesystem.VirtualFileSystem;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class ChangeDirectoryTest {
-    private AbstractFileSystem fileSystem;
+    private VirtualFileSystem fileSystem;
     private ChangeDirectory command;
     private Path path;
     private List<String> options;

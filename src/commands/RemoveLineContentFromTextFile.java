@@ -3,15 +3,15 @@ package commands;
 import java.io.IOException;
 import java.util.List;
 
-import filesystem.AbstractFileSystem;
+import filesystem.VirtualFileSystem;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class RemoveLineContentFromTextFile implements Command {
-    private AbstractFileSystem fileSystem;
+    private VirtualFileSystem fileSystem;
     private Path currentDirectory;
 
-    public RemoveLineContentFromTextFile(AbstractFileSystem fileSystem, Path currentDirectory) {
+    public RemoveLineContentFromTextFile(VirtualFileSystem fileSystem, Path currentDirectory) {
 	this.fileSystem = fileSystem;
 	this.currentDirectory = currentDirectory;
     }

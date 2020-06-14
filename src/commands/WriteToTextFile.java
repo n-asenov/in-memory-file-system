@@ -3,16 +3,16 @@ package commands;
 import java.io.IOException;
 import java.util.List;
 
-import filesystem.AbstractFileSystem;
+import filesystem.VirtualFileSystem;
 import filesystem.exceptions.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
 import path.Path;
 
 public class WriteToTextFile implements Command {
-    private AbstractFileSystem fileSystem;
+    private VirtualFileSystem fileSystem;
     private Path currentDirectory;
 
-    public WriteToTextFile(AbstractFileSystem fileSystem, Path currentDirectory) {
+    public WriteToTextFile(VirtualFileSystem fileSystem, Path currentDirectory) {
 	this.fileSystem = fileSystem;
 	this.currentDirectory = currentDirectory;
     }

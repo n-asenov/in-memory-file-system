@@ -1,6 +1,7 @@
 package commands;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,8 +11,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import commands.RemoveLineContentFromTextFile;
-import filesystem.AbstractFileSystem;
 import filesystem.VirtualFileSystem;
 import filesystem.exceptions.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
@@ -19,7 +18,7 @@ import path.Path;
 
 public class RemoveLineContentFromTextFileTest {
     private RemoveLineContentFromTextFile command;
-    private AbstractFileSystem fileSystem;
+    private VirtualFileSystem fileSystem;
     private List<String> options;
     private List<String> arguments;
 
