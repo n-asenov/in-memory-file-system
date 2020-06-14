@@ -19,31 +19,33 @@ public class ChangeDirectory implements Command {
 
     @Override
     public String execute(List<String> arguments, Set<String> options)
-	    throws FileNotFoundException, InvalidArgumentException {
-	validateOptions(options);
+	    throws InvalidArgumentException, FileNotFoundException {
 	validateArguments(arguments);
+	validateOptions(options);
 
 	String newCurrentDirectory = "";
 
-	if (arguments.size() != 0) {
-	    newCurrentDirectory = currentDirectory.getAbsolutePath(arguments.get(0));
+	if (!arguments.isEmpty()) {
+	    int newCurrentDirectoryIndex = 0;
+	    String newCurrentDirectoryRelativePath = arguments.get(newCurrentDirectoryIndex);
+	    newCurrentDirectory = currentDirectory.getAbsolutePath(newCurrentDirectoryRelativePath);
 	    validateNewCurrentDirectory(newCurrentDirectory);
 	}
 
 	currentDirectory.setCurrentDirectory(newCurrentDirectory);
-
-	return null;
-    }
-
-    private void validateOptions(Set<String> options) throws InvalidArgumentException {
-	if (options.size() != 0) {
-	    throw new InvalidArgumentException("Invalid option");
-	}
+	return "";
     }
 
     private void validateArguments(List<String> arguments) throws InvalidArgumentException {
-	if (arguments.size() > 1) {
+	final int maxArgumentsCount = 1;
+	if (arguments.size() > maxArgumentsCount) {
 	    throw new InvalidArgumentException("Invalid number of arguments");
+	}
+    }
+    
+    private void validateOptions(Set<String> options) throws InvalidArgumentException {
+	if (!options.isEmpty()) {
+	    throw new InvalidArgumentException("Invalid option");
 	}
     }
 
