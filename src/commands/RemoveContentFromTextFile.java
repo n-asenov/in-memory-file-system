@@ -2,6 +2,7 @@ package commands;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Set;
 
 import filesystem.TextFileContentController;
 import filesystem.exceptions.InvalidArgumentException;
@@ -20,7 +21,7 @@ public class RemoveContentFromTextFile implements Command {
     }
 
     @Override
-    public String execute(List<String> arguments, List<String> options)
+    public String execute(List<String> arguments, Set<String> options)
 	    throws InvalidArgumentException, FileNotFoundException {
 	validateArguments(arguments);
 	validateOptions(options);
@@ -47,7 +48,7 @@ public class RemoveContentFromTextFile implements Command {
 	}
     }
 
-    private void validateOptions(List<String> options) throws InvalidArgumentException {
+    private void validateOptions(Set<String> options) throws InvalidArgumentException {
 	if (!options.isEmpty()) {
 	    throw new InvalidArgumentException("Invalid option");
 	}

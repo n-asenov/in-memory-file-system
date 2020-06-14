@@ -3,6 +3,7 @@ package commands;
 import java.io.FileNotFoundException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import filesystem.DirectoryContentController;
 import filesystem.File;
@@ -22,7 +23,7 @@ public class ListDirectoryContent implements Command {
     }
 
     @Override
-    public String execute(List<String> arguments, List<String> options) throws InvalidArgumentException, FileNotFoundException {
+    public String execute(List<String> arguments, Set<String> options) throws InvalidArgumentException, FileNotFoundException {
 	Comparator<File> comparator = getComparator(options);
 	int size = arguments.size();
 
@@ -42,7 +43,7 @@ public class ListDirectoryContent implements Command {
 	return result.toString();
     }
 
-    private Comparator<File> getComparator(List<String> options) throws InvalidArgumentException {
+    private Comparator<File> getComparator(Set<String> options) throws InvalidArgumentException {
 	Comparator<File> comparator = DEFAULT;
 
 	for (String option : options) {

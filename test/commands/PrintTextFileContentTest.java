@@ -1,17 +1,18 @@
 package commands;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import commands.GetTextFileContent;
 import filesystem.VirtualFileSystem;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
@@ -19,7 +20,7 @@ import path.Path;
 public class PrintTextFileContentTest {
     private GetTextFileContent command;
     private VirtualFileSystem fs;
-    private List<String> options;
+    private Set<String> options;
     private List<String> arguments;
 
     @Before
@@ -31,7 +32,7 @@ public class PrintTextFileContentTest {
 	    throw new IllegalArgumentException();
 	}
 	command = new GetTextFileContent(fs, new Path());
-	options = new ArrayList<String>();
+	options = new HashSet<String>();
 	arguments = new ArrayList<String>();
     }
 

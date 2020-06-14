@@ -5,7 +5,9 @@ import static org.junit.Assert.assertEquals;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,14 +20,14 @@ import path.Path;
 public class RemoveContentFromTextFileTest {
     private RemoveContentFromTextFile command;
     private VirtualFileSystem fileSystem;
-    private List<String> options;
+    private Set<String> options;
     private List<String> arguments;
 
     @Before
     public void init() {
 	fileSystem = new VirtualFileSystem();
 	command = new RemoveContentFromTextFile(fileSystem, new Path());
-	options = new ArrayList<String>();
+	options = new HashSet<>();
 	arguments = new ArrayList<String>();
     }
 

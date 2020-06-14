@@ -2,7 +2,7 @@ package terminal;
 
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import commands.Pipe;
 import filesystem.VirtualFileSystem;
@@ -27,7 +27,7 @@ public class Terminal {
 	while (true) {
 	    if (parser.hasNextLine()) {
 		try {
-		    output.print(command.execute(parser.getCommandLine(), new ArrayList<String>()));
+		    output.print(command.execute(parser.getCommandLine(), new HashSet<>()));
 		} catch (FileAlreadyExistsException | FileNotFoundException | NotEnoughMemoryException
 			| InvalidArgumentException e) {
 		    output.print(e.getMessage());

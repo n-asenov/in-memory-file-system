@@ -6,7 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +21,7 @@ public class ChangeDirectoryTest {
     private VirtualFileSystem fileSystem;
     private ChangeDirectory command;
     private Path path;
-    private List<String> options;
+    private Set<String> options;
     private List<String> arguments;
 
     @Before
@@ -27,7 +29,7 @@ public class ChangeDirectoryTest {
 	path = new Path();
 	fileSystem = new VirtualFileSystem();
 	command = new ChangeDirectory(fileSystem, path);
-	options = new ArrayList<String>();
+	options = new HashSet<>();
 	arguments = new ArrayList<String>();
     }
 

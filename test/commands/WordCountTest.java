@@ -1,16 +1,17 @@
 package commands;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import commands.WordCount;
 import filesystem.VirtualFileSystem;
 import filesystem.exceptions.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
@@ -19,14 +20,14 @@ import path.Path;
 public class WordCountTest {
     private VirtualFileSystem fileSystem;
     private WordCount command;
-    private List<String> options;
+    private Set<String> options;
     private List<String> arguments;
 
     @Before
     public void init() throws FileAlreadyExistsException, InvalidArgumentException {
 	fileSystem = new VirtualFileSystem();
 	command = new WordCount(fileSystem, new Path());
-	options = new ArrayList<String>();
+	options = new HashSet<>();
 	arguments = new ArrayList<String>();
     }
 

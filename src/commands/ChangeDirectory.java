@@ -2,6 +2,7 @@ package commands;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Set;
 
 import filesystem.DirectoryValidator;
 import filesystem.exceptions.InvalidArgumentException;
@@ -17,7 +18,7 @@ public class ChangeDirectory implements Command {
     }
 
     @Override
-    public String execute(List<String> arguments, List<String> options)
+    public String execute(List<String> arguments, Set<String> options)
 	    throws FileNotFoundException, InvalidArgumentException {
 	validateOptions(options);
 	validateArguments(arguments);
@@ -34,7 +35,7 @@ public class ChangeDirectory implements Command {
 	return null;
     }
 
-    private void validateOptions(List<String> options) throws InvalidArgumentException {
+    private void validateOptions(Set<String> options) throws InvalidArgumentException {
 	if (options.size() != 0) {
 	    throw new InvalidArgumentException("Invalid option");
 	}

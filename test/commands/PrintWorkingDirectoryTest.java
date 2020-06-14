@@ -1,26 +1,27 @@
 package commands;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import commands.PrintWorkingDirectory;
 import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class PrintWorkingDirectoryTest {
     private PrintWorkingDirectory command;
-    private List<String> options;
+    private Set<String> options;
     private List<String> arguments;
 
     @Before
     public void init() {
 	command = new PrintWorkingDirectory(new Path());
-	options = new ArrayList<String>();
+	options = new HashSet<String>();
 	arguments = new ArrayList<String>();
     }
 

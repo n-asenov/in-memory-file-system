@@ -2,6 +2,7 @@ package commands;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Set;
 
 import filesystem.TextFileStatistics;
 import filesystem.exceptions.InvalidArgumentException;
@@ -17,9 +18,12 @@ public class WordCount implements Command {
     }
 
     @Override
-    public String execute(List<String> arguments, List<String> options) throws InvalidArgumentException, FileNotFoundException {
-	boolean getLines = validateOptions(options);
+    public String execute(List<String> arguments, Set<String> options) throws InvalidArgumentException, FileNotFoundException {
 	validateArguments(arguments);
+	
+	boolean getLines = validateOptions(options);
+	
+	
 
 	Integer result = arguments.size();
 
@@ -38,7 +42,13 @@ public class WordCount implements Command {
 	return result.toString();
     }
 
-    private boolean validateOptions(List<String> options) throws InvalidArgumentException {
+    private void validateArguments(List<String> arguments) throws InvalidArgumentException {
+	if (arguments.isEmpty()) {
+	    throw new InvalidArgumentException("Invalid number of arguments");
+	}
+    }
+    
+    private boolean validateOptions(Set<String> options) throws InvalidArgumentException {
 	boolean lines = false;
 	for (String option : options) {
 	    if (!option.equals("-l")) {
@@ -49,11 +59,7 @@ public class WordCount implements Command {
 	return lines;
     }
 
-    private void validateArguments(List<String> arguments) throws InvalidArgumentException {
-	if (arguments.size() == 0) {
-	    throw new InvalidArgumentException("Invalid number of arguments");
-	}
-    }
+    
 
     private Integer getLinesInText(List<String> text) {
 	int counter = 1;

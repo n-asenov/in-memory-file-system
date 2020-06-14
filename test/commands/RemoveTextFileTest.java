@@ -6,7 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,14 +23,14 @@ public class RemoveTextFileTest {
     
     private RemoveTextFile command;
     private VirtualFileSystem fileSystem;
-    private List<String> options;
+    private Set<String> options;
     private List<String> arguments;
 
     @Before
     public void init() {
 	fileSystem = new VirtualFileSystem();
 	command = new RemoveTextFile(fileSystem, new Path());
-	options = new ArrayList<String>();
+	options = new HashSet<>();
 	arguments = new ArrayList<String>();
     }
 

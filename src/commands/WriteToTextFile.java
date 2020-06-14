@@ -2,6 +2,7 @@ package commands;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Set;
 
 import filesystem.TextFileContentController;
 import filesystem.exceptions.InvalidArgumentException;
@@ -20,7 +21,7 @@ public class WriteToTextFile implements Command {
     }
 
     @Override
-    public String execute(List<String> arguments, List<String> options)
+    public String execute(List<String> arguments, Set<String> options)
 	    throws InvalidArgumentException, FileNotFoundException, NotEnoughMemoryException {
 	validateArguments(arguments);
 	validateOptions(options);
@@ -46,7 +47,7 @@ public class WriteToTextFile implements Command {
 	}
     }
 
-    private void validateOptions(List<String> options) throws InvalidArgumentException {
+    private void validateOptions(Set<String> options) throws InvalidArgumentException {
 	for (String option : options) {
 	    if (option.equals("-overwrite")) {
 		overwrite = true;
