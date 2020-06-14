@@ -11,7 +11,7 @@ public class CommandFactory {
     private Map<String, Command> commands;
 
     public CommandFactory(VirtualFileSystem fileSystem, Path currentDirectory) {
-	commands = new HashMap<String, Command>();
+	commands = new HashMap<>();
 	commands.put("cd", new ChangeDirectory(fileSystem, currentDirectory));
 	commands.put("create_file", new CreateTextFile(fileSystem, currentDirectory));
 	commands.put("ls", new ListDirectoryContent(fileSystem, currentDirectory));
@@ -24,13 +24,13 @@ public class CommandFactory {
 	commands.put("wc", new WordCount(fileSystem, currentDirectory));
     }
 
-    public Command make(String command) throws InvalidArgumentException {
-	Command result = commands.get(command);
+    public Command getCommand(String commandName) throws InvalidArgumentException {
+	Command command = commands.get(commandName);
 
-	if (result == null) {
+	if (command == null) {
 	    throw new InvalidArgumentException("Invalid command");
 	}
 
-	return result;
+	return command;
     }
 }

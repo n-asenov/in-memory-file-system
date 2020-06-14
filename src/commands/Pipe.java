@@ -37,7 +37,7 @@ public class Pipe implements Command {
 		    }
 		}
 
-		result = factory.make(parser.getCommandName(command)).execute(parser.getCommandArguments(command),
+		result = factory.getCommand(parser.getCommandName(command)).execute(parser.getCommandArguments(command),
 			parser.getCommandOptions(command));
 
 		command.clear();
@@ -52,7 +52,7 @@ public class Pipe implements Command {
 	    }
 	}
 
-	return factory.make(parser.getCommandName(command)).execute(parser.getCommandArguments(command),
+	return factory.getCommand(parser.getCommandName(command)).execute(parser.getCommandArguments(command),
 		parser.getCommandOptions(command));
     }
 
