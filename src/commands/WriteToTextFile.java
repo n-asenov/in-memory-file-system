@@ -38,7 +38,6 @@ public class WriteToTextFile implements Command {
 	} else {
 	    fileSystem.appendToTextFile(absolutePath, line, lineContent);
 	}
-	
 
 	return null;
     }

@@ -15,7 +15,7 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
 	DirectoryController, DirectoryContentController, DirectoryValidator {
     public static final int MEMORY_CAPACITY = 1000;
     public static final String PATH_SEPARATOR = "/";
-    
+
     private Directory root;
     private Deque<File> deletedFiles;
     private int usedMemory;
@@ -52,23 +52,11 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
     @Override
     public void writeToTextFile(String absolutePath, int line, String content)
 	    throws FileNotFoundException, NotEnoughMemoryException, InvalidArgumentException {
-	Directory workDirectory = goToWorkDirectory(absolutePath);
+	TextFile textFile = getTextFile(absolutePath);
 
-	File file = workDirectory.getFile(getCurrentFile(absolutePath));
+	usedMemory -= textFile.getLineSize(line);
 
-	if (file == null) {
-	    throw new FileNotFoundException("Text file doesn't exists");
-	}
-
-	if (file instanceof Directory) {
-	    throw new FileNotFoundException("File is directory");
-	}
-
-	TextFile textFile = (TextFile) file;
-
-	if (!freeEnoughSpace(textFile, line, content, true)) {
-	    throw new NotEnoughMemoryException("Not enough memory");
-	}
+	freeEnoughSpace(textFile, line, content);
 
 	textFile.overwrite(line, content);
     }
@@ -76,6 +64,14 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
     @Override
     public void appendToTextFile(String absolutePath, int line, String content)
 	    throws FileNotFoundException, InvalidArgumentException, NotEnoughMemoryException {
+	TextFile textFile = getTextFile(absolutePath);
+
+	freeEnoughSpace(textFile, line, content);
+
+	textFile.append(line, content);
+    }
+    
+    private TextFile getTextFile(String absolutePath) throws InvalidArgumentException, FileNotFoundException {
 	Directory workDirectory = goToWorkDirectory(absolutePath);
 
 	File file = workDirectory.getFile(getCurrentFile(absolutePath));
@@ -88,86 +84,54 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
 	    throw new FileNotFoundException("File is directory");
 	}
 
-	TextFile textFile = (TextFile) file;
+	return (TextFile) file;
+    }
+    
+    private void freeEnoughSpace(TextFile file, int line, String newContent) throws NotEnoughMemoryException {
+	int sizeToAdd = newContent.length();
 
-	if (!freeEnoughSpace(textFile, line, content, false)) {
+	if (file.isEmptyLine(line)) {
+	    sizeToAdd += 1;
+	}
+
+	while (!deletedFiles.isEmpty() && usedMemory + sizeToAdd > MEMORY_CAPACITY) {
+	    File deletedFile = deletedFiles.removeFirst();
+	    usedMemory -= deletedFile.getSize();
+	}
+
+	if (usedMemory + sizeToAdd > MEMORY_CAPACITY) {
 	    throw new NotEnoughMemoryException("Not enough memory");
 	}
 
-	textFile.append(line, content);
+	usedMemory += sizeToAdd;
     }
 
     @Override
     public void removeContentFromLinesInTextFile(String absolutePath, int start, int end)
 	    throws FileNotFoundException, InvalidArgumentException {
-	Directory workDirectory = goToWorkDirectory(absolutePath);
+	TextFile textFile = getTextFile(absolutePath);
 
-	File file = workDirectory.getFile(getCurrentFile(absolutePath));
-
-	if (file == null) {
-	    throw new FileNotFoundException("Text file doesn't exists");
-	}
-
-	if (file instanceof Directory) {
-	    throw new FileNotFoundException("File is directory");
-	}
-
-	TextFile textFile = (TextFile) file;
 	textFile.removeContentFromLines(start, end);
     }
 
     @Override
     public String getTextFileContent(String absolutePath) throws FileNotFoundException, InvalidArgumentException {
-	Directory workDirectory = goToWorkDirectory(absolutePath);
-
-	File file = workDirectory.getFile(getCurrentFile(absolutePath));
-
-	if (file == null) {
-	    throw new FileNotFoundException("Text file doesn't exists");
-	}
-
-	if (file instanceof Directory) {
-	    throw new FileNotFoundException("File is directory");
-	}
-
-	TextFile textFile = (TextFile) file;
+	TextFile textFile = getTextFile(absolutePath);
 
 	return textFile.getContent();
     }
 
     @Override
     public Integer getWordCount(String absolutePath) throws FileNotFoundException, InvalidArgumentException {
-	Directory workDirectory = goToWorkDirectory(absolutePath);
+	TextFile textFile = getTextFile(absolutePath);
 
-	File file = workDirectory.getFile(getCurrentFile(absolutePath));
-
-	if (file == null) {
-	    throw new FileNotFoundException("Text file doesn't exists");
-	}
-
-	if (file instanceof Directory) {
-	    throw new FileNotFoundException("File is directory");
-	}
-
-	TextFile textFile = (TextFile) file;
 	return textFile.getNumberOfWords();
     }
 
     @Override
     public Integer getLineCount(String absolutePath) throws FileNotFoundException, InvalidArgumentException {
-	Directory workDirectory = goToWorkDirectory(absolutePath);
+	TextFile textFile = getTextFile(absolutePath);
 
-	File file = workDirectory.getFile(getCurrentFile(absolutePath));
-
-	if (file == null) {
-	    throw new FileNotFoundException("Text file doesn't exists");
-	}
-
-	if (file instanceof Directory) {
-	    throw new FileNotFoundException("File is directory");
-	}
-
-	TextFile textFile = (TextFile) file;
 	return textFile.getNumberOfLines();
     }
 
@@ -181,13 +145,7 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
     @Override
     public List<String> getDirectoryContent(String absolutePath, FilterBy option)
 	    throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
-	Directory workDirectory = goToWorkDirectory(absolutePath);
-
-	File file = workDirectory.getFile(getCurrentFile(absolutePath));
-
-	if (file == null) {
-	    throw new FileNotFoundException("Directory doesn't exists");
-	}
+	File file = getDirectory(absolutePath);
 
 	if (file instanceof TextFile) {
 	    throw new NotDirectoryException(file.getName());
@@ -209,6 +167,12 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
 
     @Override
     public boolean isDirectory(String absolutePath) throws FileNotFoundException, InvalidArgumentException {
+	File file = getDirectory(absolutePath);
+
+	return file instanceof Directory;
+    }
+    
+    private File getDirectory(String absolutePath) throws FileNotFoundException, InvalidArgumentException {
 	Directory workDirectory = goToWorkDirectory(absolutePath);
 
 	File file = workDirectory.getFile(getCurrentFile(absolutePath));
@@ -216,8 +180,8 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
 	if (file == null) {
 	    throw new FileNotFoundException("Directory doesn't exist");
 	}
-
-	return file instanceof Directory;
+	
+	return file;
     }
 
     private Directory goToWorkDirectory(String absolutePath) throws InvalidArgumentException {
@@ -249,31 +213,6 @@ public class VirtualFileSystem implements TextFileController, TextFileContentCon
 	}
 
 	return filePath[filePath.length - 1];
-    }
-
-    private boolean freeEnoughSpace(TextFile file, int line, String newContent, boolean overwrite)
-	    throws NotEnoughMemoryException {
-	int sizeToAdd = newContent.length();
-
-	if (file.isEmptyLine(line)) {
-	    sizeToAdd += 1;
-	}
-
-	if (overwrite) {
-	    sizeToAdd -= file.getLineSize(line);
-	}
-
-	while (!deletedFiles.isEmpty() && usedMemory + sizeToAdd > MEMORY_CAPACITY) {
-	    File deletedFile = deletedFiles.removeFirst();
-	    usedMemory -= deletedFile.getSize();
-	}
-
-	if (usedMemory + sizeToAdd > MEMORY_CAPACITY) {
-	    return false;
-	}
-
-	usedMemory += sizeToAdd;
-	return true;
     }
 
 }
