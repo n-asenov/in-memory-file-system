@@ -2,7 +2,7 @@ package commands;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,69 +17,80 @@ import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class ListDirectoryContentTest {
+    private VirtualFileSystem fileSystem;
     private ListDirectoryContent command;
-    private VirtualFileSystem fs;
-    private Set<String> options;
     private List<String> arguments;
-
+    private Set<String> options;
+    
     @Before
     public void init() {
-	fs = new VirtualFileSystem();
+	fileSystem = new VirtualFileSystem();
 	try {
-	    fs.makeDirectory("/home/dir1");
-	    fs.makeDirectory("/home/dir1/dir2");
-	    fs.makeDirectory("/home/dir1/dir3");
+	    fileSystem.makeDirectory("/home/dir1");
+	    fileSystem.makeDirectory("/home/dir1/dir2");
+	    fileSystem.makeDirectory("/home/dir1/dir3");
 	} catch (FileAlreadyExistsException | InvalidArgumentException e) {
-	    throw new IllegalArgumentException();
+	    throw new IllegalArgumentException(e);
 	}
-	command = new ListDirectoryContent(fs, new Path());
+	command = new ListDirectoryContent(fileSystem, new Path());
+	arguments = new ArrayList<>();
 	options = new HashSet<>();
-	arguments = new ArrayList<String>();
     }
 
     @Test(expected = InvalidArgumentException.class)
     public void execute_CommandWithInvalidOptions_ThrowIllegalArgumentException()
-	    throws InvalidArgumentException, IOException {
+	    throws InvalidArgumentException, FileNotFoundException {
 	options.add("al");
 
 	command.execute(arguments, options);
     }
 
     @Test
-    public void execute_listEmptyDirectory_ReturnEmptyString() throws InvalidArgumentException, IOException {
+    public void execute_listEmptyDirectory_ReturnEmptyString() throws InvalidArgumentException, FileNotFoundException {
 	arguments.add("/home/dir1/dir2");
-
-	assertEquals("", command.execute(arguments, options));
+	
+	String expectedResult = "";
+	String actualResult = command.execute(arguments, options);
+	assertEquals(expectedResult, actualResult);
     }
 
     @Test
-    public void execute_listTwoDirectories_ReturnContetnOfDirectories() throws InvalidArgumentException, IOException {
+    public void execute_listTwoDirectories_ReturnContetnOfDirectories() throws InvalidArgumentException, FileNotFoundException {
 	arguments.add("/");
 	arguments.add("/home");
 
-	assertEquals("home " + System.lineSeparator() + "dir1 ", command.execute(arguments, options));
+	String expectedResult = "home " + System.lineSeparator() + "dir1 ";
+	String actualResult = command.execute(arguments, options);
+	assertEquals(expectedResult, actualResult);
     }
 
     @Test
     public void execute_listDirectoryWithSortedDescOption_ReturnContentSortedDesc()
-	    throws InvalidArgumentException, IOException {
-	options.add("-sortedDesc");
+	    throws InvalidArgumentException, FileNotFoundException {
 	arguments.add("/");
+	options.add("-sortedDesc");
+	
 
-	assertEquals("home ", command.execute(arguments, options));
+	String expectedResult = "home ";
+	String actualResult = command.execute(arguments, options);
+	assertEquals(expectedResult, actualResult);
     }
 
     @Test
     public void execute_listDirectoryWithRelativePath_ReturnContentOfDirectory()
-	    throws InvalidArgumentException, IOException {
+	    throws InvalidArgumentException, FileNotFoundException {
 	arguments.add("dir1");
 
-	assertEquals("dir2 dir3 ", command.execute(arguments, options));
+	String expectedResult = "dir2 dir3 ";
+	String actualResult = command.execute(arguments, options);
+	assertEquals(expectedResult, actualResult);
     }
 
     @Test
     public void execute_listDirectoryWithNoArguments_ReturnContentOfCurrentDirectory()
-	    throws InvalidArgumentException, IOException {
-	assertEquals("dir1 ", command.execute(arguments, options));
+	    throws InvalidArgumentException, FileNotFoundException {
+	String expectedResult = "dir1 ";
+	String actualResult = command.execute(arguments, options);
+	assertEquals(expectedResult, actualResult);
     }
 }
