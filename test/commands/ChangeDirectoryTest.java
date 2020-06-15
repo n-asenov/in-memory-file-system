@@ -3,7 +3,7 @@ package commands;
 import static org.junit.Assert.assertEquals;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,23 +19,23 @@ import path.Path;
 
 public class ChangeDirectoryTest {
     private VirtualFileSystem fileSystem;
-    private ChangeDirectory command;
     private Path path;
-    private Set<String> options;
+    private ChangeDirectory command;
     private List<String> arguments;
+    private Set<String> options;
 
     @Before
     public void init() {
-	path = new Path();
 	fileSystem = new VirtualFileSystem();
+	path = new Path();
 	command = new ChangeDirectory(fileSystem, path);
+	arguments = new ArrayList<>();
 	options = new HashSet<>();
-	arguments = new ArrayList<String>();
     }
 
     @Test(expected = InvalidArgumentException.class)
     public void execute_InvalidOption_ThrowInvalidArgumentException()
-	    throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
+	    throws InvalidArgumentException, FileNotFoundException {
 	options.add("-a");
 
 	command.execute(arguments, options);
@@ -43,7 +43,7 @@ public class ChangeDirectoryTest {
 
     @Test(expected = InvalidArgumentException.class)
     public void execute_InvalidArguments_ThrowInvalidArgumentException()
-	    throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
+	    throws InvalidArgumentException, FileNotFoundException {
 	arguments.add("/home");
 	arguments.add("/dir1");
 
@@ -52,7 +52,7 @@ public class ChangeDirectoryTest {
 
     @Test(expected = FileNotFoundException.class)
     public void execute_ChangeDirectoryToNonExistentDirectory_ThrowFileNotFoundExcepiton()
-	    throws NotDirectoryException, FileNotFoundException, InvalidArgumentException {
+	    throws InvalidArgumentException, FileNotFoundException {
 	arguments.add("/home/dir1");
 
 	command.execute(arguments, options);
@@ -60,7 +60,7 @@ public class ChangeDirectoryTest {
 
     @Test(expected = FileNotFoundException.class)
     public void execute_ChangeDirectoryToTextFile_ThrowNotDirectoryException()
-	    throws InvalidArgumentException, IOException {
+	    throws InvalidArgumentException, FileNotFoundException, FileAlreadyExistsException {
 	fileSystem.createTextFile("/home/f1");
 
 	arguments.add("f1");
@@ -70,17 +70,17 @@ public class ChangeDirectoryTest {
 
     @Test
     public void execute_RelativePathToGoBackToParentDirectory_ReturnToParentDirectory()
-	    throws FileNotFoundException, NotDirectoryException, InvalidArgumentException {
+	    throws InvalidArgumentException, FileNotFoundException {
 	arguments.add("..");
 
 	command.execute(arguments, options);
 
-	assertEquals("/", path.getCurrentDirectory());
+	assertEquals("We should go back to root directory from home directory", "/", path.getCurrentDirectory());
     }
 
     @Test
     public void execute_ChangeDirectoryToCurrentDirectory_CurrentDirectoryDoesntChange()
-	    throws FileNotFoundException, NotDirectoryException, InvalidArgumentException {
+	    throws InvalidArgumentException, FileNotFoundException {
 	arguments.add(".");
 
 	command.execute(arguments, options);
