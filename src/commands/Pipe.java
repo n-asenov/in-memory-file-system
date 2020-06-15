@@ -3,7 +3,6 @@ package commands;
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -14,6 +13,8 @@ import parser.CommandParser;
 import path.Path;
 
 public class Pipe implements Command {
+    private static final String PIPE_COMMAND = "|";
+
     private CommandFactory factory;
     private CommandParser parser;
 
@@ -23,43 +24,23 @@ public class Pipe implements Command {
     }
 
     @Override
-    public String execute(List<String> arguments, Set<String> options)
-	    throws InvalidArgumentException, NotEnoughMemoryException, FileAlreadyExistsException, FileNotFoundException {
-	validateOptions(options);
+    public String execute(List<String> arguments, Set<String> options) throws InvalidArgumentException,
+	    FileAlreadyExistsException, FileNotFoundException, NotEnoughMemoryException {
 	validateArguments(arguments);
+	validateOptions(options);
 
-	List<String> command = new ArrayList<String>();
-	String result = null;
-
-	for (String argument : arguments) {
-	    if (argument.equals("|")) {
-		if (result != null && !result.equals("")) {
-		    for (String arg : splitResult(result)) {
-			command.add(arg);
-		    }
-		}
-
-		result = factory.getCommand(parser.getCommandName(command)).execute(parser.getCommandArguments(command),
-			parser.getCommandOptions(command));
-
-		command.clear();
-	    } else {
-		command.add(argument);
-	    }
-	}
-
-	if (result != null && !result.equals("")) {
-	    for (String arg : splitResult(result)) {
-		command.add(arg);
-	    }
-	}
-
-	return factory.getCommand(parser.getCommandName(command)).execute(parser.getCommandArguments(command),
-		parser.getCommandOptions(command));
+	return executeCommands(arguments);
     }
 
     private void validateArguments(List<String> arguments) throws InvalidArgumentException {
-	if (arguments.get(0).equals("|") || arguments.get(arguments.size() - 1).equals("|")) {
+	if (arguments.isEmpty()) {
+	    throw new InvalidArgumentException("Invalid arguments");
+	}
+
+	boolean isFirstArgumentPipeCommand = arguments.get(0).equals(PIPE_COMMAND);
+	boolean isLastArgumentPipeCommand = arguments.get(arguments.size() - 1).equals(PIPE_COMMAND);
+
+	if (isFirstArgumentPipeCommand || isLastArgumentPipeCommand) {
 	    throw new InvalidArgumentException("Invalid arguments");
 	}
     }
@@ -70,7 +51,41 @@ public class Pipe implements Command {
 	}
     }
 
-    private List<String> splitResult(String result) {
-	return Arrays.asList(result.split(" "));
+    private String executeCommands(List<String> arguments) throws InvalidArgumentException, FileAlreadyExistsException,
+	    FileNotFoundException, NotEnoughMemoryException {
+	List<String> currentCommand = new ArrayList<>();
+	String lastCommandResult = "";
+
+	for (String argument : arguments) {
+	    if (!argument.equals(PIPE_COMMAND)) {
+		currentCommand.add(argument);
+	    } else {
+		addLastCommandResultToCurrentCommand(currentCommand, lastCommandResult);
+		lastCommandResult = executeCommand(currentCommand);
+		currentCommand.clear();
+	    }
+	}
+
+	addLastCommandResultToCurrentCommand(currentCommand, lastCommandResult);
+	return executeCommand(currentCommand);
+    }
+
+    private void addLastCommandResultToCurrentCommand(List<String> currentCommand, String lastCommandResult) {
+	if (!lastCommandResult.equals("")) {
+	    String[] arguments = lastCommandResult.split(" ");
+	    for (String argument : arguments) {
+		currentCommand.add(argument);
+	    }
+	}
+    }
+
+    private String executeCommand(List<String> command) throws InvalidArgumentException, FileAlreadyExistsException,
+	    FileNotFoundException, NotEnoughMemoryException {
+	String commandName = parser.getCommandName(command);
+	Command commandExecutor = factory.getCommand(commandName);
+	List<String> commandArguments = parser.getCommandArguments(command);
+	Set<String> commnadOptions = parser.getCommandOptions(command);
+
+	return commandExecutor.execute(commandArguments, commnadOptions);
     }
 }

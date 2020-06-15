@@ -33,6 +33,7 @@ public class PipeTest {
     @Test(expected = InvalidArgumentException.class)
     public void execute_InvalidOption_ThrowInvalidArgumentException()
 	    throws InvalidArgumentException, NotEnoughMemoryException, IOException {
+	arguments.add("command");
 	options.add("-l");
 
 	command.execute(arguments, options);
