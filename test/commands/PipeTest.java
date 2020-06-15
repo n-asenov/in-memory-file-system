@@ -2,7 +2,8 @@ package commands;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,20 +20,20 @@ import path.Path;
 public class PipeTest {
     private VirtualFileSystem fileSystem;
     private Pipe command;
-    private Set<String> options;
     private List<String> arguments;
+    private Set<String> options;
 
     @Before
     public void init() {
 	fileSystem = new VirtualFileSystem();
 	command = new Pipe(fileSystem, new Path());
-	options = new HashSet<String>();
-	arguments = new ArrayList<String>();
+	options = new HashSet<>();
+	arguments = new ArrayList<>();
     }
 
     @Test(expected = InvalidArgumentException.class)
-    public void execute_InvalidOption_ThrowInvalidArgumentException()
-	    throws InvalidArgumentException, NotEnoughMemoryException, IOException {
+    public void execute_InvalidOption_ThrowInvalidArgumentException() throws InvalidArgumentException,
+	    FileAlreadyExistsException, FileNotFoundException, NotEnoughMemoryException {
 	arguments.add("command");
 	options.add("-l");
 
@@ -40,16 +41,16 @@ public class PipeTest {
     }
 
     @Test(expected = InvalidArgumentException.class)
-    public void execute_InvalidArgument_ThrowInvalidArgumentException()
-	    throws InvalidArgumentException, NotEnoughMemoryException, IOException {
+    public void execute_InvalidArgument_ThrowInvalidArgumentException() throws InvalidArgumentException,
+	    NotEnoughMemoryException, FileAlreadyExistsException, FileNotFoundException {
 	arguments.add("|");
 
 	command.execute(arguments, options);
     }
 
     @Test
-    public void execute_NoPipe_ReturnResultOfCommand()
-	    throws InvalidArgumentException, NotEnoughMemoryException, IOException {
+    public void execute_NoPipe_ReturnResultOfCommand() throws InvalidArgumentException, NotEnoughMemoryException,
+	    FileAlreadyExistsException, FileNotFoundException {
 	arguments.add("ls");
 	arguments.add("/");
 
@@ -57,8 +58,8 @@ public class PipeTest {
     }
 
     @Test
-    public void execute_CommandLineWithPipe_ReturnResultOfLastCommand()
-	    throws InvalidArgumentException, NotEnoughMemoryException, IOException {
+    public void execute_CommandLineWithPipe_ReturnResultOfLastCommand() throws InvalidArgumentException,
+	    NotEnoughMemoryException, FileAlreadyExistsException, FileNotFoundException {
 	fileSystem.makeDirectory("/home/dir1");
 	fileSystem.makeDirectory("/home/dir2");
 	fileSystem.makeDirectory("/home/dir3");
