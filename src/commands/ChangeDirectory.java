@@ -39,13 +39,13 @@ public class ChangeDirectory implements Command {
     private void validateArguments(List<String> arguments) throws InvalidArgumentException {
 	final int maxArgumentsCount = 1;
 	if (arguments.size() > maxArgumentsCount) {
-	    throw new InvalidArgumentException("Invalid number of arguments");
+	    throw new InvalidArgumentException("Too many arguments");
 	}
     }
     
     private void validateOptions(Set<String> options) throws InvalidArgumentException {
 	if (!options.isEmpty()) {
-	    throw new InvalidArgumentException("Invalid option");
+	    throw new InvalidArgumentException(INVALID_OPTION_MESSAGE);
 	}
     }
 

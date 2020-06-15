@@ -9,6 +9,9 @@ import filesystem.exceptions.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
 
 public interface Command {
+    public static final String INVALID_ARGUMENT_MESSAGE = "Invalid argument";
+    public static final String INVALID_OPTION_MESSAGE = "Invalid option";
+    
     public String execute(List<String> arguments, Set<String> options) throws InvalidArgumentException,
 	    FileAlreadyExistsException, FileNotFoundException, NotEnoughMemoryException;
 }

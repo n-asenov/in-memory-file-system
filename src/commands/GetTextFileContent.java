@@ -42,13 +42,13 @@ public class GetTextFileContent implements Command {
 
     private void validateArguments(List<String> arguments) throws InvalidArgumentException {
 	if (arguments.isEmpty()) {
-	    throw new InvalidArgumentException("Invalid argument");
+	    throw new InvalidArgumentException(INVALID_ARGUMENT_MESSAGE);
 	}
     }
     
     private void validateOptions(Set<String> options) throws InvalidArgumentException {
 	if (!options.isEmpty()) {
-	    throw new InvalidArgumentException("Invalid option");
+	    throw new InvalidArgumentException(INVALID_OPTION_MESSAGE);
 	}
     }
 }

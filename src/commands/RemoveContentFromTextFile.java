@@ -50,7 +50,7 @@ public class RemoveContentFromTextFile implements Command {
 
     private void validateOptions(Set<String> options) throws InvalidArgumentException {
 	if (!options.isEmpty()) {
-	    throw new InvalidArgumentException("Invalid option");
+	    throw new InvalidArgumentException(INVALID_OPTION_MESSAGE);
 	}
     }
     
@@ -58,7 +58,7 @@ public class RemoveContentFromTextFile implements Command {
 	final int intervalLength = 2;
 	
 	if (interval.length != intervalLength) {
-	    throw new InvalidArgumentException("Interval must have 2 integers by -");
+	    throw new InvalidArgumentException("Interval must have 2 integers with - inbetween");
 	}
     }
     

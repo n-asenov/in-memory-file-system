@@ -31,7 +31,7 @@ public class MakeDirectory implements Command {
 
     private void validateOptions(Set<String> options) throws InvalidArgumentException {
 	if (!options.isEmpty()) {
-	    throw new InvalidArgumentException("Invalid option");
+	    throw new InvalidArgumentException(INVALID_OPTION_MESSAGE);
 	}
     }
 }

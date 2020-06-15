@@ -11,10 +11,11 @@ import path.Path;
 
 public class WriteToTextFile implements Command {
     private static final String OVERWRITE_OPTION = "-overwrite";
+    private static final String INVALID_SECOND_ARGUMENT_MESSAGE = "Second argument must be a positive integer";
     
     private TextFileContentController fileSystem;
     private Path currentDirectory;
-    
+
     public WriteToTextFile(TextFileContentController fileSystem, Path currentDirectory) {
 	this.fileSystem = fileSystem;
 	this.currentDirectory = currentDirectory;
@@ -49,7 +50,7 @@ public class WriteToTextFile implements Command {
     private void validateOptions(Set<String> options) throws InvalidArgumentException {
 	for (String option : options) {
 	    if (!option.equals(OVERWRITE_OPTION)) {
-		throw new InvalidArgumentException("Invalid option");
+		throw new InvalidArgumentException(INVALID_OPTION_MESSAGE);
 	    }
 	}
     }
@@ -61,7 +62,7 @@ public class WriteToTextFile implements Command {
 	try {
 	    lineNumber = Integer.parseInt(arguments.get(lineNumberIndex));
 	} catch (NumberFormatException e) {
-	    throw new InvalidArgumentException("Second argument must be a positive integer", e);
+	    throw new InvalidArgumentException(INVALID_SECOND_ARGUMENT_MESSAGE, e);
 	}
 		
 	validateLineNumber(lineNumber);
@@ -71,7 +72,7 @@ public class WriteToTextFile implements Command {
 
     private void validateLineNumber(int lineNumber) throws InvalidArgumentException {
 	if (lineNumber <= 0) {
-	    throw new InvalidArgumentException("Second argument must be a positive integer");
+	    throw new InvalidArgumentException(INVALID_SECOND_ARGUMENT_MESSAGE);
 	}
     }
 

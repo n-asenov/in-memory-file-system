@@ -34,20 +34,20 @@ public class Pipe implements Command {
 
     private void validateArguments(List<String> arguments) throws InvalidArgumentException {
 	if (arguments.isEmpty()) {
-	    throw new InvalidArgumentException("Invalid arguments");
+	    throw new InvalidArgumentException(INVALID_ARGUMENT_MESSAGE);
 	}
 
 	boolean isFirstArgumentPipeCommand = arguments.get(0).equals(PIPE_COMMAND);
 	boolean isLastArgumentPipeCommand = arguments.get(arguments.size() - 1).equals(PIPE_COMMAND);
 
 	if (isFirstArgumentPipeCommand || isLastArgumentPipeCommand) {
-	    throw new InvalidArgumentException("Invalid arguments");
+	    throw new InvalidArgumentException(INVALID_ARGUMENT_MESSAGE);
 	}
     }
 
     private void validateOptions(Set<String> options) throws InvalidArgumentException {
 	if (!options.isEmpty()) {
-	    throw new InvalidArgumentException("Invalid option");
+	    throw new InvalidArgumentException(INVALID_OPTION_MESSAGE);
 	}
     }
 

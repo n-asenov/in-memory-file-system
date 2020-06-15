@@ -41,7 +41,7 @@ public class ListDirectoryContent implements Command {
     private void validateOptions(Set<String> options) throws InvalidArgumentException {
 	for (String option : options) {
 	    if (!option.equals(SIZE_DESCDENDING_OPTION)) {
-		throw new InvalidArgumentException("Invalid option");
+		throw new InvalidArgumentException(INVALID_OPTION_MESSAGE);
 	    }
 	}
     }

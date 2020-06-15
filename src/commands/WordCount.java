@@ -36,14 +36,14 @@ public class WordCount implements Command {
 
     private void validateArguments(List<String> arguments) throws InvalidArgumentException {
 	if (arguments.isEmpty()) {
-	    throw new InvalidArgumentException("Invalid number of arguments");
+	    throw new InvalidArgumentException(INVALID_ARGUMENT_MESSAGE);
 	}
     }
 
     private void validateOptions(Set<String> options) throws InvalidArgumentException {
 	for (String option : options) {
 	    if (!option.equals(COUNT_LINES_OPTION)) {
-		throw new InvalidArgumentException("Invalid option");
+		throw new InvalidArgumentException(INVALID_OPTION_MESSAGE);
 	    }
 	}
     }
