@@ -15,14 +15,14 @@ import path.Path;
 
 public class PrintWorkingDirectoryTest {
     private PrintWorkingDirectory command;
-    private Set<String> options;
     private List<String> arguments;
+    private Set<String> options;
 
     @Before
     public void init() {
 	command = new PrintWorkingDirectory(new Path());
-	options = new HashSet<String>();
-	arguments = new ArrayList<String>();
+	arguments = new ArrayList<>();
+	options = new HashSet<>();
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -41,7 +41,8 @@ public class PrintWorkingDirectoryTest {
 
     @Test
     public void execute_NoOptionsAndArguments_ReturnCurrentDirectory() throws InvalidArgumentException {
-	assertEquals("/home/", command.execute(arguments, options));
+	String expectedResult = "/home/";
+	String actualResult = command.execute(arguments, options);
+	assertEquals(expectedResult, actualResult);
     }
-
 }
