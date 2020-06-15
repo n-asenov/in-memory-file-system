@@ -11,9 +11,10 @@ import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class ListDirectoryContent implements Command {
+    private static final String SIZE_DESCDENDING_OPTION = "-sortedDesc";
     private static final Comparator<File> DEFAULT = (f1, f2) -> f1.getName().compareTo(f2.getName());
     private static final Comparator<File> SIZE_DESCENDING = (f1, f2) -> Integer.compare(f2.getSize(), f1.getSize());
-    
+
     private DirectoryContentController fileSystem;
     private Path currentDirectory;
 
@@ -23,48 +24,70 @@ public class ListDirectoryContent implements Command {
     }
 
     @Override
-    public String execute(List<String> arguments, Set<String> options) throws InvalidArgumentException, FileNotFoundException {
-	Comparator<File> comparator = getComparator(options);
-	int size = arguments.size();
+    public String execute(List<String> arguments, Set<String> options)
+	    throws InvalidArgumentException, FileNotFoundException {
+	validateOptions(options);
 
-	if (size == 0) {
-	    return appendDirectoryContent(fileSystem.getDirectoryContent(currentDirectory.getCurrentDirectory(), comparator));
+	Comparator<File> fileComparator = getFileComparator(options);
+	boolean listCurrentDirectoryContent = arguments.isEmpty();
+
+	if (listCurrentDirectoryContent) {
+	    return getCurrentDirectoryContent(fileComparator);
 	}
-
-	StringBuilder result = new StringBuilder();
-	for (int i = 0; i < size - 1; i++) {
-	    result.append(appendDirectoryContent(
-		    fileSystem.getDirectoryContent(currentDirectory.getAbsolutePath(arguments.get(i)), comparator)));
-	    result.append(System.lineSeparator());
-	}
-	result.append(appendDirectoryContent(
-		fileSystem.getDirectoryContent(currentDirectory.getAbsolutePath(arguments.get(size - 1)), comparator)));
-
-	return result.toString();
+	
+	return getDirectoriesContent(arguments, fileComparator);
     }
 
-    private Comparator<File> getComparator(Set<String> options) throws InvalidArgumentException {
-	Comparator<File> comparator = DEFAULT;
-
+    private void validateOptions(Set<String> options) throws InvalidArgumentException {
 	for (String option : options) {
-	    if (!option.equals("-sortedDesc")) {
+	    if (!option.equals(SIZE_DESCDENDING_OPTION)) {
 		throw new InvalidArgumentException("Invalid option");
 	    }
-	    
-	    comparator = SIZE_DESCENDING;
 	}
-
-	return comparator;
     }
 
-    private String appendDirectoryContent(List<String> content) {
-	StringBuilder result = new StringBuilder();
-
-	for (String fileName : content) {
-	    result.append(fileName);
-	    result.append(" ");
+    private Comparator<File> getFileComparator(Set<String> options) {
+	if (options.contains(SIZE_DESCDENDING_OPTION)) {
+	    return SIZE_DESCENDING;
 	}
 
-	return result.toString();
+	return DEFAULT;
+    }
+
+    private String getCurrentDirectoryContent(Comparator<File> fileComparator)
+	    throws InvalidArgumentException, FileNotFoundException {
+	String currentDirectoryPath = currentDirectory.getCurrentDirectory();
+	List<String> currentDirectoryContent = fileSystem.getDirectoryContent(currentDirectoryPath, fileComparator);
+	return getDirectoryContent(currentDirectoryContent);
+    }
+
+    private String getDirectoriesContent(List<String> arguments, Comparator<File> fileComparator)
+	    throws InvalidArgumentException, FileNotFoundException {
+	StringBuilder directoriesContent = new StringBuilder();
+	int directoriesCount = arguments.size() - 1;
+
+	for (int i = 0; i <= directoriesCount; i++) {
+	    String directoryPath = currentDirectory.getAbsolutePath(arguments.get(i));
+	    List<String> directoryContent = fileSystem.getDirectoryContent(directoryPath, fileComparator);
+	    directoriesContent.append(getDirectoryContent(directoryContent));
+
+	    if (i != directoriesCount) {
+		directoriesContent.append(System.lineSeparator());
+	    }
+	}
+
+	return directoriesContent.toString();
+    }
+
+    private String getDirectoryContent(List<String> content) {
+	final String fileSeparator = " ";
+	StringBuilder directoryContent = new StringBuilder();
+
+	for (String fileName : content) {
+	    directoryContent.append(fileName);
+	    directoryContent.append(fileSeparator);
+	}
+
+	return directoryContent.toString();
     }
 }
