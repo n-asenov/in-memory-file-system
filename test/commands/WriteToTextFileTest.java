@@ -2,7 +2,7 @@ package commands;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,27 +19,27 @@ import path.Path;
 
 public class WriteToTextFileTest {
     private WriteToTextFile command;
-    private VirtualFileSystem fs;
-    private Set<String> options;
+    private VirtualFileSystem fileSystem;
     private List<String> arguments;
+    private Set<String> options;
 
     @Before
     public void init() {
-	fs = new VirtualFileSystem();
+	fileSystem = new VirtualFileSystem();
 	try {
-	    fs.createTextFile("/home/f1");
+	    fileSystem.createTextFile("/home/f1");
 	} catch (FileAlreadyExistsException | InvalidArgumentException e) {
-	    throw new IllegalArgumentException();
+	    throw new IllegalArgumentException(e);
 	}
 
-	command = new WriteToTextFile(fs, new Path());
+	command = new WriteToTextFile(fileSystem, new Path());
+	arguments = new ArrayList<>();
 	options = new HashSet<>();
-	arguments = new ArrayList<String>();
     }
 
     @Test(expected = InvalidArgumentException.class)
     public void execute_CommandWithInvalidOption_ThrowIllegalArgumentException()
-	    throws NotEnoughMemoryException, InvalidArgumentException, IOException {
+	    throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
 	options.add("append");
 
 	command.execute(arguments, options);
@@ -47,7 +47,7 @@ public class WriteToTextFileTest {
 
     @Test(expected = InvalidArgumentException.class)
     public void execute_CommandWithInvalidNumberOfArguments_ThrowIllegalArgumentException()
-	    throws NotEnoughMemoryException, InvalidArgumentException, IOException {
+	    throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
 	arguments.add("/home/f1");
 
 	command.execute(arguments, options);
@@ -55,7 +55,7 @@ public class WriteToTextFileTest {
 
     @Test(expected = InvalidArgumentException.class)
     public void execute_CommnadWithWrongSecondArgument_ThrowIllegalArgumentException()
-	    throws NotEnoughMemoryException, InvalidArgumentException, IOException {
+	    throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
 	arguments.add("/home/f1");
 	arguments.add("Hello");
 	arguments.add("Hello, World!");
@@ -65,19 +65,19 @@ public class WriteToTextFileTest {
 
     @Test
     public void execute_ValidCommandWithNoOption_WriteContentToTextFile()
-	    throws NotEnoughMemoryException, InvalidArgumentException, IOException {
+	    throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
 	arguments.add("/home/f1");
 	arguments.add("1");
 	arguments.add("Hello, World!");
 
 	command.execute(arguments, options);
 
-	assertEquals("Hello, World!", fs.getTextFileContent("/home/f1"));
+	assertEquals("Hello, World!", fileSystem.getTextFileContent("/home/f1"));
     }
 
     @Test
     public void execute_ValidCommandWithOverwriteOption_WriteContentToTextFile()
-	    throws NotEnoughMemoryException, InvalidArgumentException, IOException {
+	    throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
 	options.add("-overwrite");
 	arguments.add("/home/f1");
 	arguments.add("1");
@@ -85,18 +85,18 @@ public class WriteToTextFileTest {
 
 	command.execute(arguments, options);
 
-	assertEquals("Hello, World!", fs.getTextFileContent("/home/f1"));
+	assertEquals("Hello, World!", fileSystem.getTextFileContent("/home/f1"));
     }
 
     @Test
     public void execute_ValidCommandWithRelativePath_WriteContentToTextFile()
-	    throws NotEnoughMemoryException, InvalidArgumentException, IOException {
+	    throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
 	arguments.add("f1");
 	arguments.add("1");
 	arguments.add("Hello, World!");
 
 	command.execute(arguments, options);
 
-	assertEquals("Hello, World!", fs.getTextFileContent("/home/f1"));
+	assertEquals("Hello, World!", fileSystem.getTextFileContent("/home/f1"));
     }
 }
