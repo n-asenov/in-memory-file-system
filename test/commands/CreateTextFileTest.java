@@ -2,6 +2,7 @@ package commands;
 
 import static org.junit.Assert.assertArrayEquals;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.InvalidPathException;
@@ -21,39 +22,40 @@ import path.Path;
 
 public class CreateTextFileTest {
     private static final Comparator<File> DEFAULT = (f1, f2) -> f1.getName().compareTo(f2.getName());
-    
+
+    private VirtualFileSystem fileSystem;
     private CreateTextFile command;
-    private VirtualFileSystem fs;
-    private Set<String> options;
     private List<String> arguments;
+    private Set<String> options;
 
     @Before
     public void init() {
-	fs = new VirtualFileSystem();
-	command = new CreateTextFile(fs, new Path());
+	fileSystem = new VirtualFileSystem();
+	command = new CreateTextFile(fileSystem, new Path());
+	arguments = new ArrayList<>();
 	options = new HashSet<>();
-	arguments = new ArrayList<String>();
     }
 
     @Test(expected = InvalidArgumentException.class)
-    public void execute_CommandWithOption_ThrowIllegalArgumentException() throws InvalidArgumentException, IOException {
-	options.add("-l");
+    public void execute_CommandWithOption_ThrowIllegalArgumentException()
+	    throws InvalidArgumentException, FileAlreadyExistsException {
 	arguments.add("/home/f1");
+	options.add("-l");
 
 	command.execute(arguments, options);
     }
 
     @Test(expected = FileAlreadyExistsException.class)
     public void execute_CreateAlreadyExistingFile_ThrowFileAlreadyExistsException()
-	    throws InvalidArgumentException, IOException {
+	    throws InvalidArgumentException, FileAlreadyExistsException {
 	arguments.add("/home");
 
 	command.execute(arguments, options);
     }
 
     @Test(expected = InvalidArgumentException.class)
-    public void execute_CreateTextFileWithWrongAbsolutePath_ThrowInvalidPathException()
-	    throws InvalidArgumentException, IOException {
+    public void execute_CreateTextFileWithWrongAbsolutePath_ThrowInvalidArgumentException()
+	    throws InvalidArgumentException, FileAlreadyExistsException {
 	arguments.add("/home/dir1/f1");
 
 	command.execute(arguments, options);
@@ -61,22 +63,26 @@ public class CreateTextFileTest {
 
     @Test
     public void execute_CreateNewTextFile_TextFileAddedToFileSystem()
-	    throws InvalidPathException, InvalidArgumentException, IOException {
+	    throws InvalidArgumentException, FileAlreadyExistsException, FileNotFoundException {
 	arguments.add("/home/f1");
 
 	command.execute(arguments, options);
+
 	String[] expectedResult = { "f1" };
-	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", DEFAULT).toArray());
+	String[] actualResult = getActualResult();
+	assertArrayEquals(expectedResult, actualResult);
     }
 
     @Test
     public void execute_CreateTextFileWithRelativePath_TextFileAddedToFileSystem()
-	    throws InvalidPathException, InvalidArgumentException, IOException {
+	    throws InvalidArgumentException, FileAlreadyExistsException, FileNotFoundException {
 	arguments.add("f1");
 
 	command.execute(arguments, options);
+
 	String[] expectedResult = { "f1" };
-	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", DEFAULT).toArray());
+	String[] actualResult = getActualResult();
+	assertArrayEquals(expectedResult, actualResult);
     }
 
     @Test
@@ -88,9 +94,15 @@ public class CreateTextFileTest {
 	arguments.add("/f1");
 
 	command.execute(arguments, options);
+
 	String[] expectedResult = { "f1", "f2", "f3" };
-	assertArrayEquals(expectedResult, fs.getDirectoryContent("/home", DEFAULT).toArray());
-	String[] expectedResult2 = { "f1", "home" };
-	assertArrayEquals(expectedResult2, fs.getDirectoryContent("/", DEFAULT).toArray());
+	String[] actualResult = getActualResult();
+	assertArrayEquals(expectedResult, actualResult);
+    }
+
+    private String[] getActualResult() throws FileNotFoundException, InvalidArgumentException {
+	List<String> directoryContent = fileSystem.getDirectoryContent("/home", DEFAULT);
+	String[] actualResult = directoryContent.toArray(new String[0]);
+	return actualResult;
     }
 }
