@@ -3,7 +3,6 @@ package commands;
 import static org.junit.Assert.assertArrayEquals;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.Comparator;
