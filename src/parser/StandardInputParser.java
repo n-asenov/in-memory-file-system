@@ -1,13 +1,14 @@
 package parser;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Scanner;
 
 public class StandardInputParser implements Parser {
     private Scanner scanner;
 
-    public StandardInputParser() {
-	scanner = new Scanner(System.in);
+    public StandardInputParser(InputStream input) {
+	scanner = new Scanner(input);
     }
 
     @Override

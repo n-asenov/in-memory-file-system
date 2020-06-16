@@ -1,6 +1,8 @@
 package parser;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
@@ -8,28 +10,30 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Test;
 
-import parser.StandardInputParser;
-
 public class StandardInputParserTest {
+    private Parser parser;
+    
     @After
-    public void restore() {
-	System.setIn(System.in);
+    public void close() {
+	parser.close();
     }
-
+    
     @Test
     public void hasNextLine_StandardInputHasNextLine_ReturnTrue() {
 	setUp("Next line");
 
-	StandardInputParser parser = new StandardInputParser();
-
 	assertTrue(parser.hasNextLine());
+    }
+    
+    private void setUp(String command) {
+	byte[] commandLine = command.getBytes();
+	ByteArrayInputStream input = new ByteArrayInputStream(commandLine);
+	parser = new StandardInputParser(input);
     }
 
     @Test
     public void hasNextLine_StandardInputDoesNotHaveNextLine_ReturnFalse() {
 	setUp("");
-
-	StandardInputParser parser = new StandardInputParser();
 
 	assertFalse(parser.hasNextLine());
     }
@@ -38,7 +42,6 @@ public class StandardInputParserTest {
     public void getCommnadLine_CommandWithNoOptionsAndArguments_ReturnTheCommandName() {
 	setUp("wc");
 
-	StandardInputParser parser = new StandardInputParser();
 	List<String> result = parser.getCommandLine();
 
 	assertEquals(1, result.size());
@@ -49,7 +52,6 @@ public class StandardInputParserTest {
     public void getCommnad_CommandWithArgumentsOnly_ReturnCommandAndArguemnts() {
 	setUp("ls /home/dir1");
 
-	StandardInputParser parser = new StandardInputParser();
 	List<String> result = parser.getCommandLine();
 
 	assertEquals(2, result.size());
@@ -59,21 +61,13 @@ public class StandardInputParserTest {
 
     @Test
     public void getCommand_CommandWithOptionsAndArguments_ReturnCommandAndSetOptionsAndArguments() {
-	setUp("ls -l /home /dir1");
+	setUp("ls -l /home");
 
-	StandardInputParser parser = new StandardInputParser();
 	List<String> result = parser.getCommandLine();
 
-	assertEquals(4, result.size());
+	assertEquals(3, result.size());
 	assertEquals("ls", result.get(0));
 	assertEquals("-l", result.get(1));
 	assertEquals("/home", result.get(2));
-	assertEquals("/dir1", result.get(3));
-    }
-
-    private void setUp(String command) {
-	ByteArrayInputStream input = new ByteArrayInputStream(command.getBytes());
-
-	System.setIn(input);
     }
 }
