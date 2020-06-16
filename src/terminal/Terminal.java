@@ -11,6 +11,7 @@ import commands.CommandFactory;
 import commands.exception.InvalidArgumentException;
 import filesystem.VirtualFileSystem;
 import filesystem.exceptions.NotEnoughMemoryException;
+import output.ConsoleOutput;
 import output.Output;
 import parser.CommandParser;
 import parser.Parser;
@@ -27,7 +28,14 @@ public class Terminal {
 	this.input = input;
 	this.output = output;
     }
-
+    
+    public static void main(String[] args) {
+	InputStream input = System.in;
+	Terminal terminal = new Terminal(new VirtualFileSystem(), input, new ConsoleOutput());
+	
+	terminal.run();
+    }
+    
     public void run() {
 	Parser inputParser = new StandardInputParser(input);
 	CommandParser commandParser = new CommandParser();
