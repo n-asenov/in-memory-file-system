@@ -96,4 +96,14 @@ public class WordCountTest {
 	String actualResult = command.execute(arguments, options);
 	assertEquals(expectedResult, actualResult);
     }
+    
+    @Test
+    public void execute_TextWithNewLine_ReturnNumberOfWordsInText() throws FileNotFoundException, InvalidArgumentException {
+	arguments.add("First Line" + System.lineSeparator());
+	arguments.add("word word word");
+	
+	String expectedResult = "5";
+	String actualResult = command.execute(arguments, options);
+	assertEquals(expectedResult, actualResult);
+    }
 }

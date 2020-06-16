@@ -85,7 +85,18 @@ public class WordCount implements Command {
 	    return linesInTextFile;
 	}
 	
-	int wordsInText = arguments.size();
+	return countWordsInText(arguments);
+    }
+
+    private int countWordsInText(List<String> arguments) {
+	final String whitespace = "\\s";
+	int wordsInText = 0;
+	
+	for (String argument : arguments) {
+	    int wordsInArgument = argument.split(whitespace).length;
+	    wordsInText += wordsInArgument;
+	}
+	
 	return wordsInText;
     }
     
