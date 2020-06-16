@@ -6,6 +6,6 @@ import commands.exception.InvalidArgumentException;
 
 public interface DirectoryController {
 
-    void makeDirectory(String absolutePath) throws InvalidArgumentException, FileAlreadyExistsException;
-
+  void makeDirectory(String absolutePath)
+      throws InvalidArgumentException, FileAlreadyExistsException;
 }

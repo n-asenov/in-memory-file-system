@@ -18,58 +18,62 @@ import filesystem.exceptions.NotEnoughMemoryException;
 import path.Path;
 
 public class PipeTest {
-    private VirtualFileSystem fileSystem;
-    private Command command;
-    private List<String> arguments;
-    private Set<String> options;
+  private VirtualFileSystem fileSystem;
+  private Command command;
+  private List<String> arguments;
+  private Set<String> options;
 
-    @Before
-    public void init() {
-	fileSystem = new VirtualFileSystem();
-	Path currentDirectory = new Path();
-	CommandFactory factory = new CommandFactory(fileSystem, currentDirectory);
-	command = new Pipe(factory);
-	arguments = new ArrayList<>();
-	options = new HashSet<>();
-    }
+  @Before
+  public void init() {
+    fileSystem = new VirtualFileSystem();
+    Path currentDirectory = new Path();
+    CommandFactory factory = new CommandFactory(fileSystem, currentDirectory);
+    command = new Pipe(factory);
+    arguments = new ArrayList<>();
+    options = new HashSet<>();
+  }
 
-    @Test(expected = InvalidArgumentException.class)
-    public void execute_InvalidOption_ThrowInvalidArgumentException() throws InvalidArgumentException,
-	    FileAlreadyExistsException, FileNotFoundException, NotEnoughMemoryException {
-	arguments.add("command");
-	options.add("-l");
+  @Test(expected = InvalidArgumentException.class)
+  public void execute_InvalidOption_ThrowInvalidArgumentException()
+      throws InvalidArgumentException, FileAlreadyExistsException, FileNotFoundException,
+          NotEnoughMemoryException {
+    arguments.add("command");
+    options.add("-l");
 
-	command.execute(arguments, options);
-    }
+    command.execute(arguments, options);
+  }
 
-    @Test(expected = InvalidArgumentException.class)
-    public void execute_InvalidArgument_ThrowInvalidArgumentException() throws InvalidArgumentException,
-	    NotEnoughMemoryException, FileAlreadyExistsException, FileNotFoundException {
-	arguments.add("|");
+  @Test(expected = InvalidArgumentException.class)
+  public void execute_InvalidArgument_ThrowInvalidArgumentException()
+      throws InvalidArgumentException, NotEnoughMemoryException, FileAlreadyExistsException,
+          FileNotFoundException {
+    arguments.add("|");
 
-	command.execute(arguments, options);
-    }
+    command.execute(arguments, options);
+  }
 
-    @Test
-    public void execute_NoPipe_ReturnResultOfCommand() throws InvalidArgumentException, NotEnoughMemoryException,
-	    FileAlreadyExistsException, FileNotFoundException {
-	arguments.add("ls");
-	arguments.add("/");
+  @Test
+  public void execute_NoPipe_ReturnResultOfCommand()
+      throws InvalidArgumentException, NotEnoughMemoryException, FileAlreadyExistsException,
+          FileNotFoundException {
+    arguments.add("ls");
+    arguments.add("/");
 
-	assertEquals("home ", command.execute(arguments, options));
-    }
+    assertEquals("home ", command.execute(arguments, options));
+  }
 
-    @Test
-    public void execute_CommandLineWithPipe_ReturnResultOfLastCommand() throws InvalidArgumentException,
-	    NotEnoughMemoryException, FileAlreadyExistsException, FileNotFoundException {
-	fileSystem.makeDirectory("/home/dir1");
-	fileSystem.makeDirectory("/home/dir2");
-	fileSystem.makeDirectory("/home/dir3");
+  @Test
+  public void execute_CommandLineWithPipe_ReturnResultOfLastCommand()
+      throws InvalidArgumentException, NotEnoughMemoryException, FileAlreadyExistsException,
+          FileNotFoundException {
+    fileSystem.makeDirectory("/home/dir1");
+    fileSystem.makeDirectory("/home/dir2");
+    fileSystem.makeDirectory("/home/dir3");
 
-	arguments.add("ls");
-	arguments.add("|");
-	arguments.add("wc");
+    arguments.add("ls");
+    arguments.add("|");
+    arguments.add("wc");
 
-	assertEquals("3", command.execute(arguments, options));
-    }
+    assertEquals("3", command.execute(arguments, options));
+  }
 }

@@ -12,63 +12,63 @@ import org.junit.After;
 import org.junit.Test;
 
 public class InputParserTest {
-    private InputParser parser;
-    
-    @After
-    public void close() throws IOException {
-	parser.close();
-    }
-    
-    @Test
-    public void hasNextLine_StandardInputHasNextLine_ReturnTrue() {
-	setUp("Next line");
+  private InputParser parser;
 
-	assertTrue(parser.hasNextLine());
-    }
-    
-    private void setUp(String command) {
-	byte[] commandLine = command.getBytes();
-	ByteArrayInputStream input = new ByteArrayInputStream(commandLine);
-	parser = new InputParser(input);
-    }
+  @After
+  public void close() throws IOException {
+    parser.close();
+  }
 
-    @Test
-    public void hasNextLine_StandardInputDoesNotHaveNextLine_ReturnFalse() {
-	setUp("");
+  @Test
+  public void hasNextLine_StandardInputHasNextLine_ReturnTrue() {
+    setUp("Next line");
 
-	assertFalse(parser.hasNextLine());
-    }
+    assertTrue(parser.hasNextLine());
+  }
 
-    @Test
-    public void getCommnadLine_CommandWithNoOptionsAndArguments_ReturnTheCommandName() {
-	setUp("wc");
+  private void setUp(String command) {
+    byte[] commandLine = command.getBytes();
+    ByteArrayInputStream input = new ByteArrayInputStream(commandLine);
+    parser = new InputParser(input);
+  }
 
-	List<String> result = parser.getCommandLine();
+  @Test
+  public void hasNextLine_StandardInputDoesNotHaveNextLine_ReturnFalse() {
+    setUp("");
 
-	assertEquals(1, result.size());
-	assertEquals("wc", result.get(0));
-    }
+    assertFalse(parser.hasNextLine());
+  }
 
-    @Test
-    public void getCommnad_CommandWithArgumentsOnly_ReturnCommandAndArguemnts() {
-	setUp("ls /home/dir1");
+  @Test
+  public void getCommnadLine_CommandWithNoOptionsAndArguments_ReturnTheCommandName() {
+    setUp("wc");
 
-	List<String> result = parser.getCommandLine();
+    List<String> result = parser.getCommandLine();
 
-	assertEquals(2, result.size());
-	assertEquals("ls", result.get(0));
-	assertEquals("/home/dir1", result.get(1));
-    }
+    assertEquals(1, result.size());
+    assertEquals("wc", result.get(0));
+  }
 
-    @Test
-    public void getCommand_CommandWithOptionsAndArguments_ReturnCommandAndSetOptionsAndArguments() {
-	setUp("ls -l /home");
+  @Test
+  public void getCommnad_CommandWithArgumentsOnly_ReturnCommandAndArguemnts() {
+    setUp("ls /home/dir1");
 
-	List<String> result = parser.getCommandLine();
+    List<String> result = parser.getCommandLine();
 
-	assertEquals(3, result.size());
-	assertEquals("ls", result.get(0));
-	assertEquals("-l", result.get(1));
-	assertEquals("/home", result.get(2));
-    }
+    assertEquals(2, result.size());
+    assertEquals("ls", result.get(0));
+    assertEquals("/home/dir1", result.get(1));
+  }
+
+  @Test
+  public void getCommand_CommandWithOptionsAndArguments_ReturnCommandAndSetOptionsAndArguments() {
+    setUp("ls -l /home");
+
+    List<String> result = parser.getCommandLine();
+
+    assertEquals(3, result.size());
+    assertEquals("ls", result.get(0));
+    assertEquals("-l", result.get(1));
+    assertEquals("/home", result.get(2));
+  }
 }

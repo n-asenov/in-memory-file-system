@@ -18,85 +18,85 @@ import filesystem.exceptions.NotEnoughMemoryException;
 import path.Path;
 
 public class WriteToTextFileTest {
-    private WriteToTextFile command;
-    private VirtualFileSystem fileSystem;
-    private List<String> arguments;
-    private Set<String> options;
+  private WriteToTextFile command;
+  private VirtualFileSystem fileSystem;
+  private List<String> arguments;
+  private Set<String> options;
 
-    @Before
-    public void init() {
-	fileSystem = new VirtualFileSystem();
-	try {
-	    fileSystem.createTextFile("/home/f1");
-	} catch (FileAlreadyExistsException | InvalidArgumentException e) {
-	    throw new IllegalArgumentException(e);
-	}
-
-	command = new WriteToTextFile(fileSystem, new Path());
-	arguments = new ArrayList<>();
-	options = new HashSet<>();
+  @Before
+  public void init() {
+    fileSystem = new VirtualFileSystem();
+    try {
+      fileSystem.createTextFile("/home/f1");
+    } catch (FileAlreadyExistsException | InvalidArgumentException e) {
+      throw new IllegalArgumentException(e);
     }
 
-    @Test(expected = InvalidArgumentException.class)
-    public void execute_CommandWithInvalidOption_ThrowIllegalArgumentException()
-	    throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
-	options.add("append");
+    command = new WriteToTextFile(fileSystem, new Path());
+    arguments = new ArrayList<>();
+    options = new HashSet<>();
+  }
 
-	command.execute(arguments, options);
-    }
+  @Test(expected = InvalidArgumentException.class)
+  public void execute_CommandWithInvalidOption_ThrowIllegalArgumentException()
+      throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
+    options.add("append");
 
-    @Test(expected = InvalidArgumentException.class)
-    public void execute_CommandWithInvalidNumberOfArguments_ThrowIllegalArgumentException()
-	    throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
-	arguments.add("/home/f1");
+    command.execute(arguments, options);
+  }
 
-	command.execute(arguments, options);
-    }
+  @Test(expected = InvalidArgumentException.class)
+  public void execute_CommandWithInvalidNumberOfArguments_ThrowIllegalArgumentException()
+      throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
+    arguments.add("/home/f1");
 
-    @Test(expected = InvalidArgumentException.class)
-    public void execute_CommnadWithWrongSecondArgument_ThrowIllegalArgumentException()
-	    throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
-	arguments.add("/home/f1");
-	arguments.add("Hello");
-	arguments.add("Hello, World!");
+    command.execute(arguments, options);
+  }
 
-	command.execute(arguments, options);
-    }
+  @Test(expected = InvalidArgumentException.class)
+  public void execute_CommnadWithWrongSecondArgument_ThrowIllegalArgumentException()
+      throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
+    arguments.add("/home/f1");
+    arguments.add("Hello");
+    arguments.add("Hello, World!");
 
-    @Test
-    public void execute_ValidCommandWithNoOption_WriteContentToTextFile()
-	    throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
-	arguments.add("/home/f1");
-	arguments.add("1");
-	arguments.add("Hello, World!");
+    command.execute(arguments, options);
+  }
 
-	command.execute(arguments, options);
+  @Test
+  public void execute_ValidCommandWithNoOption_WriteContentToTextFile()
+      throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
+    arguments.add("/home/f1");
+    arguments.add("1");
+    arguments.add("Hello, World!");
 
-	assertEquals("Hello, World!", fileSystem.getTextFileContent("/home/f1"));
-    }
+    command.execute(arguments, options);
 
-    @Test
-    public void execute_ValidCommandWithOverwriteOption_WriteContentToTextFile()
-	    throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
-	options.add("-overwrite");
-	arguments.add("/home/f1");
-	arguments.add("1");
-	arguments.add("Hello, World!");
+    assertEquals("Hello, World!", fileSystem.getTextFileContent("/home/f1"));
+  }
 
-	command.execute(arguments, options);
+  @Test
+  public void execute_ValidCommandWithOverwriteOption_WriteContentToTextFile()
+      throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
+    options.add("-overwrite");
+    arguments.add("/home/f1");
+    arguments.add("1");
+    arguments.add("Hello, World!");
 
-	assertEquals("Hello, World!", fileSystem.getTextFileContent("/home/f1"));
-    }
+    command.execute(arguments, options);
 
-    @Test
-    public void execute_ValidCommandWithRelativePath_WriteContentToTextFile()
-	    throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
-	arguments.add("f1");
-	arguments.add("1");
-	arguments.add("Hello, World!");
+    assertEquals("Hello, World!", fileSystem.getTextFileContent("/home/f1"));
+  }
 
-	command.execute(arguments, options);
+  @Test
+  public void execute_ValidCommandWithRelativePath_WriteContentToTextFile()
+      throws NotEnoughMemoryException, InvalidArgumentException, FileNotFoundException {
+    arguments.add("f1");
+    arguments.add("1");
+    arguments.add("Hello, World!");
 
-	assertEquals("Hello, World!", fileSystem.getTextFileContent("/home/f1"));
-    }
+    command.execute(arguments, options);
+
+    assertEquals("Hello, World!", fileSystem.getTextFileContent("/home/f1"));
+  }
 }

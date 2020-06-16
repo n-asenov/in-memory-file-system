@@ -9,46 +9,46 @@ import filesystem.TextFileContentController;
 import path.Path;
 
 public class GetTextFileContent implements Command {
-    private TextFileContentController fileSystem;
-    private Path currentDirectory;
+  private TextFileContentController fileSystem;
+  private Path currentDirectory;
 
-    public GetTextFileContent(TextFileContentController fileSystem, Path currentDirectory) {
-	this.fileSystem = fileSystem;
-	this.currentDirectory = currentDirectory;
+  public GetTextFileContent(TextFileContentController fileSystem, Path currentDirectory) {
+    this.fileSystem = fileSystem;
+    this.currentDirectory = currentDirectory;
+  }
+
+  @Override
+  public String execute(List<String> arguments, Set<String> options)
+      throws InvalidArgumentException, FileNotFoundException {
+    validateArguments(arguments);
+    validateOptions(options);
+
+    StringBuilder textFilesContent = new StringBuilder();
+    final int lastIndex = arguments.size() - 1;
+
+    for (int index = 0; index < arguments.size(); index++) {
+      String textFileRelativePath = arguments.get(index);
+      String textFileAbsolutePath = currentDirectory.getAbsolutePath(textFileRelativePath);
+      String currentTextFileContent = fileSystem.getTextFileContent(textFileAbsolutePath);
+      textFilesContent.append(currentTextFileContent);
+
+      if (index != lastIndex) {
+        textFilesContent.append(System.lineSeparator());
+      }
     }
 
-    @Override
-    public String execute(List<String> arguments, Set<String> options)
-	    throws InvalidArgumentException, FileNotFoundException {
-	validateArguments(arguments);
-	validateOptions(options);
+    return textFilesContent.toString();
+  }
 
-	StringBuilder textFilesContent = new StringBuilder();
-	final int lastIndex = arguments.size() - 1;
-	
-	for (int index = 0; index < arguments.size(); index++) {
-	    String textFileRelativePath = arguments.get(index);
-	    String textFileAbsolutePath = currentDirectory.getAbsolutePath(textFileRelativePath);
-	    String currentTextFileContent = fileSystem.getTextFileContent(textFileAbsolutePath);
-	    textFilesContent.append(currentTextFileContent);
-	    
-	    if (index != lastIndex) {
-		textFilesContent.append(System.lineSeparator());
-	    }
-	}
+  private void validateArguments(List<String> arguments) throws InvalidArgumentException {
+    if (arguments.isEmpty()) {
+      throw new InvalidArgumentException(INVALID_ARGUMENT_MESSAGE);
+    }
+  }
 
-	return textFilesContent.toString();
+  private void validateOptions(Set<String> options) throws InvalidArgumentException {
+    if (!options.isEmpty()) {
+      throw new InvalidArgumentException(INVALID_OPTION_MESSAGE);
     }
-
-    private void validateArguments(List<String> arguments) throws InvalidArgumentException {
-	if (arguments.isEmpty()) {
-	    throw new InvalidArgumentException(INVALID_ARGUMENT_MESSAGE);
-	}
-    }
-    
-    private void validateOptions(Set<String> options) throws InvalidArgumentException {
-	if (!options.isEmpty()) {
-	    throw new InvalidArgumentException(INVALID_OPTION_MESSAGE);
-	}
-    }
+  }
 }

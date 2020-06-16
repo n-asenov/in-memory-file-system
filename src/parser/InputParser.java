@@ -7,22 +7,22 @@ import java.util.List;
 import java.util.Scanner;
 
 public class InputParser implements AutoCloseable, Closeable {
-    private Scanner scanner;
+  private Scanner scanner;
 
-    public InputParser(InputStream input) {
-	scanner = new Scanner(input);
-    }
+  public InputParser(InputStream input) {
+    scanner = new Scanner(input);
+  }
 
-    public boolean hasNextLine() {
-	return scanner.hasNextLine();
-    }
+  public boolean hasNextLine() {
+    return scanner.hasNextLine();
+  }
 
-    public List<String> getCommandLine() {
-	return List.of(scanner.nextLine().split(" "));
-    }
+  public List<String> getCommandLine() {
+    return List.of(scanner.nextLine().split(" "));
+  }
 
-    @Override
-    public void close() throws IOException {
-	scanner.close();
-    }
+  @Override
+  public void close() throws IOException {
+    scanner.close();
+  }
 }

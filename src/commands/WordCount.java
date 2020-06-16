@@ -9,100 +9,102 @@ import filesystem.TextFileStatistics;
 import path.Path;
 
 public class WordCount implements Command {
-    private static final String COUNT_LINES_OPTION = "-l";
+  private static final String COUNT_LINES_OPTION = "-l";
 
-    private TextFileStatistics fileSystem;
-    private Path currentDirectory;
+  private TextFileStatistics fileSystem;
+  private Path currentDirectory;
 
-    public WordCount(TextFileStatistics fileSystem, Path currentDirectory) {
-	this.fileSystem = fileSystem;
-	this.currentDirectory = currentDirectory;
+  public WordCount(TextFileStatistics fileSystem, Path currentDirectory) {
+    this.fileSystem = fileSystem;
+    this.currentDirectory = currentDirectory;
+  }
+
+  @Override
+  public String execute(List<String> arguments, Set<String> options)
+      throws InvalidArgumentException, FileNotFoundException {
+    validateArguments(arguments);
+    validateOptions(options);
+
+    if (options.contains(COUNT_LINES_OPTION)) {
+      int lines = countLines(arguments);
+      return String.valueOf(lines);
     }
 
-    @Override
-    public String execute(List<String> arguments, Set<String> options)
-	    throws InvalidArgumentException, FileNotFoundException {
-	validateArguments(arguments);
-	validateOptions(options);
+    int words = countWords(arguments);
+    return String.valueOf(words);
+  }
 
-	if (options.contains(COUNT_LINES_OPTION)) {
-	    int lines = countLines(arguments);
-	    return String.valueOf(lines);
-	}
-	
-	int words = countWords(arguments);
-	return String.valueOf(words);
+  private void validateArguments(List<String> arguments) throws InvalidArgumentException {
+    if (arguments.isEmpty()) {
+      throw new InvalidArgumentException(INVALID_ARGUMENT_MESSAGE);
+    }
+  }
+
+  private void validateOptions(Set<String> options) throws InvalidArgumentException {
+    for (String option : options) {
+      if (!option.equals(COUNT_LINES_OPTION)) {
+        throw new InvalidArgumentException(INVALID_OPTION_MESSAGE);
+      }
+    }
+  }
+
+  private int countLines(List<String> arguments)
+      throws InvalidArgumentException, FileNotFoundException {
+    if (countInTextFile(arguments)) {
+      String textFileAbsolutePath = getTextFileAbsolutePath(arguments);
+      int linesInTextFile = fileSystem.getLineCount(textFileAbsolutePath);
+      return linesInTextFile;
     }
 
-    private void validateArguments(List<String> arguments) throws InvalidArgumentException {
-	if (arguments.isEmpty()) {
-	    throw new InvalidArgumentException(INVALID_ARGUMENT_MESSAGE);
-	}
+    return countLinesInText(arguments);
+  }
+
+  private boolean countInTextFile(List<String> arguments) {
+    return arguments.size() == 1;
+  }
+
+  private int countLinesInText(List<String> text) {
+    final String newLine = "\\n";
+    int lines = 1;
+
+    for (String word : text) {
+      int index = word.indexOf(newLine);
+
+      while (index != -1) {
+        lines++;
+        index = word.indexOf(newLine, index + 1);
+      }
     }
 
-    private void validateOptions(Set<String> options) throws InvalidArgumentException {
-	for (String option : options) {
-	    if (!option.equals(COUNT_LINES_OPTION)) {
-		throw new InvalidArgumentException(INVALID_OPTION_MESSAGE);
-	    }
-	}
+    return lines;
+  }
+
+  private int countWords(List<String> arguments)
+      throws InvalidArgumentException, FileNotFoundException {
+    if (countInTextFile(arguments)) {
+      String textFileAbsolutePath = getTextFileAbsolutePath(arguments);
+      int linesInTextFile = fileSystem.getWordCount(textFileAbsolutePath);
+      return linesInTextFile;
     }
 
-    private int countLines(List<String> arguments) throws InvalidArgumentException, FileNotFoundException {
-	if (countInTextFile(arguments)) {
-	    String textFileAbsolutePath = getTextFileAbsolutePath(arguments);
-	    int linesInTextFile = fileSystem.getLineCount(textFileAbsolutePath);
-	    return linesInTextFile;
-	}
+    return countWordsInText(arguments);
+  }
 
-	return countLinesInText(arguments);
+  private int countWordsInText(List<String> arguments) {
+    final String whitespace = "\\s";
+    int wordsInText = 0;
+
+    for (String argument : arguments) {
+      int wordsInArgument = argument.split(whitespace).length;
+      wordsInText += wordsInArgument;
     }
 
-    private boolean countInTextFile(List<String> arguments) {
-	return arguments.size() == 1;
-    }
+    return wordsInText;
+  }
 
-    private int countLinesInText(List<String> text) {
-	final String newLine = "\\n";
-	int lines = 1;
-
-	for (String word : text) {
-	    int index = word.indexOf(newLine);
-
-	    while (index != -1) {
-		lines++;
-		index = word.indexOf(newLine, index + 1);
-	    }
-	}
-
-	return lines;
-    }
-
-    private int countWords(List<String> arguments) throws InvalidArgumentException, FileNotFoundException {
-	if (countInTextFile(arguments)) {
-	    String textFileAbsolutePath = getTextFileAbsolutePath(arguments);
-	    int linesInTextFile = fileSystem.getWordCount(textFileAbsolutePath);
-	    return linesInTextFile;
-	}
-	
-	return countWordsInText(arguments);
-    }
-
-    private int countWordsInText(List<String> arguments) {
-	final String whitespace = "\\s";
-	int wordsInText = 0;
-	
-	for (String argument : arguments) {
-	    int wordsInArgument = argument.split(whitespace).length;
-	    wordsInText += wordsInArgument;
-	}
-	
-	return wordsInText;
-    }
-    
-    private String getTextFileAbsolutePath(List<String> arguments) {
-	String textFilePath = arguments.get(0);
-	String textFileAbsolutePath = currentDirectory.getAbsolutePath(textFilePath);
-	return textFileAbsolutePath;
-    }
+  private String getTextFileAbsolutePath(List<String> arguments) {
+    String textFilePath = arguments.get(0);
+    String textFileAbsolutePath = currentDirectory.getAbsolutePath(textFilePath);
+    return textFileAbsolutePath;
+  }
 }

@@ -6,20 +6,20 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 public class Output implements AutoCloseable, Closeable {
-    private PrintStream output;
+  private PrintStream output;
 
-    public Output(OutputStream output) {
-	this.output = new PrintStream(output);
+  public Output(OutputStream output) {
+    this.output = new PrintStream(output);
+  }
+
+  public void println(String result) {
+    if (!result.equals("")) {
+      output.println(result);
     }
+  }
 
-    public void println(String result) {
-	if (!result.equals("")) {
-	    output.println(result);
-	}
-    }
-
-    @Override
-    public void close() throws IOException {
-	output.close();
-    }	
+  @Override
+  public void close() throws IOException {
+    output.close();
+  }
 }

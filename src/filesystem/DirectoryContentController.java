@@ -8,7 +8,6 @@ import commands.exception.InvalidArgumentException;
 
 public interface DirectoryContentController {
 
-    List<String> getDirectoryContent(String absolutePath, Comparator<File> comparator)
-	    throws InvalidArgumentException, FileNotFoundException;
-
+  List<String> getDirectoryContent(String absolutePath, Comparator<File> comparator)
+      throws InvalidArgumentException, FileNotFoundException;
 }

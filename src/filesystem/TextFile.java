@@ -6,120 +6,120 @@ import java.util.TreeMap;
 import commands.exception.InvalidArgumentException;
 
 public class TextFile extends File {
-    private SortedMap<Integer, String> content;
-    private int size;
+  private SortedMap<Integer, String> content;
+  private int size;
 
-    public TextFile(String name) {
-	super(name);
-	content = new TreeMap<>();
-	size = 0;
+  public TextFile(String name) {
+    super(name);
+    content = new TreeMap<>();
+    size = 0;
+  }
+
+  @Override
+  public int getSize() {
+    return size;
+  }
+
+  public String getContent() {
+    StringBuilder fileContent = new StringBuilder();
+
+    if (!content.isEmpty()) {
+      int lastLineIndex = content.lastKey();
+
+      for (int lineIndex = 1; lineIndex < lastLineIndex; lineIndex++) {
+        String lineContent = content.get(lineIndex);
+
+        if (lineContent != null) {
+          fileContent.append(lineContent);
+        }
+
+        fileContent.append(System.lineSeparator());
+      }
+
+      fileContent.append(content.get(lastLineIndex));
     }
 
-    @Override
-    public int getSize() {
-	return size;
+    return fileContent.toString();
+  }
+
+  public int getNumberOfWords() {
+    int words = 0;
+
+    for (String line : content.values()) {
+      words += line.split(" ").length;
     }
 
-    public String getContent() {
-	StringBuilder fileContent = new StringBuilder();
+    return words;
+  }
 
-	if (!content.isEmpty()) {
-	    int lastLineIndex = content.lastKey();
-
-	    for (int lineIndex = 1; lineIndex < lastLineIndex; lineIndex++) {
-		String lineContent = content.get(lineIndex);
-
-		if (lineContent != null) {
-		    fileContent.append(lineContent);
-		}
-
-		fileContent.append(System.lineSeparator());
-	    }
-
-	    fileContent.append(content.get(lastLineIndex));
-	}
-
-	return fileContent.toString();
+  public int getNumberOfLines() {
+    if (content.isEmpty()) {
+      return 0;
     }
 
-    public int getNumberOfWords() {
-	int words = 0;
+    return content.lastKey();
+  }
 
-	for (String line : content.values()) {
-	    words += line.split(" ").length;
-	}
+  public boolean isEmptyLine(int lineIndex) {
+    return content.get(lineIndex) == null;
+  }
 
-	return words;
+  public int getLineSize(int lineIndex) {
+    String lineContent = content.get(lineIndex);
+
+    if (lineContent == null) {
+      return 0;
     }
 
-    public int getNumberOfLines() {
-	if (content.isEmpty()) {
-	    return 0;
-	}
+    return lineContent.length();
+  }
 
-	return content.lastKey();
+  public void removeContentFromLines(int startIndex, int endIndex) throws InvalidArgumentException {
+    if (endIndex < startIndex) {
+      throw new InvalidArgumentException("End line must be bigger than start line");
     }
 
-    public boolean isEmptyLine(int lineIndex) {
-	return content.get(lineIndex) == null;
+    for (int lineIndex = startIndex; lineIndex <= endIndex; lineIndex++) {
+      removeLineContent(lineIndex);
+    }
+  }
+
+  private void removeLineContent(int lineIndex) throws InvalidArgumentException {
+    if (lineIndex <= 0) {
+      throw new InvalidArgumentException("Line number must be positive");
     }
 
-    public int getLineSize(int lineIndex) {
-	String lineContent = content.get(lineIndex);
+    String deletedContent = content.remove(lineIndex);
 
-	if (lineContent == null) {
-	    return 0;
-	}
+    if (deletedContent != null) {
+      int lineSize = deletedContent.length() + 1;
+      size -= lineSize;
+    }
+  }
 
-	return lineContent.length();
+  public void overwrite(int lineIndex, String lineContent) {
+    String currentContent = content.get(lineIndex);
+
+    if (currentContent != null) {
+      size -= currentContent.length();
+    } else {
+      size++;
     }
 
-    public void removeContentFromLines(int startIndex, int endIndex) throws InvalidArgumentException {
-	if (endIndex < startIndex) {
-	    throw new InvalidArgumentException("End line must be bigger than start line");
-	}
+    content.put(lineIndex, lineContent);
+    size += lineContent.length();
+  }
 
-	for (int lineIndex = startIndex; lineIndex <= endIndex; lineIndex++) {
-	    removeLineContent(lineIndex);
-	}
+  public void append(int lineIndex, String lineContent) {
+    String currentContent = content.get(lineIndex);
+    String newContent;
+
+    if (currentContent == null) {
+      newContent = lineContent;
+    } else {
+      newContent = currentContent + lineContent;
     }
 
-    private void removeLineContent(int lineIndex) throws InvalidArgumentException {
-	if (lineIndex <= 0) {
-	    throw new InvalidArgumentException("Line number must be positive");
-	}
-
-	String deletedContent = content.remove(lineIndex);
-
-	if (deletedContent != null) {
-	    int lineSize = deletedContent.length() + 1;
-	    size -= lineSize;
-	}
-    }
-
-    public void overwrite(int lineIndex, String lineContent) {
-	String currentContent = content.get(lineIndex);
-
-	if (currentContent != null) {
-	    size -= currentContent.length();
-	} else {
-	    size++;
-	}
-
-	content.put(lineIndex, lineContent);
-	size += lineContent.length();
-    }
-
-    public void append(int lineIndex, String lineContent) {
-	String currentContent = content.get(lineIndex);
-	String newContent;
-	
-	if (currentContent == null) {
-	    newContent = lineContent;
-	} else {
-	    newContent = currentContent + lineContent;
-	}
-
-	overwrite(lineIndex, newContent);
-    }
+    overwrite(lineIndex, newContent);
+  }
 }
