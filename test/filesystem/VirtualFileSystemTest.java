@@ -15,7 +15,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import filesystem.exceptions.InvalidArgumentException;
+import commands.exception.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
 
 public class VirtualFileSystemTest {

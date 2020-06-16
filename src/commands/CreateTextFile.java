@@ -4,8 +4,8 @@ import java.nio.file.FileAlreadyExistsException;
 import java.util.List;
 import java.util.Set;
 
+import commands.exception.InvalidArgumentException;
 import filesystem.TextFileController;
-import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class CreateTextFile implements Command {

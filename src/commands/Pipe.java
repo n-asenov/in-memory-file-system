@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import commands.exception.InvalidArgumentException;
 import filesystem.VirtualFileSystem;
-import filesystem.exceptions.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
 import parser.CommandParser;
 import path.Path;

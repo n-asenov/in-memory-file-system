@@ -2,7 +2,7 @@ package filesystem;
 
 import java.io.FileNotFoundException;
 
-import filesystem.exceptions.InvalidArgumentException;
+import commands.exception.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
 
 public interface TextFileContentController {

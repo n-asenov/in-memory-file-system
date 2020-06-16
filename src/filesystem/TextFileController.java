@@ -3,7 +3,7 @@ package filesystem;
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 
-import filesystem.exceptions.InvalidArgumentException;
+import commands.exception.InvalidArgumentException;
 
 public interface TextFileController {
     

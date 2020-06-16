@@ -13,8 +13,8 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
+import commands.exception.InvalidArgumentException;
 import filesystem.VirtualFileSystem;
-import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class ChangeDirectoryTest {

@@ -5,7 +5,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.util.List;
 import java.util.Set;
 
-import filesystem.exceptions.InvalidArgumentException;
+import commands.exception.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
 
 public interface Command {

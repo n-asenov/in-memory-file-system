@@ -3,8 +3,8 @@ package commands;
 import java.util.HashMap;
 import java.util.Map;
 
+import commands.exception.InvalidArgumentException;
 import filesystem.VirtualFileSystem;
-import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class CommandFactory {

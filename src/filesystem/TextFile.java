@@ -3,7 +3,7 @@ package filesystem;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import filesystem.exceptions.InvalidArgumentException;
+import commands.exception.InvalidArgumentException;
 
 public class TextFile extends File {
     private SortedMap<Integer, String> content;

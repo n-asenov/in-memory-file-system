@@ -4,8 +4,8 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Set;
 
+import commands.exception.InvalidArgumentException;
 import filesystem.DirectoryValidator;
-import filesystem.exceptions.InvalidArgumentException;
 import path.Path;
 
 public class ChangeDirectory implements Command {

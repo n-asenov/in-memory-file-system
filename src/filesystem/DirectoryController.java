@@ -2,7 +2,7 @@ package filesystem;
 
 import java.nio.file.FileAlreadyExistsException;
 
-import filesystem.exceptions.InvalidArgumentException;
+import commands.exception.InvalidArgumentException;
 
 public interface DirectoryController {
 

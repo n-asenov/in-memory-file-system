@@ -7,7 +7,7 @@ import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
 
-import filesystem.exceptions.InvalidArgumentException;
+import commands.exception.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
 
 public class VirtualFileSystem implements TextFileController, TextFileContentController, TextFileStatistics,
