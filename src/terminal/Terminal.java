@@ -2,6 +2,7 @@ package terminal;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.List;
 import java.util.Set;
@@ -11,7 +12,6 @@ import commands.CommandFactory;
 import commands.exception.InvalidArgumentException;
 import filesystem.VirtualFileSystem;
 import filesystem.exceptions.NotEnoughMemoryException;
-import output.ConsoleOutput;
 import output.Output;
 import parser.CommandParser;
 import parser.Parser;
@@ -28,14 +28,15 @@ public class Terminal {
 	this.input = input;
 	this.output = output;
     }
-    
+
     public static void main(String[] args) {
 	InputStream input = System.in;
-	Terminal terminal = new Terminal(new VirtualFileSystem(), input, new ConsoleOutput());
-	
+	OutputStream output = System.out;
+	Terminal terminal = new Terminal(new VirtualFileSystem(), input, new Output(output));
+
 	terminal.run();
     }
-    
+
     public void run() {
 	Parser inputParser = new StandardInputParser(input);
 	CommandParser commandParser = new CommandParser();
@@ -43,19 +44,19 @@ public class Terminal {
 	CommandFactory commandFactory = new CommandFactory(fileSystem, currentDirectory);
 
 	while (true) {
-	    if (inputParser.hasNextLine()) {
-		List<String> commandLine = inputParser.getCommandLine();
-		String commandName = commandParser.getCommandName(commandLine);
-		try {
+	    try {
+		if (inputParser.hasNextLine()) {
+		    List<String> commandLine = inputParser.getCommandLine();
+		    String commandName = commandParser.getCommandName(commandLine);
 		    Command command = commandFactory.getCommand(commandName);
 		    List<String> commandArguments = commandParser.getCommandArguments(commandLine);
 		    Set<String> commandOptions = commandParser.getCommandOptions(commandLine);
 		    String commmandResult = command.execute(commandArguments, commandOptions);
-		    output.print(commmandResult);
-		} catch (InvalidArgumentException | FileAlreadyExistsException | FileNotFoundException
-			| NotEnoughMemoryException e) {
-		    output.print(e.getMessage());
+		    output.println(commmandResult);
 		}
+	    } catch (InvalidArgumentException | FileAlreadyExistsException | FileNotFoundException
+		    | NotEnoughMemoryException e) {
+		output.println(e.getMessage());
 	    }
 	}
     }
