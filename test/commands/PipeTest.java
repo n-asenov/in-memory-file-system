@@ -26,7 +26,7 @@ public class PipeTest {
     @Before
     public void init() {
 	fileSystem = new VirtualFileSystem();
-	command = new Pipe(fileSystem, new Path());
+	command = new Pipe(new CommandFactory(fileSystem, new Path()));
 	options = new HashSet<>();
 	arguments = new ArrayList<>();
     }

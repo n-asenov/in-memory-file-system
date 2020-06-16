@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import commands.exception.InvalidArgumentException;
-import filesystem.VirtualFileSystem;
 import filesystem.exceptions.NotEnoughMemoryException;
 import parser.CommandParser;
-import path.Path;
 
 public class Pipe implements Command {
     private static final String PIPE_COMMAND = "|";
@@ -18,8 +16,8 @@ public class Pipe implements Command {
     private CommandFactory factory;
     private CommandParser parser;
 
-    public Pipe(VirtualFileSystem fileSystem, Path currentDirectory) {
-	factory = new CommandFactory(fileSystem, currentDirectory);
+    public Pipe(CommandFactory factory) {
+	this.factory = factory;
 	parser = new CommandParser();
     }
 
@@ -33,10 +31,6 @@ public class Pipe implements Command {
     }
 
     private void validateArguments(List<String> arguments) throws InvalidArgumentException {
-	if (arguments.isEmpty()) {
-	    throw new InvalidArgumentException(INVALID_ARGUMENT_MESSAGE);
-	}
-
 	boolean isFirstArgumentPipeCommand = arguments.get(0).equals(PIPE_COMMAND);
 	boolean isLastArgumentPipeCommand = arguments.get(arguments.size() - 1).equals(PIPE_COMMAND);
 

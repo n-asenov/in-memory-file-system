@@ -22,6 +22,7 @@ public class CommandFactory {
 	commands.put("remove", new RemoveContentFromTextFile(fileSystem, currentDirectory));
 	commands.put("pwd", new PrintWorkingDirectory(currentDirectory));
 	commands.put("wc", new WordCount(fileSystem, currentDirectory));
+	commands.put("|", new Pipe(this));
     }
 
     public Command getCommand(String commandName) throws InvalidArgumentException {
