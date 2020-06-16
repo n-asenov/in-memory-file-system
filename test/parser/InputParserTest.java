@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.After;
@@ -14,7 +15,7 @@ public class InputParserTest {
     private InputParser parser;
     
     @After
-    public void close() {
+    public void close() throws IOException {
 	parser.close();
     }
     

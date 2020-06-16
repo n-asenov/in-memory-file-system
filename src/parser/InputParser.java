@@ -1,6 +1,7 @@
 package parser;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Scanner;
@@ -21,7 +22,7 @@ public class InputParser implements AutoCloseable, Closeable {
     }
 
     @Override
-    public void close() {
+    public void close() throws IOException {
 	scanner.close();
     }
 }
