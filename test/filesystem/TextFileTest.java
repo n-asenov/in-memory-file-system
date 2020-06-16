@@ -23,7 +23,9 @@ public class TextFileTest {
 	file.overwrite(1, lineContent);
 
 	assertEquals(lineContent, file.getContent());
-	assertEquals(lineContent.length() + 1, file.getSize());
+	int expectedTextFileSize = lineContent.length() + 1;
+	int actualTextFileSize = file.getSize();
+	assertEquals(expectedTextFileSize, actualTextFileSize);
     }
 
     @Test
@@ -58,7 +60,8 @@ public class TextFileTest {
 	file.overwrite(lineNumber, lineContent);
 
 	assertEquals(lineContent, file.getContent());
-	assertEquals(lineContent.length() + 1, file.getSize());
+	int expectedTextFileSize = lineContent.length() + 1;
+	assertEquals(expectedTextFileSize, file.getSize());
     }
 
     @Test
@@ -68,7 +71,8 @@ public class TextFileTest {
 	file.overwrite(1, newContent);
 
 	assertEquals(newContent, file.getContent());
-	assertEquals(newContent.length() + 1, file.getSize());
+	int expectedTextFileSize = newContent.length() + 1;
+	assertEquals(expectedTextFileSize, file.getSize());
     }
 
     @Test
@@ -94,7 +98,7 @@ public class TextFileTest {
     }
 
     @Test
-    public void getContent_TwoContentLinesWithGapInbetween_ContentReturnedAsString() throws InvalidArgumentException {
+    public void getContent_TwoContentLinesWithGapInbetween_ContentReturnedAsString() {
 	StringBuilder expectedResult = new StringBuilder();
 	String newLine = System.lineSeparator();
 
@@ -108,8 +112,7 @@ public class TextFileTest {
     }
 
     @Test
-    public void getContent_SeveralContentLinesWithGapInbetween_ContentReturnedAsString()
-	    throws InvalidArgumentException {
+    public void getContent_SeveralContentLinesWithGapInbetween_ContentReturnedAsString() {
 	StringBuilder expectedResult = new StringBuilder();
 	String newLine = System.lineSeparator();
 
@@ -120,9 +123,7 @@ public class TextFileTest {
 	expectedResult.append(newLine);
 	file.overwrite(5, "Hello Again");
 	expectedResult.append("Hello Again" + newLine);
-	expectedResult.append(newLine);
-	expectedResult.append(newLine);
-	file.overwrite(8, "World");
+	file.overwrite(6, "World");
 	expectedResult.append("World");
 
 	assertEquals(expectedResult.toString(), file.getContent());
@@ -140,17 +141,16 @@ public class TextFileTest {
 	int start = 1;
 	int end = 5;
 
-	for (int i = start; i < end; i++) {
-	    file.overwrite(i, "Hello");
-	}
-
 	file.removeContentFromLines(end, start);
     }
 
     @Test(expected = InvalidArgumentException.class)
     public void removeContentFromLines_RemoveContentFromNegativeLineNumber_ThrowInvalidArgumentException()
 	    throws InvalidArgumentException {
-	file.removeContentFromLines(-1, 2);
+	int start = -1;
+	int end = 2;
+
+	file.removeContentFromLines(start, end);
     }
 
     @Test
@@ -170,33 +170,43 @@ public class TextFileTest {
 
     @Test
     public void getNumberOfWords_EmptyFile_Return0() {
-	assertTrue(0 == file.getNumberOfWords());
+	int expectedNumberOfWords = 0;
+	int actualNumberOfWords = file.getNumberOfWords();
+
+	assertEquals(expectedNumberOfWords, actualNumberOfWords);
     }
 
     @Test
-    public void getNumberOfWords_FileWithOneLine_ReturnNumberOfWords() throws InvalidArgumentException {
+    public void getNumberOfWords_FileWithOneLine_ReturnNumberOfWords() {
 	file.overwrite(1, "Hello World");
-	assertTrue(2 == file.getNumberOfWords());
+
+	int expectedNumberOfWords = 2;
+	int actualNumberOfWords = file.getNumberOfWords();
+
+	assertEquals(expectedNumberOfWords, actualNumberOfWords);
     }
 
     @Test
-    public void getNumberOfWords_FileWithSeveralLines_ReturnNumberOfWords() throws InvalidArgumentException {
+    public void getNumberOfWords_FileWithSeveralLines_ReturnNumberOfWords() {
 	file.overwrite(1, "hello world");
 	file.overwrite(3, "hello");
 	file.overwrite(5, "hello world");
 
-	assertTrue(5 == file.getNumberOfWords());
+	int expectedNumberOfWords = 5;
+	int actualNumberOfWords = file.getNumberOfWords();
+
+	assertEquals(expectedNumberOfWords, actualNumberOfWords);
     }
 
     @Test
     public void getNumberOfLines_EmptyTextFile_Return0() {
-	assertTrue(0 == file.getNumberOfLines());
+	assertEquals(0, file.getNumberOfLines());
     }
 
     @Test
-    public void getNumberOfLines_NonEmptyFile_ReturnNumberOfLinesInTextFile() throws InvalidArgumentException {
+    public void getNumberOfLines_NonEmptyFile_ReturnNumberOfLinesInTextFile() {
 	int lastLine = 5;
 	file.overwrite(lastLine, "hello world");
-	assertTrue(lastLine == file.getNumberOfLines());
+	assertEquals(lastLine, file.getNumberOfLines());
     }
 }
