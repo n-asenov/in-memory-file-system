@@ -19,16 +19,18 @@ import path.Path;
 
 public class PipeTest {
     private VirtualFileSystem fileSystem;
-    private Pipe command;
+    private Command command;
     private List<String> arguments;
     private Set<String> options;
 
     @Before
     public void init() {
 	fileSystem = new VirtualFileSystem();
-	command = new Pipe(new CommandFactory(fileSystem, new Path()));
-	options = new HashSet<>();
+	Path currentDirectory = new Path();
+	CommandFactory factory = new CommandFactory(fileSystem, currentDirectory);
+	command = new Pipe(factory);
 	arguments = new ArrayList<>();
+	options = new HashSet<>();
     }
 
     @Test(expected = InvalidArgumentException.class)
