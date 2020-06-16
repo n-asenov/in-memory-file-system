@@ -100,13 +100,15 @@ public class DirectoryTest {
 	firstTextFile.overwrite(1, "hello");
 	TextFile secondTextFile = new TextFile("f2");
 	secondTextFile.overwrite(2, "Hello, World!");
-	Directory subDirectory = new Directory("dir1");
-
+	Directory firstSubDirectory = new Directory("dir1");
+	Directory secondSubDirectory = new Directory("dir2");
+	
 	directory.addFile(firstTextFile);
 	directory.addFile(secondTextFile);
-	directory.addFile(subDirectory);
+	directory.addFile(firstSubDirectory);
+	directory.addFile(secondSubDirectory);
 
-	String[] expectedDirectoryContent = { "f2", "f1", "dir1" };
+	String[] expectedDirectoryContent = { "f2", "f1", "dir2", "dir1" };
 	List<String> directoryContent = directory.getContent(SIZE_DESCENDING);
 	String[] actualDirectoryContent = directoryContent.toArray(new String[0]);
 	assertArrayEquals(expectedDirectoryContent, actualDirectoryContent);

@@ -2,12 +2,12 @@ package filesystem;
 
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class Directory extends File {
@@ -72,14 +72,17 @@ public class Directory extends File {
     }
 
     public List<String> getContent(Comparator<File> comparator) {
-	Set<File> sortedContent = new TreeSet<>(comparator);
+	List<File> sortedContent = new ArrayList<>();
 
 	for (String fileName : content.keySet()) {
 	    if (!fileName.equals(".") && !fileName.equals("..")) {
-		sortedContent.add(content.get(fileName));
+		File file = content.get(fileName);
+		sortedContent.add(file);
 	    }
 	}
-
+	
+	Collections.sort(sortedContent, comparator);
+	
 	return sortedContent.stream()
 		.map(file -> file.getName())
 		.collect(Collectors.toList());
