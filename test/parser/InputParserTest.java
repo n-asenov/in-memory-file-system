@@ -10,8 +10,8 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Test;
 
-public class StandardInputParserTest {
-    private Parser parser;
+public class InputParserTest {
+    private InputParser parser;
     
     @After
     public void close() {
@@ -28,7 +28,7 @@ public class StandardInputParserTest {
     private void setUp(String command) {
 	byte[] commandLine = command.getBytes();
 	ByteArrayInputStream input = new ByteArrayInputStream(commandLine);
-	parser = new StandardInputParser(input);
+	parser = new InputParser(input);
     }
 
     @Test

@@ -14,49 +14,49 @@ import filesystem.VirtualFileSystem;
 import filesystem.exceptions.NotEnoughMemoryException;
 import output.Output;
 import parser.CommandParser;
-import parser.Parser;
-import parser.StandardInputParser;
+import parser.InputParser;
 import path.Path;
 
 public class Terminal {
     private VirtualFileSystem fileSystem;
     private InputStream input;
-    private Output output;
+    private OutputStream output;
 
-    public Terminal(VirtualFileSystem fileSystem, InputStream input, Output output) {
+    public Terminal(VirtualFileSystem fileSystem, InputStream input, OutputStream output) {
 	this.fileSystem = fileSystem;
 	this.input = input;
 	this.output = output;
     }
 
     public static void main(String[] args) {
+	VirtualFileSystem fileSystem = new VirtualFileSystem();
 	InputStream input = System.in;
 	OutputStream output = System.out;
-	Terminal terminal = new Terminal(new VirtualFileSystem(), input, new Output(output));
-
+	Terminal terminal = new Terminal(fileSystem, input, output);
 	terminal.run();
     }
 
     public void run() {
-	Parser inputParser = new StandardInputParser(input);
-	CommandParser commandParser = new CommandParser();
-	Path currentDirectory = new Path();
-	CommandFactory commandFactory = new CommandFactory(fileSystem, currentDirectory);
+	try (InputParser inputParser = new InputParser(input); Output outputPrinter = new Output(output)) {
+	    CommandParser commandParser = new CommandParser();
+	    Path currentDirectory = new Path();
+	    CommandFactory commandFactory = new CommandFactory(fileSystem, currentDirectory);
 
-	while (true) {
-	    try {
-		if (inputParser.hasNextLine()) {
-		    List<String> commandLine = inputParser.getCommandLine();
-		    String commandName = commandParser.getCommandName(commandLine);
-		    Command command = commandFactory.getCommand(commandName);
-		    List<String> commandArguments = commandParser.getCommandArguments(commandLine);
-		    Set<String> commandOptions = commandParser.getCommandOptions(commandLine);
-		    String commmandResult = command.execute(commandArguments, commandOptions);
-		    output.println(commmandResult);
+	    while (true) {
+		try {
+		    if (inputParser.hasNextLine()) {
+			List<String> commandLine = inputParser.getCommandLine();
+			String commandName = commandParser.getCommandName(commandLine);
+			Command command = commandFactory.getCommand(commandName);
+			List<String> commandArguments = commandParser.getCommandArguments(commandLine);
+			Set<String> commandOptions = commandParser.getCommandOptions(commandLine);
+			String commmandResult = command.execute(commandArguments, commandOptions);
+			outputPrinter.println(commmandResult);
+		    }
+		} catch (InvalidArgumentException | FileAlreadyExistsException | FileNotFoundException
+			| NotEnoughMemoryException e) {
+		    outputPrinter.println(e.getMessage());
 		}
-	    } catch (InvalidArgumentException | FileAlreadyExistsException | FileNotFoundException
-		    | NotEnoughMemoryException e) {
-		output.println(e.getMessage());
 	    }
 	}
     }

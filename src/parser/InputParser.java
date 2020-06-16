@@ -1,22 +1,21 @@
 package parser;
 
+import java.io.Closeable;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Scanner;
 
-public class StandardInputParser implements Parser {
+public class InputParser implements AutoCloseable, Closeable {
     private Scanner scanner;
 
-    public StandardInputParser(InputStream input) {
+    public InputParser(InputStream input) {
 	scanner = new Scanner(input);
     }
 
-    @Override
     public boolean hasNextLine() {
 	return scanner.hasNextLine();
     }
 
-    @Override
     public List<String> getCommandLine() {
 	return List.of(scanner.nextLine().split(" "));
     }
