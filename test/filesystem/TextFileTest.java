@@ -1,12 +1,9 @@
 package filesystem;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-
 import commands.exception.InvalidArgumentException;
-import filesystem.TextFile;
 
 public class TextFileTest {
   private TextFile file;
@@ -168,47 +165,5 @@ public class TextFileTest {
 
     assertEquals("", file.getContent());
     assertEquals(0, file.getSize());
-  }
-
-  @Test
-  public void getNumberOfWords_EmptyFile_Return0() {
-    int expectedNumberOfWords = 0;
-    int actualNumberOfWords = file.getNumberOfWords();
-
-    assertEquals(expectedNumberOfWords, actualNumberOfWords);
-  }
-
-  @Test
-  public void getNumberOfWords_FileWithOneLine_ReturnNumberOfWords() {
-    file.overwrite(1, "Hello World");
-
-    int expectedNumberOfWords = 2;
-    int actualNumberOfWords = file.getNumberOfWords();
-
-    assertEquals(expectedNumberOfWords, actualNumberOfWords);
-  }
-
-  @Test
-  public void getNumberOfWords_FileWithSeveralLines_ReturnNumberOfWords() {
-    file.overwrite(1, "hello world");
-    file.overwrite(3, "hello");
-    file.overwrite(5, "hello world");
-
-    int expectedNumberOfWords = 5;
-    int actualNumberOfWords = file.getNumberOfWords();
-
-    assertEquals(expectedNumberOfWords, actualNumberOfWords);
-  }
-
-  @Test
-  public void getNumberOfLines_EmptyTextFile_Return0() {
-    assertEquals(0, file.getNumberOfLines());
-  }
-
-  @Test
-  public void getNumberOfLines_NonEmptyFile_ReturnNumberOfLinesInTextFile() {
-    int lastLine = 5;
-    file.overwrite(lastLine, "hello world");
-    assertEquals(lastLine, file.getNumberOfLines());
   }
 }

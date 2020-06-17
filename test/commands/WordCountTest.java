@@ -1,17 +1,14 @@
 package commands;
 
 import static org.junit.Assert.assertEquals;
-
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import commands.exception.InvalidArgumentException;
 import filesystem.VirtualFileSystem;
 import filesystem.exceptions.NotEnoughMemoryException;
@@ -91,8 +88,8 @@ public class WordCountTest {
   public void execute_CommandWithOptionAndText_ReturnNumberOfLinesInText()
       throws InvalidArgumentException, FileNotFoundException {
     options.add("-l");
-    arguments.add("First Line\\n");
-    arguments.add("Second Line\\n");
+    arguments.add("First Line" + System.lineSeparator());
+    arguments.add("Second Line" + System.lineSeparator());
     arguments.add("Third");
 
     String expectedResult = "3";

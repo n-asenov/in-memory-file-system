@@ -2,7 +2,6 @@ package filesystem;
 
 import java.util.SortedMap;
 import java.util.TreeMap;
-
 import commands.exception.InvalidArgumentException;
 
 public class TextFile extends File {
@@ -40,24 +39,6 @@ public class TextFile extends File {
     }
 
     return fileContent.toString();
-  }
-
-  public int getNumberOfWords() {
-    int words = 0;
-
-    for (String line : content.values()) {
-      words += line.split(" ").length;
-    }
-
-    return words;
-  }
-
-  public int getNumberOfLines() {
-    if (content.isEmpty()) {
-      return 0;
-    }
-
-    return content.lastKey();
   }
 
   public boolean isEmptyLine(int lineIndex) {

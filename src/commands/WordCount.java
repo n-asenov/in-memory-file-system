@@ -3,18 +3,17 @@ package commands;
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Set;
-
 import commands.exception.InvalidArgumentException;
-import filesystem.TextFileStatistics;
+import filesystem.TextFileContentController;
 import path.Path;
 
 public class WordCount implements Command {
   private static final String COUNT_LINES_OPTION = "-l";
 
-  private TextFileStatistics fileSystem;
+  private TextFileContentController fileSystem;
   private Path currentDirectory;
 
-  public WordCount(TextFileStatistics fileSystem, Path currentDirectory) {
+  public WordCount(TextFileContentController fileSystem, Path currentDirectory) {
     this.fileSystem = fileSystem;
     this.currentDirectory = currentDirectory;
   }
@@ -50,61 +49,85 @@ public class WordCount implements Command {
 
   private int countLines(List<String> arguments)
       throws InvalidArgumentException, FileNotFoundException {
+    String text;
+
     if (countInTextFile(arguments)) {
-      String textFileAbsolutePath = getTextFileAbsolutePath(arguments);
-      int linesInTextFile = fileSystem.getLineCount(textFileAbsolutePath);
-      return linesInTextFile;
+      text = getTextFileContent(arguments);
+    } else {
+      text = getTextFromArguments(arguments);
     }
 
-    return countLinesInText(arguments);
+    return countLinesInText(text);
   }
 
   private boolean countInTextFile(List<String> arguments) {
     return arguments.size() == 1;
   }
 
-  private int countLinesInText(List<String> text) {
-    final String newLine = "\\n";
-    int lines = 1;
+  private String getTextFileContent(List<String> arguments)
+      throws InvalidArgumentException, FileNotFoundException {
+    String textFilePath = arguments.get(0);
+    String textFileAbsolutePath = currentDirectory.getAbsolutePath(textFilePath);
+    String textFileContent = fileSystem.getTextFileContent(textFileAbsolutePath);
+    return textFileContent;
+  }
 
-    for (String word : text) {
-      int index = word.indexOf(newLine);
+  private int countLinesInText(String text) {
+    int lines = 0;
 
-      while (index != -1) {
-        lines++;
-        index = word.indexOf(newLine, index + 1);
-      }
+    if (text.isEmpty()) {
+      return lines;
+    }
+
+    lines = 1;
+    int index = text.indexOf(System.lineSeparator());
+
+    while (index != -1) {
+      lines++;
+      index = text.indexOf(System.lineSeparator(), index + 1);
     }
 
     return lines;
   }
 
-  private int countWords(List<String> arguments)
-      throws InvalidArgumentException, FileNotFoundException {
-    if (countInTextFile(arguments)) {
-      String textFileAbsolutePath = getTextFileAbsolutePath(arguments);
-      int linesInTextFile = fileSystem.getWordCount(textFileAbsolutePath);
-      return linesInTextFile;
-    }
-
-    return countWordsInText(arguments);
-  }
-
-  private int countWordsInText(List<String> arguments) {
-    final String whitespace = "\\s";
-    int wordsInText = 0;
+  private String getTextFromArguments(List<String> arguments) {
+    StringBuilder text = new StringBuilder();
 
     for (String argument : arguments) {
-      int wordsInArgument = argument.split(whitespace).length;
-      wordsInText += wordsInArgument;
+      text.append(argument).append(" ");
     }
 
-    return wordsInText;
+    return text.toString();
   }
 
-  private String getTextFileAbsolutePath(List<String> arguments) {
-    String textFilePath = arguments.get(0);
-    String textFileAbsolutePath = currentDirectory.getAbsolutePath(textFilePath);
-    return textFileAbsolutePath;
+  private int countWords(List<String> arguments)
+      throws InvalidArgumentException, FileNotFoundException {
+    String text;
+
+    if (countInTextFile(arguments)) {
+      text = getTextFileContent(arguments);
+    } else {
+      text = getTextFromArguments(arguments);
+    }
+
+    return countWordsInText(text);
+  }
+
+  private int countWordsInText(String text) {
+    int words = 0;
+
+    if (text.isEmpty()) {
+      return words;
+    }
+
+    final String whitespace = "\\s";
+
+    for (String word : text.split(whitespace)) {
+      if (!word.isEmpty()) {
+        words++;
+      }
+    }
+
+    return words;
   }
 }

@@ -6,14 +6,12 @@ import java.util.ArrayDeque;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
-
 import commands.exception.InvalidArgumentException;
 import filesystem.exceptions.NotEnoughMemoryException;
 
 public class VirtualFileSystem
     implements TextFileController,
         TextFileContentController,
-        TextFileStatistics,
         DirectoryController,
         DirectoryContentController,
         DirectoryValidator {
@@ -156,22 +154,6 @@ public class VirtualFileSystem
     TextFile textFile = findTextFile(absolutePath);
 
     return textFile.getContent();
-  }
-
-  @Override
-  public int getWordCount(String absolutePath)
-      throws InvalidArgumentException, FileNotFoundException {
-    TextFile textFile = findTextFile(absolutePath);
-
-    return textFile.getNumberOfWords();
-  }
-
-  @Override
-  public int getLineCount(String absolutePath)
-      throws InvalidArgumentException, FileNotFoundException {
-    TextFile textFile = findTextFile(absolutePath);
-
-    return textFile.getNumberOfLines();
   }
 
   @Override
